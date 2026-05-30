@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JackCode Login</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/login.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+
+        <div class="container">
+
+            <a class="navbar-brand" href="#">
+                <h2 class="logo-text">
+               <img src="" alt="">
+                </h2>
+            </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#menu">
+                ☰
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+
+                <ul class="navbar-nav ms-auto text-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Problems</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Leaderboard</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- Login -->
+    <section class="login-section">
+
+        <div class="container">
+
+            <div class="row justify-content-center">
+
+                <div class="col-lg-5">
+
+                    <div class="login-card">
+
+                        <h1 class="title">
+                            Welcome Back
+                        </h1>
+
+                        <p class="subtitle">
+                            Sign in to continue coding
+                        </p>
+
+                        <!-- Login Type -->
+                        <div class="login-type">
+
+                            <button class="type-btn active"
+                                    type="button"
+                                    id="emailTab">
+                                Email
+                            </button>
+
+                            <button class="type-btn"
+                                    type="button"
+                                    id="userTab">
+                                Username
+                            </button>
+
+                        </div>
+
+                        <form id="loginForm">
+
+                            <div id="emailBox">
+
+                                <label class="form-label">
+                                    Email
+                                </label>
+
+                                <input type="email"
+                                       id="email"
+                                       class="form-control"
+                                       placeholder="Enter email">
+
+                            </div>
+
+                            <div id="userBox"
+                                 style="display:none;">
+
+                                <label class="form-label">
+                                    Username
+                                </label>
+
+                                <input type="text"
+                                       id="username"
+                                       class="form-control"
+                                       placeholder="Enter username">
+
+                            </div>
+
+                            <div class="mt-3">
+
+                                <label class="form-label">
+                                    Password
+                                </label>
+
+                                <input type="password"
+                                       id="password"
+                                       class="form-control"
+                                       placeholder="Enter password">
+
+                            </div>
+
+                            <button type="submit"
+                                    class="login-btn mt-4">
+                                Login
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script>
+
+        const emailTab = document.getElementById("emailTab");
+        const userTab = document.getElementById("userTab");
+
+        const emailBox = document.getElementById("emailBox");
+        const userBox = document.getElementById("userBox");
+
+        emailTab.onclick = () => {
+
+            emailBox.style.display = "block";
+            userBox.style.display = "none";
+
+            emailTab.classList.add("active");
+            userTab.classList.remove("active");
+        };
+
+        userTab.onclick = () => {
+
+            emailBox.style.display = "none";
+            userBox.style.display = "block";
+
+            userTab.classList.add("active");
+            emailTab.classList.remove("active");
+        };
+
+        document.getElementById("loginForm")
+            .addEventListener("submit", function (e) {
+
+                e.preventDefault();
+
+                if (emailTab.classList.contains("active")) {
+
+                    console.log({
+                        email: document.getElementById("email").value,
+                        password: document.getElementById("password").value
+                    });
+
+                } else {
+
+                    console.log({
+                        username: document.getElementById("username").value,
+                        password: document.getElementById("password").value
+                    });
+
+                }
+
+            });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
