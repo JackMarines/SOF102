@@ -1,0 +1,181 @@
+/* ================================================= */
+/* GLOBAL STYLE */
+/* ================================================= */
+
+body{
+    background-color: #070311;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+a{
+    text-decoration: none;
+}
+
+.main-color{
+    color: #b388ff;
+}
+
+.custom-btn{
+    background: #b388ff;
+    color: black;
+    border-radius: 12px;
+    padding: 12px 25px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.custom-btn:hover{
+    background: white;
+    transform: translateY(-2px);
+}
+
+.glass-box{
+    background: #120c22;
+    border: 1px solid #2b2142;
+    border-radius: 20px;
+}
+
+/* ================================================= */
+/* NAVBAR */
+/* ================================================= */
+
+.navbar{
+    border-bottom: 1px solid #241b36;
+    background-color: rgba(7,3,17,0.95);
+}
+
+.navbar-brand{
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.nav-link{
+    color: #c7bddf !important;
+    margin-left: 15px;
+    transition: 0.3s;
+}
+
+.nav-link:hover{
+    color: #b388ff !important;
+}
+
+/* ================================================= */
+/* HERO SECTION */
+/* ================================================= */
+
+.hero{
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.hero-title{
+    font-size: 65px;
+    font-weight: 700;
+}
+
+.hero-text{
+    color: #aaa;
+    font-size: 18px;
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.hero-image{
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #2b2142;
+}
+
+/* ================================================= */
+/* STATISTICS SECTION */
+/* ================================================= */
+
+.stat-card{
+    padding: 35px;
+    transition: 0.3s;
+}
+
+.stat-card:hover{
+    transform: translateY(-5px);
+    border-color: #b388ff;
+}
+
+.stat-number{
+    font-size: 45px;
+    font-weight: 700;
+    color: #b388ff;
+}
+
+.stat-text{
+    color: #aaa;
+    letter-spacing: 2px;
+}
+
+/* ================================================= */
+/* FEATURE SECTION */
+/* ================================================= */
+
+.feature-card{
+    padding: 30px;
+    height: 100%;
+    transition: 0.3s;
+}
+
+.feature-card:hover{
+    transform: translateY(-5px);
+    border-color: #b388ff;
+}
+
+.feature-title{
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.feature-text{
+    color: #aaa;
+    margin-top: 15px;
+}
+
+/* ================================================= */
+/* FOOTER */
+/* ================================================= */
+
+footer{
+    border-top: 1px solid #241b36;
+    margin-top: 100px;
+    padding: 30px 0;
+    color: #888;
+}
+
+/* ================================================= */
+/* RESPONSIVE */
+/* ================================================= */
+
+@media(max-width: 992px){
+
+    .hero{
+        text-align: center;
+    }
+
+    .hero-title{
+        font-size: 45px;
+    }
+
+    .hero-image{
+        margin-top: 40px;
+    }
+}
+
+@media(max-width: 576px){
+
+    .hero-title{
+        font-size: 35px;
+    }
+
+    .custom-btn{
+        width: 100%;
+    }
+
+}
