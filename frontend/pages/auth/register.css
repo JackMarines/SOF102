@@ -15,9 +15,7 @@ body{
     height:40px;
 }
 
-
 /* Navbar */
-
 .navbar{
     border-bottom: 1px solid #241b36;
     background-color: rgba(7,3,17,0.95);
@@ -37,16 +35,16 @@ body{
 .nav-link:hover{
     color: #b388ff !important;
 }
-/* Login */
+/* Register */
 
-.login-section{
-        margin-top: 40px;
+.register-section{
+    margin-top: 70px;
     min-height:100vh;
     display:flex;
     align-items:center;
 }
 
-.login-card{
+.register-card{
     background:#120c22;
     border:1px solid #2b2142;
     border-radius:25px;
@@ -63,29 +61,6 @@ body{
     text-align:center;
     color:#9d9d9d;
     margin-bottom:25px;
-}
-
-/* Login Type */
-
-.login-type{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.type-btn{
-    flex:1;
-    background:#1a122d;
-    border:1px solid #2b2142;
-    color:white;
-    padding:12px;
-    border-radius:12px;
-}
-
-.type-btn.active{
-    background:#b388ff;
-    color:black;
-    font-weight:600;
 }
 
 /* Form */
@@ -114,7 +89,7 @@ body{
     box-shadow:0 0 10px rgba(179,136,255,.4);
 }
 
-.login-btn{
+.register-btn{
     width:100%;
     background:#b388ff;
     color:black;
@@ -122,9 +97,10 @@ body{
     border-radius:12px;
     padding:12px;
     font-weight:600;
+    transition:.3s;
 }
 
-.login-btn:hover{
+.register-btn:hover{
     background:white;
 }
 
@@ -140,6 +116,8 @@ footer{
 }
 
 
+/* Responsive */
+
 @media(max-width:768px){
 
     .navbar-collapse{
@@ -153,4 +131,7 @@ footer{
         margin:10px 0;
     }
 
+    .register-card{
+        padding:25px;
+    }
 }
