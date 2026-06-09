@@ -8,6 +8,11 @@ body{
     color: white;
 }
 
+.logo {
+    width: 120px;
+    height:40px;
+}
+
 a{
     text-decoration: none;
 }
@@ -65,7 +70,7 @@ a{
 /* ================================================= */
 
 .hero{
-    padding-top: 120px;
+    margin-top: 120px;
     padding-bottom: 80px;
 }
 
