@@ -10,42 +10,37 @@ body{
     color:white;
 }
 
+.logo {
+    width: 120px;
+    height:40px;
+}
+
+
 /* Navbar */
 
 .navbar{
-    background:#070311;
-    border-bottom:1px solid #241b36;
-    padding:15px 0;
+    border-bottom: 1px solid #241b36;
+    background-color: rgba(7,3,17,0.95);
 }
 
-.logo-text{
-    color:white;
-    font-weight:700;
-    margin:0;
-}
-
-.logo-text span{
-    color:#b388ff;
+.navbar-brand{
+    font-size: 30px;
+    font-weight: 700;
 }
 
 .nav-link{
-    color:#c7bddf !important;
-    margin-left:20px;
+    color: #c7bddf !important;
+    margin-left: 15px;
+    transition: 0.3s;
 }
 
 .nav-link:hover{
-    color:#b388ff !important;
+    color: #b388ff !important;
 }
-
-.navbar-toggler{
-    background:#b388ff;
-    border:none;
-    color:black;
-}
-
 /* Login */
 
 .login-section{
+        margin-top: 40px;
     min-height:100vh;
     display:flex;
     align-items:center;
