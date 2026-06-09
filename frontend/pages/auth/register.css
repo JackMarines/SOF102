@@ -1,0 +1,132 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#070311;
+    font-family:'Poppins',sans-serif;
+    color:white;
+}
+
+/* Navbar */
+
+.navbar{
+    background:#070311;
+    border-bottom:1px solid #241b36;
+    padding:15px 0;
+}
+
+.logo-text{
+    color:white;
+    font-weight:700;
+    margin:0;
+}
+
+.logo-text span{
+    color:#b388ff;
+}
+
+.nav-link{
+    color:#c7bddf !important;
+    margin-left:20px;
+}
+
+.nav-link:hover{
+    color:#b388ff !important;
+}
+
+.navbar-toggler{
+    background:#b388ff;
+    border:none;
+    color:black;
+}
+
+/* Register */
+
+.register-section{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+}
+
+.register-card{
+    background:#120c22;
+    border:1px solid #2b2142;
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 0 30px rgba(179,136,255,.15);
+}
+
+.title{
+    text-align:center;
+    font-weight:700;
+}
+
+.subtitle{
+    text-align:center;
+    color:#9d9d9d;
+    margin-bottom:30px;
+}
+
+/* Form */
+
+.form-label{
+    color:#c7bddf;
+    margin-bottom:8px;
+}
+
+.form-control{
+    background:#1a122d;
+    border:1px solid #2b2142;
+    color:white;
+    border-radius:12px;
+    padding:12px;
+}
+
+.form-control::placeholder{
+    color:#8a7ca7;
+}
+
+.form-control:focus{
+    background:#1a122d;
+    color:white;
+    border-color:#b388ff;
+    box-shadow:0 0 10px rgba(179,136,255,.4);
+}
+
+.register-btn{
+    width:100%;
+    background:#b388ff;
+    color:black;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.register-btn:hover{
+    background:white;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .navbar-collapse{
+        background:#120c22;
+        margin-top:15px;
+        padding:15px;
+        border-radius:15px;
+    }
+
+    .nav-link{
+        margin:10px 0;
+    }
+
+    .register-card{
+        padding:25px;
+    }
+}
