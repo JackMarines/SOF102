@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #050014;
+    color: white;
+}
+
+/* NAVBAR giữ giống login */
+.navbar {
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.nav-link {
+    color: white;
+    margin-left: 20px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #b388ff;
+}
+
+/* TITLE */
+.page-title {
+    text-align: center;
+    margin: 30px 0;
+    font-weight: 600;
+}
+
+/* SEARCH */
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #3b2a63;
+    background: #120924;
+    color: white;
+}
+
+/* HEADER */
+.table-header {
+    display: grid;
+    grid-template-columns: 60px 1fr 150px 120px;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: #c7b6ff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ITEM */
+.problem-list {
+    margin-top: 10px;
+}
+
+.problem-item {
+    display: grid;
+    grid-template-columns: 60px 1fr 150px 120px;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.2s;
+}
+
+.problem-item:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+/* DIFFICULTY */
+.easy {
+    color: #22c55e;
+}
+
+.medium {
+    color: #fbbf24;
+}
+
+.hard {
+    color: #ef4444;
+}
+
+/* PAGINATION */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.pagination span {
+    padding: 6px 12px;
+    border: 1px solid #3b2a63;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pagination .active {
+    background: #a855f7;
+    color: black;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: #aaa;
+}
+.page {
+    padding: 6px 12px;
+    border: 1px solid #3b2a63;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.page:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.page.active {
+    background: #a855f7;
+    color: black;
+    font-weight: 600;
+}
