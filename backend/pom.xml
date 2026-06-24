@@ -83,8 +83,9 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven2-plugin</artifactId>
+        <artifactId>cargo-maven3-plugin</artifactId>
         <version>1.10.27</version>
+        <extensions>true</extensions>
         <configuration>
           <container>
             <containerId>tomcat11x</containerId>
