@@ -1,0 +1,29 @@
+# OS
+Thumbs.db
+.DS_Store
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.classpath
+.project
+.settings/
+bin/
+
+# Project docs (not code)
+*.md
+*.docx
+*.doc
+
+# Certificates (security, not the prod truststore)
+*.pem
+
+# Secrets
+firebase-service-account.json
+
+# Code intelligence cache
+.codegraph/

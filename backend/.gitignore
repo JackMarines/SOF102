@@ -1,0 +1,9 @@
+target/
+*.class
+*.jar
+*.war
+.settings/
+.project
+.classpath
+bin/
+firebase-service-account.json

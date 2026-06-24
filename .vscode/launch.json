@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "DevClimb - Maven Build",
+      "request": "launch",
+      "mainClass": "org.apache.maven.cli.MavenCli",
+      "args": "clean package -f backend/pom.xml",
+      "console": "externalTerminal"
+    },
+    {
+      "type": "java",
+      "name": "DevClimb - Cargo Run",
+      "request": "launch",
+      "mainClass": "org.apache.maven.cli.MavenCli",
+      "args": "clean package cargo:run -f backend/pom.xml",
+      "console": "externalTerminal"
+    }
+  ]
+}
