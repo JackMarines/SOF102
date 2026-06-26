@@ -4,27 +4,38 @@ body {
     background: #050014;
     color: white;
 }
+.logo {
+    width: 120px;
+    height:40px;
+}
+/* ================================================= */
+/* NAVBAR */
+/* ================================================= */
 
-/* NAVBAR giữ giống login */
-.navbar {
-    padding: 18px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+.navbar{
+    border-bottom: 1px solid #241b36;
+    background-color: rgba(7,3,17,0.95);
 }
 
-.nav-link {
-    color: white;
-    margin-left: 20px;
+.navbar-brand{
+    font-size: 30px;
+    font-weight: 700;
 }
 
-.nav-link:hover,
-.nav-link.active {
-    color: #b388ff;
+.nav-link{
+    color: #c7bddf !important;
+    margin-left: 15px;
+    transition: 0.3s;
+}
+
+.nav-link:hover{
+    color: #b388ff !important;
 }
 
 /* TITLE */
 .page-title {
     text-align: center;
-    margin: 30px 0;
+    margin-top: 130px ;
     font-weight: 600;
 }
 
@@ -85,6 +96,7 @@ body {
 }
 
 /* PAGINATION */
+/* PAGINATION */
 .pagination {
     display: flex;
     justify-content: center;
@@ -92,18 +104,29 @@ body {
     margin-top: 25px;
 }
 
-.pagination span {
-    padding: 6px 12px;
+.page {
+    padding: 8px 16px;
     border: 1px solid #3b2a63;
     border-radius: 6px;
+
+    background: transparent;
+    color: white;
+    text-decoration: none;
+
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.pagination .active {
+.page:hover {
     background: #a855f7;
     color: black;
 }
 
+.page.active {
+    background: transparent;
+    color: white;
+    font-weight: normal;
+}
 /* FOOTER */
 .footer {
     text-align: center;
