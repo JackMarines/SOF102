@@ -105,6 +105,9 @@
               </properties>
             </deployable>
           </deployables>
+          <properties>
+            <cargo.jvmargs>-Djavax.net.ssl.trustStore=${project.basedir}/ca-truststore.jks -Djavax.net.ssl.trustStorePassword=changeit</cargo.jvmargs>
+          </properties>
         </configuration>
       </plugin>
     </plugins>

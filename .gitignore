@@ -25,5 +25,8 @@ bin/
 # Secrets
 firebase-service-account.json
 
+# SSL truststore (each dev provides their own)
+ca-truststore.jks
+
 # Code intelligence cache
 .codegraph/
