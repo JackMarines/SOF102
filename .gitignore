@@ -30,3 +30,5 @@ ca-truststore.jks
 
 # Code intelligence cache
 .codegraph/
+
+constants.js
