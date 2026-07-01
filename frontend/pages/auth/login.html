@@ -21,13 +21,50 @@
 
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
 
         <div class="container">
 
-            <a class="navbar-brand" href="#">
-                <img src="/frontend/assets/css/logo.png" alt="" class="logo">
+            <!-- Logo -->
+            <a class="navbar-brand" href="../../index.html">
+                <img src="/frontend/assets/css/logo.png" alt="Logo" class="logo">
             </a>
+
+            <!-- Mobile Menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+                aria-controls="menu" aria-expanded="false" aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <!-- Menu -->
+            <div class="collapse navbar-collapse" id="menu">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center text-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../index.html">
+                            Help
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="../puzzle/index.html">
+                            Puzzles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link current-link" href="login.html">
+                            Log in
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
         </div>
 
     </nav>
@@ -97,6 +134,15 @@
 
                             </div>
 
+                            <p class="register-link mt-3">
+
+                                Don't have an account?
+
+                                <a href="register.html">
+                                    Register here
+                                </a>
+
+                            </p>
                             <button type="submit" class="login-btn mt-4">
                                 Login
                             </button>

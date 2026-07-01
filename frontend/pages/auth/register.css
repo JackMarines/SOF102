@@ -135,3 +135,28 @@ footer{
         padding:25px;
     }
 }
+
+.login-link{
+
+    text-align:center;
+    margin-top:15px;
+    font-size:14px;
+    color:#a9a1bf;
+
+}
+
+.login-link a{
+
+    color:#d7c6ff;          /* Màu giống trong ảnh */
+    text-decoration:none;   /* Bỏ gạch chân */
+    font-weight:500;
+    transition:.3s;
+
+}
+
+.login-link a:hover{
+
+    color:#b388ff;
+    text-decoration:none;   /* Hover vẫn không gạch chân */
+
+}

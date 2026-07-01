@@ -154,3 +154,24 @@ footer{
     }
 
 }
+
+/* Register Link */
+
+.register-link{
+    margin-top:18px;
+    text-align:center;
+    font-size:15px;
+    color:#b8b1cf;
+}
+
+.register-link a{
+    color:#d7c6ff;
+    text-decoration:none;
+    font-weight:600;
+    transition:.25s;
+}
+
+.register-link a:hover{
+    color:#b388ff;
+    text-decoration:none;
+}
