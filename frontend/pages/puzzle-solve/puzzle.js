@@ -2,7 +2,12 @@
 // ELEMENTS
 // ===========================
 
+import { editor } from './CodeMirror.js';
+
 const codeEditor = document.getElementById("codeEditor");
+
+const codeEditorContent = document.getElementById("codeEditor").textContent;
+
 const timer = document.getElementById("timer");
 
 const submitBtn = document.getElementById("submitBtn");
@@ -20,6 +25,32 @@ const topPanel = document.querySelector(".top-panel");
 const verticalResizer = document.getElementById("verticalResizer");
 
 const horizontalResizer = document.getElementById("horizontalResizer");
+
+const code = "Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.\n\nExample:\nInput: nums = [-2,1,-3,4,-1,2,1,-5,4]\nOutput: 6\nExplanation: [4,-1,2,1] has the largest sum = 6.\n\nConstraints:\n- 1 <= nums.length <= 10^5\n- -10^4 <= nums[i] <= 10^4"
+
+// ===========================
+// set code template
+// ===========================
+
+function setCode(code) {
+    editor.dispatch({
+        changes: {
+            from: 0,
+            to: editor.state.doc.length,
+            insert: code
+        }
+    });
+}
+
+setCode(code);
+
+// ===========================
+// get user's code input
+// ===========================
+
+function getCode() {
+    return editor.state.doc.toString();
+}
 
 // ===========================
 // TIMER
@@ -67,7 +98,6 @@ submitBtn.addEventListener("click", () => {
 
     submitBtn.disabled = true;
 
-    submitBtn.innerHTML = "Running...";
 
     statusText.className = "status pending";
 
@@ -78,7 +108,8 @@ submitBtn.addEventListener("click", () => {
 });
 
 function runFakeJudge() {
-
+    const code = getCode();
+    console.log(code);
     const pass = Math.random() > 0.5;
 
     if (pass) {
@@ -129,7 +160,6 @@ function runFakeJudge() {
 
     submitBtn.disabled = false;
 
-    submitBtn.innerHTML = "Submit";
 
 }
 
@@ -205,53 +235,53 @@ document.addEventListener("mousemove", (e) => {
 
 });
 
-// ===========================
-// STOP SELECT TEXT WHEN DRAG
-// ===========================
+// // ===========================
+// // STOP SELECT TEXT WHEN DRAG
+// // ===========================
 
-document.addEventListener("dragstart", (e) => {
+// document.addEventListener("dragstart", (e) => {
 
-    e.preventDefault();
+//     e.preventDefault();
 
-});
+// });
 
-// ===========================
-// TAB KEY
-// ===========================
+// // ===========================
+// // TAB KEY
+// // ===========================
 
-codeEditor.addEventListener("keydown", function (e) {
+// codeEditor.addEventListener("keydown", function (e) {
 
-    if (e.key === "Tab") {
+//     if (e.key === "Tab") {
 
-        e.preventDefault();
+//         e.preventDefault();
 
-        const start = this.selectionStart;
+//         const start = this.selectionStart;
 
-        const end = this.selectionEnd;
+//         const end = this.selectionEnd;
 
-        this.value =
-            this.value.substring(0, start) +
-            "    " +
-            this.value.substring(end);
+//         this.value =
+//             this.value.substring(0, start) +
+//             "    " +
+//             this.value.substring(end);
 
-        this.selectionStart =
+//         this.selectionStart =
 
-        this.selectionEnd = start + 4;
+//         this.selectionEnd = start + 4;
 
-    }
+//     }
 
-});
+// });
 
-// ===========================
-// CTRL + ENTER
-// ===========================
+// // ===========================
+// // CTRL + ENTER
+// // ===========================
 
-codeEditor.addEventListener("keydown", (e) => {
+// codeEditor.addEventListener("keydown", (e) => {
 
-    if (e.ctrlKey && e.key === "Enter") {
+//     if (e.ctrlKey && e.key === "Enter") {
 
-        submitBtn.click();
+//         submitBtn.click();
 
-    }
+//     }
 
-});
+// });
