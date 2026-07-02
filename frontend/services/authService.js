@@ -1,5 +1,5 @@
 // Khởi tạo Firebase
-firebase.initializeApp(FIREBASE_CONFIG);
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 // ── ĐĂNG NHẬP ──
