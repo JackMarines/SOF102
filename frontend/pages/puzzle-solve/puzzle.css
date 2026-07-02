@@ -96,9 +96,12 @@ body{
 ================================================= */
 
 .workspace{
+    margin-top:  20px;
     height:calc(100vh - 64px);
     display:grid;
     grid-template-rows:70% 6px 30%;
+        margin-top: 40px;
+
 }
 
 .top-panel{
@@ -211,6 +214,7 @@ pre{
 .editor-panel{
     display:flex;
     flex-direction:column;
+    overflow-y: auto;
 }
 
 .editor-body{
@@ -237,6 +241,44 @@ pre{
     border-color:#8b5cf6;
 }
 
+#codeEditor {
+  height: 700px;
+    width:100%;
+}
+
+#codeEditor .cm-editor {
+  height: 100%;
+    background-color: #050014;
+    border-radius: 8px;
+
+}
+
+#codeEditor .cm-gutters {
+    background: #171127;
+    color: #d8cfff;
+    border:1px solid #2f2544;
+
+}
+
+#codeEditor .cm-activeLineGutter {
+    background: #d8cfff;
+    color: #171127;
+}
+
+#codeEditor .cm-cursor {
+    border-left-color: #d8cfff;
+}
+
+.cm-content {
+    font-family: "JetBrains Mono", monospace;
+}
+
+.cm-selectionBackground {
+    background-color: rgba(139, 92, 246, 0.35) !important;
+}
+
+
+
 /* =================================================
    FOOTER
 ================================================= */
@@ -253,7 +295,8 @@ pre{
     color:white;
     border:none;
     border-radius:8px;
-    padding:11px 28px;
+    padding:3px 12px;
+    margin-right:30px;
     font-size:15px;
     font-weight:600;
     transition:.3s;
@@ -261,7 +304,6 @@ pre{
 
 .btn-submit:hover{
     background:#a855f7;
-    transform:translateY(-2px);
 }
 
 /* =================================================
