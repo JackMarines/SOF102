@@ -65,9 +65,12 @@ public class AuthController extends HttpServlet {
     }
 
     // Xác thực Firebase token -> tìm user trong CSDL -> tạo session
+    // Nếu request có kèm "username" thì tìm user bằng username (đăng nhập bằng username)
+    // Nếu không có username thì tìm bằng firebaseUid (đăng nhập bằng email)
     private void doLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> json = readJsonBody(req);
         String idToken = (String) json.get("idToken");
+        String username = (String) json.get("username");
 
         if (idToken == null || idToken.isEmpty()) {
             ResponseUtil.error(resp, 400, "idToken is required");
@@ -81,9 +84,13 @@ public class AuthController extends HttpServlet {
         }
 
         String firebaseUid = decoded.getUid();
-        String email = decoded.getEmail();
 
-        User user = userDao.findByFirebaseUid(firebaseUid);
+        User user;
+        if (username != null && !username.trim().isEmpty()) {
+            user = userDao.findByUsername(username.trim());
+        } else {
+            user = userDao.findByFirebaseUid(firebaseUid);
+        }
         if (user == null) {
             ResponseUtil.error(resp, 404, "User not found. Please register first.");
             return;
