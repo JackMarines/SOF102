@@ -16,7 +16,7 @@ if (loginForm) {
       }
 
       console.log('Đăng nhập thành công:', result);
-      window.location.href = '/';
+      window.location.href = '/frontend/pages/puzzle-user/index.html';
     } catch (err) {
       alert('Lỗi: ' + err.message);
     }
@@ -48,7 +48,7 @@ if (registerForm) {
       }
 
       console.log('Đăng ký thành công:', result);
-      window.location.href = '/';
+      window.location.href = '/frontend/pages/puzzle-user/index.html';
     } catch (err) {
       alert('Lỗi: ' + err.message);
     }

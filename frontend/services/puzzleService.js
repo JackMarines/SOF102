@@ -1,11 +1,10 @@
-//show all puzzles from database (page 1)
-async function findAllPuzzles() {
-    console.log("findAllPuzzles()");
-    return apiGet('/puzzles');
-}
-
 async function getPuzzleById(id){
-    console.log("getPuzzleById()");
     return apiGet('/puzzles?id='+id);
 };
 
+async function getFilteredPuzzles(search, difficulty, page, limit) {
+    let url = '/puzzles?page=' + page + '&limit=' + limit;
+    if (search) url += '&search=' + encodeURIComponent(search);
+    if (difficulty) url += '&difficulty=' + difficulty;
+    return apiGet(url);
+}

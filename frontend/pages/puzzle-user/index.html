@@ -21,44 +21,69 @@
 
 
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <!-- ===================== NAVBAR ===================== -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
 
         <div class="container">
 
             <!-- Logo -->
-            <a class="navbar-brand" href="../../index.html">
-                <img src="/frontend/assets/css/logo.png" alt="Logo" class="logo">
+            <a class="navbar-brand" href="http://127.0.0.1:5500/frontend/index.html">
+                <img src="/frontend/assets/css/logo.png" class="logo" alt="Logo">
+
             </a>
+
             <!-- Mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
-                aria-controls="menu" aria-expanded="false">
 
-                <span class="navbar-toggler-icon"></span>
+            <div class="d-flex align-items-center d-lg-none ms-auto">
 
-            </button>
+                <a href="../profile/index.html" class="profile-btn me-2">
+
+                    <i class="bi bi-person-circle"></i>
+
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+            </div>
 
             <!-- Menu -->
+
             <div class="collapse navbar-collapse" id="menu">
 
-                <ul class="navbar-nav ms-auto align-items-lg-center">
+                <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="../home/index.html">
+
+                        <a class="nav-link" href="#">
                             Help
                         </a>
+
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="../puzzle-guest/index.html">
-                            Puzzles
-                        </a>
-                    </li>
+                    <a class="nav-link" href="../puzzle/index.html">
+                        Puzzles
+                    </a>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="../auth/login.html">
-                            Log in
+
+                        <a class="nav-link" href="http://127.0.0.1:5500/frontend/index.html">
+                            Home
                         </a>
+
+                    </li>
+                    <li class="nav-item ms-lg-3 d-none d-lg-block">
+
+                        <a href="../profile/index.html" class="profile-btn">
+
+                            <i class="bi bi-person-circle"></i>
+
+                        </a>
+
                     </li>
 
                 </ul>
@@ -68,7 +93,6 @@
         </div>
 
     </nav>
-
     <!-- CONTENT -->
     <section class="puzzles-section">
 
@@ -128,8 +152,11 @@
 
     <!-- Các service của chúng ta -->
     <script src="/frontend/utils/constants.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="/frontend/services/api.js"></script>
     <script src="/frontend/services/puzzleService.js"></script>
+    <script src="/frontend/services/authService.js"></script>
     <script src="puzzle.js"></script>
 
 

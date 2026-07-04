@@ -2,7 +2,7 @@
 // ELEMENTS
 // ===========================
 
-import { editor } from './CodeMirror.js';
+import { editor } from './codeMirror.js';
 
 const codeEditor = document.getElementById("codeEditor");
 
