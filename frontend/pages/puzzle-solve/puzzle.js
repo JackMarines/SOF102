@@ -53,6 +53,57 @@ function getCode() {
 }
 
 // ===========================
+// load puzzle
+// ===========================
+
+async function loadPuzzle() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const puzzle = await getPuzzleById(id)
+    const container = document.getElementById("puzzlePanel");
+console.log(puzzle)
+    const panelHeader = document.createElement("div");
+    panelHeader.classList.add("panel-header")
+
+    const title = document.createElement("h2");
+    title.textContent = `${puzzle.id}. ${puzzle.title}`
+
+    const badges = document.createElement("div");
+    badges.classList.add("badges")
+
+        const difficulty = document.createElement("span");
+        difficulty.textContent = puzzle.difficulty
+        if (difficulty.textContent === "Easy") {
+            difficulty.classList.add("easy");
+        } else if (difficulty.textContent === "Medium") {
+            difficulty.classList.add("medium");
+        } else if (difficulty.textContent === "Hard") {
+            difficulty.classList.add("hard");
+        }
+
+        const language = document.createElement("span");
+        language.textContent = puzzle.language
+        language.classList.add("language")
+
+    const panelContent = document.createElement("div");
+    panelContent.classList.add("panel-content")
+
+    const content = document.createElement("p");
+    content.textContent = puzzle.content
+
+
+
+    panelHeader.append(title, badges);
+    panelContent.append(content);
+    badges.append(language, difficulty);
+    container.append(panelHeader, panelContent);
+}
+
+
+loadPuzzle();
+
+// ===========================
 // TIMER
 // ===========================
 

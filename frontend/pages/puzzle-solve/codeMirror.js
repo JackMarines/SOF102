@@ -1,14 +1,9 @@
-import { EditorView, basicSetup } from "https://esm.sh/codemirror";
-import { keymap } from "https://esm.sh/@codemirror/view";
-import { oneDark } from "https://esm.sh/@codemirror/theme-one-dark";
-import { javascript } from "https://esm.sh/@codemirror/lang-javascript";
-import { python } from "https://esm.sh/@codemirror/lang-python";
-import { EditorState } from "https://esm.sh/@codemirror/state";
-import { indentWithTab } from "https://esm.sh/@codemirror/commands";
-import { indentUnit } from "https://esm.sh/@codemirror/language";
-import { Prec } from "https://esm.sh/@codemirror/state";
-import {autocompletion,acceptCompletion} from "https://esm.sh/@codemirror/autocomplete";
-import { cpp } from "https://esm.sh/@codemirror/lang-cpp";
+import { EditorView, basicSetup, EditorState, Prec, indentWithTab, indentUnit, autocompletion, acceptCompletion } from "https://esm.sh/codemirror@6.0.2";
+import { keymap } from "https://esm.sh/@codemirror/view@6.35.3";
+import { oneDark } from "https://esm.sh/@codemirror/theme-one-dark@6.1.2";
+import { javascript } from "https://esm.sh/@codemirror/lang-javascript@6.2.2";
+import { python } from "https://esm.sh/@codemirror/lang-python@6.1.6";
+import { cpp } from "https://esm.sh/@codemirror/lang-cpp@6.0.2";
 
 
 const tabKey = keymap.of([

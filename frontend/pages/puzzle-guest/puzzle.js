@@ -6,6 +6,9 @@ async function loadPuzzles() {
     const container = document.getElementById("puzzleList");
 
     for (const puzzle of response.data) {
+        const link = document.createElement("a");
+        link.href = `/frontend/pages/puzzle-solve/index.html?id=${puzzle.id}`;
+
         const row = document.createElement("div");
         row.classList.add("puzzle-item")
 
@@ -30,10 +33,12 @@ async function loadPuzzles() {
         } else if (difficulty.textContent === "Hard") {
             difficulty.classList.add("hard");
         }
-
-        row.append(id,title,language, difficulty);
-        container.appendChild(row);
+        row.append(id, title, language, difficulty);
+        link.appendChild(row)
+        container.appendChild(link);
     }
 }
 
 loadPuzzles();
+
+

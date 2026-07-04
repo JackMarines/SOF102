@@ -4,9 +4,8 @@ async function findAllPuzzles() {
     return apiGet('/puzzles');
 }
 
-async function main() {
-    const pagedata = await findAllPuzzles();
-    console.log(pagedata);
-}
+async function getPuzzleById(id){
+    console.log("getPuzzleById()");
+    return apiGet('/puzzles?id='+id);
+};
 
-main();
