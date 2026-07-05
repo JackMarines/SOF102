@@ -40,7 +40,15 @@ async function getMe() {
 async function checkAuth() {
   const session = await getMe();
   if (session.error) {
-    window.location.href = '/frontend/pages/auth/login.html';
+    window.location.href = '/frontend/pages/guest/auth/login.html';
   }
   return session;
+}
+
+// redirect to user home if already authenticated (for guest pages)
+async function redirectIfAuthenticated() {
+  const session = await getMe();
+  if (!session.error) {
+    window.location.href = '/frontend/pages/user/home/index.html';
+  }
 }
