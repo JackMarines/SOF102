@@ -8,8 +8,7 @@ import { indentWithTab } from "https://esm.sh/@codemirror/commands";
 import { indentUnit } from "https://esm.sh/@codemirror/language";
 import { Prec } from "https://esm.sh/@codemirror/state";
 import {autocompletion,acceptCompletion} from "https://esm.sh/@codemirror/autocomplete";
-import { cpp } from "https://esm.sh/@codemirror/lang-cpp";
-
+import { php } from "https://esm.sh/@codemirror/lang-php";
 
 const tabKey = keymap.of([
     indentWithTab
@@ -34,9 +33,9 @@ const editor = new EditorView({
         basicSetup,
         completionKey,
         tabKey,
+        javascript(),
         theme,
         oneDark,
-        cpp(),
         EditorState.tabSize.of(4),
         indentUnit.of("    "),
         EditorView.lineWrapping
