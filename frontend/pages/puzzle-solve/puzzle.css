@@ -110,6 +110,8 @@ body{
     overflow:hidden;
 }
 
+
+
 /* =================================================
    PANEL
 ================================================= */
@@ -118,6 +120,17 @@ body{
     background:#0d0819;
     border:1px solid #2f2544;
     overflow:hidden;
+}
+
+.puzzle-panel{
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+.puzzle-panel .panel-content{
+    flex:1;
+    min-height:0;
 }
 
 .panel-header{
@@ -141,6 +154,9 @@ body{
     padding:22px;
     overflow:auto;
     color:#e8e8e8;
+}
+.panel-content p {
+    white-space: pre-wrap;
 }
 
 .panel-content h5{

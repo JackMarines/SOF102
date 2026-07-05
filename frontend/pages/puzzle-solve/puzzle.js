@@ -2,7 +2,7 @@
 // ELEMENTS
 // ===========================
 
-import { editor } from './CodeMirror.js';
+// import { editor } from './codeMirror.js';
 
 const codeEditor = document.getElementById("codeEditor");
 
@@ -28,29 +28,80 @@ const horizontalResizer = document.getElementById("horizontalResizer");
 
 const code = "Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.\n\nExample:\nInput: nums = [-2,1,-3,4,-1,2,1,-5,4]\nOutput: 6\nExplanation: [4,-1,2,1] has the largest sum = 6.\n\nConstraints:\n- 1 <= nums.length <= 10^5\n- -10^4 <= nums[i] <= 10^4"
 
-// ===========================
-// set code template
-// ===========================
+// // ===========================
+// // set code template
+// // ===========================
 
-function setCode(code) {
-    editor.dispatch({
-        changes: {
-            from: 0,
-            to: editor.state.doc.length,
-            insert: code
+// function setCode(code) {
+//     editor.dispatch({
+//         changes: {
+//             from: 0,
+//             to: editor.state.doc.length,
+//             insert: code
+//         }
+//     });
+// }
+
+// setCode(code);
+
+// // ===========================
+// // get user's code input
+// // ===========================
+
+// function getCode() {
+//     return editor.state.doc.toString();
+// }
+
+// ===========================
+// load puzzle
+// ===========================
+checkAuth()
+async function loadPuzzle() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const puzzle = await getPuzzleById(id)
+    const container = document.getElementById("puzzlePanel");
+console.log(puzzle)
+    const panelHeader = document.createElement("div");
+    panelHeader.classList.add("panel-header")
+
+    const title = document.createElement("h2");
+    title.textContent = `${puzzle.id}. ${puzzle.title}`
+
+    const badges = document.createElement("div");
+    badges.classList.add("badges")
+
+        const difficulty = document.createElement("span");
+        difficulty.textContent = puzzle.difficulty
+        if (difficulty.textContent === "Easy") {
+            difficulty.classList.add("easy");
+        } else if (difficulty.textContent === "Medium") {
+            difficulty.classList.add("medium");
+        } else if (difficulty.textContent === "Hard") {
+            difficulty.classList.add("hard");
         }
-    });
+
+        const language = document.createElement("span");
+        language.textContent = puzzle.language
+        language.classList.add("language")
+
+    const panelContent = document.createElement("div");
+    panelContent.classList.add("panel-content")
+
+    const content = document.createElement("p");
+    content.textContent = puzzle.content
+
+
+
+    panelHeader.append(title, badges);
+    panelContent.append(content);
+    badges.append(language, difficulty);
+    container.append(panelHeader, panelContent);
 }
 
-setCode(code);
 
-// ===========================
-// get user's code input
-// ===========================
-
-function getCode() {
-    return editor.state.doc.toString();
-}
+loadPuzzle();
 
 // ===========================
 // TIMER

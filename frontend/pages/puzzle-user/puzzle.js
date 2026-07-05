@@ -135,4 +135,4 @@ async function loadPuzzles(page = 1) {
     fetchPuzzles(page);
 }
 
-loadPuzzles()
+checkAuth().then(() => loadPuzzles())

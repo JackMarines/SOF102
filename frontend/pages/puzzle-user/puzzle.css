@@ -15,38 +15,71 @@ a {
 h1 {
     color:white
 }
-/* ================================================= */
-/* NAVBAR */
-/* ================================================= */
+/* ================= NAVBAR ================= */
 
-.navbar{
-    border-bottom: 1px solid #241b36;
-    background-color: rgba(7,3,17,0.95);
+.custom-navbar{
+    background:#070311;
+    border-bottom:1px solid #241b36;
+    padding:12px 0;
 }
 
-.navbar-brand{
-    font-size: 30px;
-    font-weight: 700;
+.logo{
+    width:120px;
+    height:40px;
 }
-
 .nav-link{
-    color: #c7bddf !important;
-    margin-left: 15px;
-    transition: 0.3s;
+
+    letter-spacing:0.2px;
+
+    text-shadow:none;
+
 }
 
-.nav-link:hover{
-    color: #b388ff !important;
+/* Menu */
+
+.navbar-nav{
+    display:flex;
+    align-items:center;
+    gap:20px;
 }
 
-.current-link{
-    color: #b388ff !important;
-    margin-left: 15px;
-    transition: 0.3s;
+.navbar-nav .nav-link{
+
+    font-family:'Poppins',sans-serif;
+    color:#c7bddf !important;
+
+    transition:0.3s ease;
+
+    padding:8px 10px;
 }
 
-.current-link:hover{
-    color: #c7bddf !important;
+.navbar-nav .nav-link:hover{
+    color:#b388ff !important;
+}
+
+.navbar-nav .nav-link.active{
+    color:#b388ff !important;
+}
+
+/* Avatar */
+
+.profile-btn{
+    width:42px;
+    height:42px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+}
+
+.profile-btn i{
+    font-size:34px;
+    color:#d7dbe2;
+    transition:.3s;
+}
+
+.profile-btn:hover i{
+    color:#b388ff;
 }
 
 /* TITLE */

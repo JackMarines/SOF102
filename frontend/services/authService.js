@@ -1,5 +1,5 @@
 // Khởi tạo Firebase
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(FIREBASE_CONFIG);
 const auth = firebase.auth();
 
 // ── ĐĂNG NHẬP ──
@@ -34,4 +34,13 @@ async function logout() {
 // Nếu hết → trả về { error: "Not authenticated" }
 async function getMe() {
   return apiGet('/auth/me');
+}
+
+// redirect to login if not authenticated
+async function checkAuth() {
+  const session = await getMe();
+  if (session.error) {
+    window.location.href = '/frontend/pages/auth/login.html';
+  }
+  return session;
 }
