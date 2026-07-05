@@ -2,7 +2,7 @@
 // ELEMENTS
 // ===========================
 
-import { editor } from './codeMirror.js';
+// import { editor } from './codeMirror.js';
 
 const codeEditor = document.getElementById("codeEditor");
 
@@ -28,34 +28,34 @@ const horizontalResizer = document.getElementById("horizontalResizer");
 
 const code = "Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.\n\nExample:\nInput: nums = [-2,1,-3,4,-1,2,1,-5,4]\nOutput: 6\nExplanation: [4,-1,2,1] has the largest sum = 6.\n\nConstraints:\n- 1 <= nums.length <= 10^5\n- -10^4 <= nums[i] <= 10^4"
 
-// ===========================
-// set code template
-// ===========================
+// // ===========================
+// // set code template
+// // ===========================
 
-function setCode(code) {
-    editor.dispatch({
-        changes: {
-            from: 0,
-            to: editor.state.doc.length,
-            insert: code
-        }
-    });
-}
+// function setCode(code) {
+//     editor.dispatch({
+//         changes: {
+//             from: 0,
+//             to: editor.state.doc.length,
+//             insert: code
+//         }
+//     });
+// }
 
-setCode(code);
+// setCode(code);
 
-// ===========================
-// get user's code input
-// ===========================
+// // ===========================
+// // get user's code input
+// // ===========================
 
-function getCode() {
-    return editor.state.doc.toString();
-}
+// function getCode() {
+//     return editor.state.doc.toString();
+// }
 
 // ===========================
 // load puzzle
 // ===========================
-
+checkAuth()
 async function loadPuzzle() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
