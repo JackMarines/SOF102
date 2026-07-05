@@ -159,8 +159,6 @@ submitBtn.addEventListener("click", () => {
 });
 
 function runFakeJudge() {
-    const code = getCode();
-    console.log(code);
     const pass = Math.random() > 0.5;
 
     if (pass) {
