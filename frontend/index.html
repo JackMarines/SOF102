@@ -16,57 +16,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- EXTERNAL CSS -->
-       <link rel="stylesheet" href="/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="/frontend/assets/css/style.css">
     <link rel="icon" href="/frontend/assets/css/icon.png">
 
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-
-    <div class="container">
-
-        <a class="navbar-brand" href="#">
-            <img src="/frontend/assets/css/logo.png" alt="" class="logo">
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-  <!-- Menu -->
-        <div class="collapse navbar-collapse" id="menu">
-
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/home/index.html">
-                        Help
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link current-link" href="pages/puzzle-guest/index.html">
-                         Puzzles
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/auth/login.html">
-                        Log in
-                    </a>
-                </li>
-
-            </ul>
-
-        </div>
-
-    </div>
-
-</nav>
+<div id="navbar"></div>
 
 
 <!-- HERO SECTION -->
@@ -90,11 +47,11 @@
 
                 <div class="mt-4">
 
-                    <a href="#" class="btn custom-btn me-3">
+                    <a href="pages/guest/auth/login.html" class="btn custom-btn me-3">
                         Start Now
                     </a>
 
-                    <a href="#" class="btn btn-outline-light px-4 py-3 rounded-4">
+                    <a href="pages/guest/puzzle/index.html" class="btn btn-outline-light px-4 py-3 rounded-4">
                         Explore Problems
                     </a>
 
@@ -232,17 +189,17 @@
 
 </section>
 
-<!-- FOOTER -->
+<div id="footer"></div>
 
-<footer>
+<script src="/frontend/components/navbar-guest.js"></script>
+<script src="/frontend/components/footer.js"></script>
 
-    <div class="container text-center">
-        © 2026 JackCode - Coding Game Platform
-    </div>
-
-</footer>
-
-<!-- BOOTSTRAP SCRIPT -->
+<script src="/frontend/utils/constants.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="/frontend/services/api.js"></script>
+<script src="/frontend/services/authService.js"></script>
+<script>redirectIfAuthenticated()</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

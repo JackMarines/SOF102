@@ -41,7 +41,7 @@ async function renderPuzzles(response) {
     // render each puzzle row
     for (const puzzle of response.data) {
         const link = document.createElement("a");
-        link.href = `/frontend/pages/puzzle-solve/index.html?id=${puzzle.id}`;
+        link.href = `/frontend/pages/user/solve/index.html?id=${puzzle.id}`;
 
         const row = document.createElement("div");
         row.classList.add("puzzle-item")
@@ -52,7 +52,7 @@ async function renderPuzzles(response) {
 
         const title = document.createElement("span");
         title.textContent = puzzle.title
-        title.classList.add("title")
+        title.classList.add("puzzle-title")
 
         const language = document.createElement("span");
         language.textContent = puzzle.language
