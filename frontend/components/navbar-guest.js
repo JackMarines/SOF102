@@ -15,7 +15,7 @@
 
         nav.innerHTML =
             '<div class="container">' +
-                '<a class="navbar-brand" href="/frontend/index.html">' +
+                '<a class="navbar-brand" href="/">' +
                     '<img src="/frontend/assets/css/logo.png" alt="Logo" class="logo">' +
                 '</a>' +
                 '<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">' +
@@ -24,13 +24,13 @@
                 '<div class="collapse navbar-collapse" id="menu">' +
                     '<ul class="navbar-nav ms-auto align-items-lg-center text-center">' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (path.includes('/guest/home/') ? ' current-link' : '') + '" href="/frontend/pages/guest/home/index.html">Help</a>' +
+                            '<a class="nav-link' + (path.includes('/guest/home/') ? ' current-link' : '') + '" href="/help">Help</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (path.includes('/puzzle') ? ' current-link' : '') + '" href="/frontend/pages/guest/puzzle/index.html">Puzzles</a>' +
+                            '<a class="nav-link' + (path.includes('/puzzle') ? ' current-link' : '') + '" href="/puzzle">Puzzles</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (path.includes('/guest/auth/') ? ' current-link' : '') + '" href="/frontend/pages/guest/auth/login.html">Log in</a>' +
+                            '<a class="nav-link' + (path.includes('/guest/auth/') ? ' current-link' : '') + '" href="/login">Log in</a>' +
                         '</li>' +
                     '</ul>' +
                 '</div>' +

@@ -27,11 +27,11 @@
 
         nav.innerHTML =
             '<div class="container">' +
-                '<a class="navbar-brand" href="/frontend/pages/user/home/index.html">' +
+                '<a class="navbar-brand" href="/dashboard">' +
                     '<img src="/frontend/assets/css/logo.png" class="logo" alt="Logo">' +
                 '</a>' +
                 '<div class="d-flex align-items-center d-lg-none ms-auto">' +
-                    '<a href="/frontend/pages/profile/index.html" class="profile-btn me-2">' +
+                    '<a href="/profile" class="profile-btn me-2">' +
                         '<i class="bi bi-person-circle"></i>' +
                     '</a>' +
                     '<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">' +
@@ -41,20 +41,20 @@
                 '<div class="collapse navbar-collapse" id="menu">' +
                     '<ul class="navbar-nav ms-auto">' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (isActive('help') ? ' active' : '') + '" href="/frontend/pages/user/help/index.html">Help</a>' +
+                            '<a class="nav-link' + (isActive('help') ? ' active' : '') + '" href="/help">Help</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (isActive('puzzles') ? ' active' : '') + '" href="/frontend/pages/user/puzzle/index.html">Puzzles</a>' +
+                            '<a class="nav-link' + (isActive('puzzles') ? ' active' : '') + '" href="/user-puzzle">Puzzles</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (isActive('home') ? ' active' : '') + '" href="/frontend/pages/user/home/index.html">Home</a>' +
+                            '<a class="nav-link' + (isActive('home') ? ' active' : '') + '" href="/dashboard">Home</a>' +
                         '</li>' +
                         '<li class="nav-item ms-lg-3 d-none d-lg-block profile-dropdown">' +
-                            '<a class="profile-btn" href="/frontend/pages/profile/index.html">' +
+                            '<a class="profile-btn" href="/profile">' +
                                 '<i class="bi bi-person-circle"></i>' +
                             '</a>' +
                             '<div class="dropdown-menu-custom">' +
-                                '<a href="/frontend/pages/profile/index.html">Profile</a>' +
+                                '<a href="/profile">Profile</a>' +
                                 '<hr>' +
                                 '<a href="#" id="logout-btn">Log out</a>' +
                             '</div>' +
@@ -71,12 +71,12 @@
                 e.preventDefault();
                 if (typeof logout === 'function') {
                     logout().then(function() {
-                        window.location.href = '/frontend/index.html';
+                        window.location.href = '/';
                     }).catch(function() {
-                        window.location.href = '/frontend/index.html';
+                        window.location.href = '/';
                     });
                 } else {
-                    window.location.href = '/frontend/index.html';
+                    window.location.href = '/';
                 }
             });
         }

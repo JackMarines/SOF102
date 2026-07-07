@@ -6,10 +6,10 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class JpaUtils {
-    private static EntityManagerFactory factory;
+    private static volatile EntityManagerFactory factory;
 
     // Lấy EntityManager để thao tác với CSDL
-    public static EntityManager getEntityManager() {
+    public static synchronized EntityManager getEntityManager() {
         if (factory == null || !factory.isOpen()) {
             factory = Persistence.createEntityManagerFactory("DevClimb");
         }

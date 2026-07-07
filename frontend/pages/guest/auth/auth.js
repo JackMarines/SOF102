@@ -31,7 +31,7 @@ if (loginForm) {
         return;
       }
 
-      window.location.href = '/frontend/pages/user/puzzle/index.html';
+      window.location.href = '/user-puzzle';
     } catch (err) {
       errorDiv.textContent = friendlyAuthError(err);
     }
@@ -64,7 +64,7 @@ if (registerForm) {
         return;
       }
 
-      window.location.href = '/frontend/pages/user/puzzle/index.html';
+      window.location.href = '/user-puzzle';
     } catch (err) {
       errorDiv.textContent = friendlyAuthError(err);
     }

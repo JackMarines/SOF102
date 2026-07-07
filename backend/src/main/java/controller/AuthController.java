@@ -96,6 +96,7 @@ public class AuthController extends HttpServlet {
             return;
         }
 
+        req.changeSessionId(); // chống session fixation
         req.getSession().setAttribute("user", user);
 
         Map<String, Object> data = new HashMap<>();
@@ -149,6 +150,7 @@ public class AuthController extends HttpServlet {
 
         userDao.create(user);
 
+        req.changeSessionId(); // chống session fixation
         req.getSession().setAttribute("user", user);
 
         Map<String, Object> data = new HashMap<>();

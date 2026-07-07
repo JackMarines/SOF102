@@ -23,24 +23,6 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        // Đặt CORS headers để frontend có thể đọc response lỗi
-        String origin = req.getHeader("Origin");
-        if (origin != null && !origin.isBlank()) {
-            resp.setHeader("Access-Control-Allow-Origin", origin);
-            resp.setHeader("Vary", "Origin");
-        } else {
-            resp.setHeader("Access-Control-Allow-Origin", "*");
-        }
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        resp.setHeader("Access-Control-Allow-Credentials", "true");
-
-        // Cho phép OPTIONS (preflight) đi qua
-        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
-
         // Kiểm tra session có user không
         User user = (User) req.getSession().getAttribute("user");
         if (user == null) {

@@ -40,7 +40,7 @@ async function getMe() {
 async function checkAuth() {
   const session = await getMe();
   if (session.error) {
-    window.location.href = '/frontend/pages/guest/auth/login.html';
+    window.location.href = '/login';
   }
   return session;
 }
@@ -49,6 +49,6 @@ async function checkAuth() {
 async function redirectIfAuthenticated() {
   const session = await getMe();
   if (!session.error) {
-    window.location.href = '/frontend/pages/user/home/index.html';
+    window.location.href = '/dashboard';
   }
 }
