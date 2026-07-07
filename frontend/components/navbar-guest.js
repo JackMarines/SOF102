@@ -15,8 +15,8 @@
 
         nav.innerHTML =
             '<div class="container">' +
-                '<a class="navbar-brand" href="/">' +
-                    '<img src="/frontend/assets/css/logo.png" alt="Logo" class="logo">' +
+'<a class="navbar-brand" href="/">' +
+                    '<img src="/frontend/assets/images/logo.png" alt="Logo" class="logo">' +
                 '</a>' +
                 '<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">' +
                     '<span class="navbar-toggler-icon"></span>' +

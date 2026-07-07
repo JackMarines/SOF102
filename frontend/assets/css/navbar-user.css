@@ -27,6 +27,21 @@
     color: #b388ff !important;
 }
 
+.custom-navbar .navbar-nav .nav-link::after{
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #b388ff;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    margin-top: 2px;
+}
+
+.custom-navbar .navbar-nav .nav-link:hover::after{
+    width: 100%;
+}
+
 .profile-btn{
     width: 42px;
     height: 42px;

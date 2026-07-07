@@ -27,8 +27,8 @@
 
         nav.innerHTML =
             '<div class="container">' +
-                '<a class="navbar-brand" href="/dashboard">' +
-                    '<img src="/frontend/assets/css/logo.png" class="logo" alt="Logo">' +
+'<a class="navbar-brand" href="/dashboard">' +
+                    '<img src="/frontend/assets/images/logo.png" class="logo" alt="Logo">' +
                 '</a>' +
                 '<div class="d-flex align-items-center d-lg-none ms-auto">' +
                     '<a href="/profile" class="profile-btn me-2">' +

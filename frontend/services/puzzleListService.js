@@ -1,4 +1,7 @@
-// current active filters
+// ===========================
+// PUZZLE LIST
+// ===========================
+
 let currentSearch = '';
 let currentDifficulty = '';
 
@@ -7,27 +10,24 @@ function updateDropdownText() {
     btn.textContent = currentDifficulty || "Difficulty";
 }
 
-// fetch puzzles with current filters, then render
 async function fetchPuzzles(page) {
+    showSpinner("puzzleList");
     const response = await getFilteredPuzzles(currentSearch, currentDifficulty, page, 6);
     renderPuzzles(response);
 }
 
-// search by title
 async function searchPuzzles() {
     const input = document.getElementById("input");
     currentSearch = input.value.trim();
     loadPuzzles(1);
 }
 
-// filter by difficulty
 function sortPuzzlesDifficulty(difficulty) {
     currentDifficulty = difficulty;
     updateDropdownText();
     loadPuzzles(1);
 }
 
-// clear difficulty filter
 function clearFilter() {
     currentDifficulty = '';
     updateDropdownText();
@@ -35,10 +35,12 @@ function clearFilter() {
 }
 
 async function renderPuzzles(response) {
+    hideSpinner("puzzleList");
+    if (!response || !response.data) return;
+
     const container = document.getElementById("puzzleList");
     container.innerHTML = '';
 
-    // render each puzzle row
     for (const puzzle of response.data) {
         const link = document.createElement("a");
         link.href = `/solve?id=${puzzle.id}`;
@@ -72,7 +74,6 @@ async function renderPuzzles(response) {
         container.appendChild(link);
     }
 
-    // pagination: sliding window of 3 page buttons
     const currentPage = response.pagination.page
     const totalPages = response.pagination.totalPages
 
@@ -84,7 +85,6 @@ async function renderPuzzles(response) {
         else start = Math.max(1, totalPages - 2);
     }
 
-    // build pagination buttons
     const paginationDiv = document.getElementById("pagination");
     paginationDiv.onclick = function (e) {
         const text = e.target.textContent;
@@ -130,9 +130,6 @@ async function renderPuzzles(response) {
     paginationDiv.append(last);
 }
 
-// orchestrator: load a page (keeps current filters)
 async function loadPuzzles(page = 1) {
     fetchPuzzles(page);
 }
-
-checkAuth().then(() => loadPuzzles());
