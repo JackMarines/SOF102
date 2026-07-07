@@ -1,0 +1,1 @@
+checkAuth().then(() => loadPuzzles());

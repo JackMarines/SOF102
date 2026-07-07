@@ -1,0 +1,2 @@
+initLoginForm();
+initRegisterForm();

@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Backend",
+      "type": "shell",
+      "command": "mvn clean package -f backend/pom.xml -DskipTests",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$maven"]
+    },
+    {
+      "label": "Run DevClimb (Cargo)",
+      "type": "shell",
+      "command": "mvn clean package cargo:run -f backend/pom.xml",
+      "group": "none",
+      "problemMatcher": ["$maven"]
+    }
+  ]
+}

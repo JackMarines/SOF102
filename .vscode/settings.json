@@ -1,0 +1,17 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "maven.executable.path": "mvn",
+  "files.encoding": "UTF-8",
+  "java.home": "C:\\Program Files\\Java\\jdk-25",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/target": true
+  },
+  "tomcat.port": 8080,
+  "tomcat.protocol": "http",
+  "tomcat.javaHome": "C:\\Program Files\\Java\\jdk-25",
+  "tomcat.catalinaHome": ""
+}

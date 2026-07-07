@@ -1,0 +1,20 @@
+// Gửi POST request lên backend
+// - body: object JS sẽ tự động chuyển thành JSON
+// - credentials: 'include' là bắt buộc để gửi session cookie
+async function apiPost(path, body) {
+  const res = await fetch(API_BASE + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',          // <-- quan trọng: gửi kèm cookie
+    body: JSON.stringify(body),
+  });
+  return res.json();                 // parse JSON response
+}
+
+// Gửi GET request (ví dụ: /me để kiểm tra đăng nhập)
+async function apiGet(path) {
+  const res = await fetch(API_BASE + path, {
+    credentials: 'include',          // <-- quan trọng: gửi kèm cookie
+  });
+  return res.json();
+}
