@@ -190,7 +190,33 @@ public class SubmissionController extends HttpServlet {
                 break;
             }
 
-            // Non-Accepted status (TLE, Runtime error, etc.)
+            // Wrong Answer — add to failed list with actual stdout
+            if (statusId == 4) {
+                String stdout = Judge0Util.base64Decode((String) r.get("stdout")).trim();
+                String expected = tc.getTcOutput().trim();
+
+                if (r.get("time") != null) {
+                    double t = Double.parseDouble((String) r.get("time"));
+                    if (t > maxTime) maxTime = t;
+                }
+                if (r.get("memory") != null) {
+                    long m = ((Number) r.get("memory")).longValue();
+                    if (m > maxMemory) maxMemory = m;
+                }
+
+                Map<String, Object> f = new HashMap<>();
+                f.put("input",    tc.getTcInput());
+                f.put("expected", expected);
+                f.put("got",      stdout);
+                f.put("time",     r.get("time"));
+                f.put("memory",   r.get("memory"));
+                f.put("stderr",   thisStderr);
+                f.put("status",   statusDesc);
+                failed.add(f);
+                continue;
+            }
+
+            // Other non-Accepted (TLE, Runtime error, etc.)
             if (statusId != 3) {
                 if (!error) {
                     error = true;

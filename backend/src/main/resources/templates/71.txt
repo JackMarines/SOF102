@@ -6,6 +6,6 @@ if __name__ == '__main__':
     args = data if isinstance(data, list) else [data]
     result = {FUNCT}(*args)
     if result is not None:
-        print(json.dumps(result))
+        print(json.dumps(result, separators=(',', ':')))
     elif args:
         print(json.dumps(args[0]))
