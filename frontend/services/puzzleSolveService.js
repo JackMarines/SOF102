@@ -64,65 +64,97 @@ function stopTimer() {
 // JUDGE
 // ===========================
 
-function runFakeJudge() {
+let puzzleIdGlobal = null;
+let puzzleFuncName = null;
+let puzzleLangId = 1;
+
+async function handleSubmit() {
     const submitBtn = document.getElementById("submitBtn");
     const statusText = document.getElementById("statusText");
     const passResult = document.getElementById("passResult");
     const testCases = document.getElementById("testCases");
 
-    const pass = Math.random() > 0.5;
-
-    if (pass) {
-        const params = new URLSearchParams(window.location.search);
-        localStorage.removeItem("puzzle_code_" + params.get("id"));
-
-        statusText.textContent = "Accepted";
-
-        statusText.className = "status success";
-
-        passResult.textContent = "true";
-
-        passResult.style.color = "#4ade80";
-
-    }
-
-    else {
-
-        statusText.textContent = "Failed";
-
+    if (!puzzleIdGlobal || !puzzleFuncName) {
+        statusText.textContent = "Error: Puzzle not loaded";
         statusText.className = "status fail";
-
-        passResult.textContent = "false";
-
-        passResult.style.color = "#ef4444";
-
+        submitBtn.disabled = false;
+        return;
     }
 
-    testCases.innerHTML = "";
+    const body = {
+        puz_id: parseInt(puzzleIdGlobal),
+        lang_id: puzzleLangId,
+        user_code: typeof window.getEditorCode === 'function' ? window.getEditorCode() : '',
+        function_name: puzzleFuncName
+    };
 
-    for (let i = 1; i <= 5; i++) {
+    var result = await apiPost('/submit', body);
 
-        const ok = pass || Math.random() > 0.45;
+    statusText.className = '';
 
-        const div = document.createElement("div");
+    if (result.error) {
+        statusText.textContent = 'Error';
+        statusText.className = 'status fail';
+        passResult.textContent = '0/0';
+        var html = '<p class="placeholder">' + (result.errorMsg || result.error) + '</p>';
+        if (result.compile_output) {
+            html += '<hr><strong>Compiler Output:</strong><pre>'
+                  + result.compile_output + '</pre>';
+        }
+        if (result.stderr) {
+            html += '<hr><strong>Stderr:</strong><pre>'
+                  + result.stderr + '</pre>';
+        }
+        testCases.innerHTML = html;
+        submitBtn.disabled = false;
+        return;
+    }
 
-        div.className = "test-item";
+    passResult.textContent = result.testpassed + '/' + result.testcount;
+    statusText.textContent = result.puzzlepass ? 'Accepted' : 'Failed';
+    statusText.className = result.puzzlepass ? 'status success' : 'status fail';
 
-        div.innerHTML = `
-            <strong>Testcase ${i}</strong><br>
-            Result :
-            <span style="color:${ok ? '#4ade80' : '#ef4444'}">
-                ${ok ? 'PASS' : 'FAIL'}
-            </span>
-        `;
+    var html = '';
 
-        testCases.appendChild(div);
+    if (result.time || result.memory) {
+        html += '<div class="execution-stats">'
+              + '<span>Time: ' + (result.time || 0) + 's</span>'
+              + '<span>Memory: ' + (result.memory || 0) + ' KB</span>'
+              + '</div>';
+    }
 
+    if (result.testfailed && result.testfailed.length > 0) {
+        html += '<hr><strong>Failed Test Cases:</strong>';
+        result.testfailed.forEach(function(f) {
+            html += '<div class="testcase-row failed">'
+                  + '<div>Input: ' + f.input + '</div>'
+                  + '<div>Expected: ' + f.expected + '</div>'
+                  + '<div>Got: ' + f.got + '</div>'
+                  + (f.time ? '<div>Time: ' + f.time + 's</div>' : '')
+                  + (f.memory ? '<div>Memory: ' + f.memory + ' KB</div>' : '')
+                  + (f.stderr ? '<div class="stderr">Stderr: ' + f.stderr + '</div>' : '')
+                  + '</div>';
+        });
+    }
+
+    if (result.compile_output) {
+        html += '<hr><strong>Compiler Output:</strong><pre>'
+              + result.compile_output + '</pre>';
+    }
+
+    if (result.stderr) {
+        html += '<hr><strong>Stderr:</strong><pre>'
+              + result.stderr + '</pre>';
+    }
+
+    testCases.innerHTML = html
+        || '<p class="placeholder">All test cases passed!</p>';
+
+    if (result.puzzlepass) {
+        localStorage.removeItem("puzzle_code_" + puzzleIdGlobal);
     }
 
     submitBtn.disabled = false;
-
-
 }
 
 // ===========================
@@ -134,10 +166,21 @@ checkAuth();
 async function loadPuzzle(setLanguage, setCode) {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
+    puzzleIdGlobal = id;
+    puzzleFuncName = null;
+    puzzleLangId = 1;
 
     showSpinner("puzzlePanel");
 
-    const puzzle = await getPuzzleById(id)
+    const puzzle = await getPuzzleById(id);
+    puzzleFuncName = puzzle.functionName;
+    var lang = (puzzle.language || '').toLowerCase();
+    if (lang.includes('python')) puzzleLangId = 1;
+    else if (lang.includes('javascript') || lang.includes('node')) puzzleLangId = 2;
+    else if (lang.includes('php')) puzzleLangId = 3;
+    else if (lang.includes('java')) puzzleLangId = 4;
+    else if (lang.includes('c++') || lang.includes('cpp')) puzzleLangId = 5;
+    else if (lang.includes('c ')) puzzleLangId = 6;
     const container = document.getElementById("puzzlePanel");
     hideSpinner("puzzlePanel");
 
@@ -202,12 +245,11 @@ function initSubmit() {
 
         submitBtn.disabled = true;
 
-
         statusText.className = "status pending";
 
         statusText.textContent = "Running";
 
-        setTimeout(runFakeJudge, 1200);
+        handleSubmit();
 
     });
 }

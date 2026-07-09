@@ -1,0 +1,11 @@
+import json
+import sys
+
+if __name__ == '__main__':
+    data = json.loads(sys.stdin.read())
+    args = data if isinstance(data, list) else [data]
+    result = {FUNCT}(*args)
+    if result is not None:
+        print(json.dumps(result))
+    elif args:
+        print(json.dumps(args[0]))

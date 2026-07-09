@@ -8,6 +8,10 @@
     <persistence-unit name="DevClimb" transaction-type="RESOURCE_LOCAL">
         <class>entity.Team</class>
         <class>entity.User</class>
+        <class>entity.Language</class>
+        <class>entity.Puzzle</class>
+        <class>entity.Testcase</class>
+        <class>entity.Progress</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
@@ -20,7 +24,7 @@
                 value="DB_PASSWOR" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="validate" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="hibernate.dialect"
                 value="org.hibernate.dialect.MySQLDialect" />
         </properties>
