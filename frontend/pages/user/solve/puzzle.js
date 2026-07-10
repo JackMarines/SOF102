@@ -9,6 +9,8 @@ console.log(getCode());
 
 const puzzleId = new URLSearchParams(window.location.search).get("id");
 
+window.getEditorCode = getCode;
+
 codeEditor.addEventListener("input", () => {
 
     startTimer();

@@ -1,0 +1,9 @@
+<?php
+$data = json_decode(file_get_contents('php://stdin'), true);
+$args = is_array($data) ? $data : [$data];
+$result = {FUNCT}(...$args);
+if ($result !== null) {
+    echo json_encode($result);
+} elseif (!empty($args)) {
+    echo json_encode($args[0]);
+}
