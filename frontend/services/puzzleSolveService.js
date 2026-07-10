@@ -91,70 +91,153 @@ async function handleSubmit() {
     var result = await apiPost('/submit', body);
 
     statusText.className = '';
+    testCases.innerHTML = '';
 
+    // ---- Error path ----
     if (result.error) {
         statusText.textContent = 'Error';
         statusText.className = 'status fail';
         passResult.textContent = '0/0';
-        var html = '<p class="placeholder">' + (result.errorMsg || result.error) + '</p>';
+
+        const p = document.createElement('p');
+        p.className = 'placeholder';
+        p.textContent = result.errorMsg || result.error;
+        testCases.appendChild(p);
+
         if (result.compile_output) {
-            html += '<hr><strong>Compiler Output:</strong><pre>'
-                  + result.compile_output + '</pre>';
+            testCases.appendChild(document.createElement('hr'));
+            const strong = document.createElement('strong');
+            strong.textContent = 'Compiler Output:';
+            testCases.appendChild(strong);
+            const pre = document.createElement('pre');
+            pre.textContent = result.compile_output;
+            testCases.appendChild(pre);
         }
+
         if (result.stderr) {
-            html += '<hr><strong>Stderr:</strong><pre>'
-                  + result.stderr + '</pre>';
+            testCases.appendChild(document.createElement('hr'));
+            const strong = document.createElement('strong');
+            strong.textContent = 'Stderr:';
+            testCases.appendChild(strong);
+            const pre = document.createElement('pre');
+            pre.textContent = result.stderr;
+            testCases.appendChild(pre);
         }
-        testCases.innerHTML = html;
+
         submitBtn.disabled = false;
         return;
     }
 
+    // ---- Success / failure path ----
     passResult.textContent = result.testpassed + '/' + result.testcount;
     statusText.textContent = result.puzzlepass ? 'Accepted' : 'Failed';
     statusText.className = result.puzzlepass ? 'status success' : 'status fail';
 
-    var html = '';
-
+    // Execution stats
     if (result.time || result.memory) {
-        html += '<div class="execution-stats">'
-              + '<span>Time: ' + (result.time || 0) + 's</span>'
-              + '<span>Memory: ' + (result.memory || 0) + ' KB</span>'
-              + '</div>';
+        const stats = document.createElement('div');
+        stats.className = 'execution-stats';
+
+        const timeSpan = document.createElement('span');
+        timeSpan.textContent = 'Time: ' + (result.time || 0) + 's';
+
+        const memorySpan = document.createElement('span');
+        memorySpan.textContent = 'Memory: ' + (result.memory || 0) + ' KB';
+
+        stats.append(timeSpan, memorySpan);
+        testCases.appendChild(stats);
     }
 
+    // Failed test cases
     if (result.testfailed && result.testfailed.length > 0) {
-        html += '<hr><strong>Failed Test Cases:</strong>';
+        testCases.appendChild(document.createElement('hr'));
+        const strong = document.createElement('strong');
+        strong.textContent = 'Failed Test Cases:';
+        testCases.appendChild(strong);
+
         result.testfailed.forEach(function(f) {
-            html += '<div class="testcase-row failed">'
-                  + '<div>Input: ' + f.input + '</div>'
-                  + '<div>Expected: ' + f.expected + '</div>'
-                  + '<div>Got: ' + f.got + '</div>'
-                  + (f.time ? '<div>Time: ' + f.time + 's</div>' : '')
-                  + (f.memory ? '<div>Memory: ' + f.memory + ' KB</div>' : '')
-                  + (f.stderr ? '<div class="stderr">Stderr: ' + f.stderr + '</div>' : '')
-                  + '</div>';
+            const div = document.createElement('div');
+            div.className = 'testcase-row failed';
+
+            const input = document.createElement('div');
+            input.textContent = 'Input: ' + f.input;
+            div.appendChild(input);
+
+            const expected = document.createElement('div');
+            expected.textContent = 'Expected: ' + f.expected;
+            div.appendChild(expected);
+
+            const got = document.createElement('div');
+            got.textContent = 'Got: ' + f.got;
+            div.appendChild(got);
+
+            if (f.status) {
+                const statusDiv = document.createElement('div');
+                statusDiv.textContent = 'Status: ' + f.status;
+                div.appendChild(statusDiv);
+            }
+
+            if (f.time) {
+                const timeDiv = document.createElement('div');
+                timeDiv.textContent = 'Time: ' + f.time + 's';
+                div.appendChild(timeDiv);
+            }
+
+            if (f.memory) {
+                const memoryDiv = document.createElement('div');
+                memoryDiv.textContent = 'Memory: ' + f.memory + ' KB';
+                div.appendChild(memoryDiv);
+            }
+
+            if (f.stderr) {
+                const stderrDiv = document.createElement('div');
+                stderrDiv.className = 'stderr';
+                stderrDiv.textContent = 'Stderr: ' + f.stderr;
+                div.appendChild(stderrDiv);
+            }
+
+            testCases.appendChild(div);
         });
     }
 
+    // Compiler output
     if (result.compile_output) {
-        html += '<hr><strong>Compiler Output:</strong><pre>'
-              + result.compile_output + '</pre>';
+        testCases.appendChild(document.createElement('hr'));
+        const strong = document.createElement('strong');
+        strong.textContent = 'Compiler Output:';
+        testCases.appendChild(strong);
+        const pre = document.createElement('pre');
+        pre.textContent = result.compile_output;
+        testCases.appendChild(pre);
     }
 
+    // Stderr
     if (result.stderr) {
-        html += '<hr><strong>Stderr:</strong><pre>'
-              + result.stderr + '</pre>';
+        testCases.appendChild(document.createElement('hr'));
+        const strong = document.createElement('strong');
+        strong.textContent = 'Stderr:';
+        testCases.appendChild(strong);
+        const pre = document.createElement('pre');
+        pre.textContent = result.stderr;
+        testCases.appendChild(pre);
     }
 
-    testCases.innerHTML = html
-        || '<p class="placeholder">All test cases passed!</p>';
+    // Nothing added → all passed
+    if (testCases.children.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'placeholder';
+        p.textContent = 'All test cases passed!';
+        testCases.appendChild(p);
+    }
 
     if (result.puzzlepass) {
         localStorage.removeItem("puzzle_code_" + puzzleIdGlobal);
     }
 
     submitBtn.disabled = false;
+
+    const resultsTab = document.querySelector('.solve-tab[data-tab="results"]');
+    if (resultsTab) resultsTab.click();
 }
 
 // ===========================
@@ -178,9 +261,7 @@ async function loadPuzzle(setLanguage, setCode) {
     if (lang.includes('python')) puzzleLangId = 1;
     else if (lang.includes('javascript') || lang.includes('node')) puzzleLangId = 2;
     else if (lang.includes('php')) puzzleLangId = 3;
-    else if (lang.includes('java')) puzzleLangId = 4;
-    else if (lang.includes('c++') || lang.includes('cpp')) puzzleLangId = 5;
-    else if (lang.includes('c ')) puzzleLangId = 6;
+
     const container = document.getElementById("puzzlePanel");
     hideSpinner("puzzlePanel");
 
@@ -229,6 +310,31 @@ async function loadPuzzle(setLanguage, setCode) {
     } else {
         setCode(await initSignature(puzzle.language, puzzle.functionName));
     }
+}
+
+// ===========================
+// SOLVE TABS
+// ===========================
+
+function initSolveTabs() {
+    const tabs = document.querySelectorAll('.solve-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.solve-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.solve-tab-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            const target = tab.dataset.tab;
+            const content = document.querySelector(`[data-tab-content="${target}"]`);
+            if (content) content.classList.add('active');
+            if (target === 'results') {
+                const editor = document.querySelector('.cm-editor');
+                if (editor) editor.style.pointerEvents = 'none';
+            } else {
+                const editor = document.querySelector('.cm-editor');
+                if (editor) editor.style.pointerEvents = '';
+            }
+        });
+    });
 }
 
 // ===========================
@@ -290,48 +396,6 @@ function initVerticalResize() {
 
         topPanel.style.gridTemplateColumns =
             `${left}px 6px auto`;
-
-    });
-}
-
-// ===========================
-// RESIZE TOP / BOTTOM
-// ===========================
-
-function initHorizontalResize() {
-    const resizer = document.getElementById("horizontalResizer");
-    const workspace = document.querySelector(".workspace");
-
-    let isHorizontal = false;
-
-    resizer.addEventListener("mousedown", () => {
-
-        isHorizontal = true;
-
-    });
-
-    document.addEventListener("mouseup", () => {
-
-        isHorizontal = false;
-
-    });
-
-    document.addEventListener("mousemove", (e) => {
-
-        if (!isHorizontal) return;
-
-        const top = workspace.getBoundingClientRect().top;
-
-        const totalHeight = workspace.offsetHeight;
-
-        let h = e.clientY - top;
-
-        h = Math.max(220, h);
-
-        h = Math.min(totalHeight - 180, h);
-
-        workspace.style.gridTemplateRows =
-            `${h}px 6px auto`;
 
     });
 }
