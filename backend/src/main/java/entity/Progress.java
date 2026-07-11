@@ -17,8 +17,11 @@ public class Progress {
     @Column(name = "puz_id")
     private Integer puzId;
 
+    @Column(name = "prog_date")
+    private Timestamp progDate;
+
     @Column(name = "prog_time")
-    private Timestamp progTime;
+    private Integer progTime;
 
     public Progress() {}
 
@@ -28,6 +31,8 @@ public class Progress {
     public void setUserId(Integer userId) { this.userId = userId; }
     public Integer getPuzId() { return puzId; }
     public void setPuzId(Integer puzId) { this.puzId = puzId; }
-    public Timestamp getProgTime() { return progTime; }
-    public void setProgTime(Timestamp progTime) { this.progTime = progTime; }
+    public Timestamp getProgDate() { return progDate; }
+    public void setProgDate(Timestamp progDate) { this.progDate = progDate; }
+    public Integer getProgTime() { return progTime; }
+    public void setProgTime(Integer progTime) { this.progTime = progTime; }
 }

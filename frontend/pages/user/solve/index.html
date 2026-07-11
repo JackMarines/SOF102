@@ -40,103 +40,67 @@
 
             <section class="panel puzzle-panel" id="puzzlePanel">
 
-               
-
             </section>
 
             <!-- RESIZER -->
 
             <div id="verticalResizer" class="vertical-resizer"></div>
 
-            <!-- RIGHT PANEL -->
-            <section class="panel editor-panel">
+            <!-- RIGHT TABBED PANEL -->
+            <div class="right-tabbed">
 
-                <div class="panel-header editor-header">
-
-                    <h3>Code Editor</h3>
-
-                    <button id="submitBtn" class="btn-submit ms-auto">
-                        <span><i class="bi bi-play-fill"></i></span>
-                    </button>
-
-                    <div class="timer">
-                        Time:
-                        <span id="timer">00:00</span>
+                <!-- Tab bar -->
+                <div class="solve-tabs panel-header">
+                    <div class="solve-tabs-nav">
+                        <button class="solve-tab active" data-tab="editor">Code Editor</button>
+                        <button class="solve-tab" data-tab="results">Test Results</button>
                     </div>
-
+                    <div class="solve-tabs-actions">
+                        <div class="timer">
+                            Time:
+                            <span id="timer">00:00</span>
+                        </div>
+                        <button id="submitBtn" class="btn-submit">
+                            <span><i class="bi bi-play-fill"></i></span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="editor-body panel-content">
-                    <div id="codeEditor"></div>
-                    <!-- <textarea id="codeEditor">
-public class Solution {
+                <!-- Editor content -->
+                <section class="panel editor-panel solve-tab-content active" data-tab-content="editor">
+                    <div class="editor-body panel-content">
+                        <div id="codeEditor"></div>
+                    </div>
+                </section>
 
-    public int[] twoSum(int[] nums, int target) {
+                <!-- Result content -->
+                <section class="panel result-panel solve-tab-content" data-tab-content="results">
 
-    }
+                    <div class="panel-content">
+                        <div class="status-row">
+                            <span>Status</span>
+                            <span id="statusText" class="pending">
+                                Waiting...
+                            </span>
+                        </div>
+                        <div class="status-row">
+                            <span>Pass</span>
+                            <span id="passResult">
+                                false
+                            </span>
+                        </div>
+                        <hr>
+                        <div id="testCases">
+                            <p class="placeholder">
+                                Press Submit to run testcases...
+                            </p>
+                        </div>
+                    </div>
+                </section>
 
-}
-</textarea> -->
-
-                </div>
-
-
-
-            </section>
+            </div>
 
         </div>
-
-        <!-- Horizontal Resizer -->
-
-        <div class="horizontal-resizer" id="horizontalResizer"></div>
-
-        <!-- ===================== RESULT ===================== -->
-
-        <section class="panel result-panel">
-
-            <div class="panel-header">
-
-                <h3>Test Results</h3>
-
-            </div>
-
-            <div class="panel-content">
-
-                <div class="status-row">
-
-                    <span>Status</span>
-
-                    <span id="statusText" class="pending">
-                        Waiting...
-                    </span>
-
-                </div>
-
-                <div class="status-row">
-
-                    <span>Pass</span>
-
-                    <span id="passResult">
-                        false
-                    </span>
-
-                </div>
-
-                <hr>
-
-                <div id="testCases">
-
-                    <p class="placeholder">
-
-                        Press Submit to run testcases...
-
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
 
     </div>
     <script src="/frontend/components/navbar-user.js"></script>
@@ -147,6 +111,7 @@ public class Solution {
     <script src="/frontend/services/puzzleService.js"></script>
     <script src="/frontend/services/authService.js"></script>
     <script src="/frontend/services/puzzleSolveService.js"></script>
+    <script src="/frontend/services/submissionService.js"></script>
     <script src="puzzle.js" type="module"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

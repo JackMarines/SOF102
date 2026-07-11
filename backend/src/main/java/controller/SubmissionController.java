@@ -79,6 +79,8 @@ public class SubmissionController extends HttpServlet {
         int langId = Integer.parseInt(body.get("lang_id").toString());
         String userCode = (String) body.get("user_code");
         String funcName = (String) body.get("function_name");
+        Integer progTime = body.get("prog_time") != null
+            ? Integer.parseInt(body.get("prog_time").toString()) : null;
 
         int judge0Lang = JUDGE0_LANG_MAP.getOrDefault(langId, 71);
 
@@ -164,15 +166,18 @@ public class SubmissionController extends HttpServlet {
         String errorMsg = "";
         int passed = 0;
         List<Map<String, Object>> failed = new ArrayList<>();
+        List<Map<String, Object>> testcaseResults = new ArrayList<>();
         String compileOutput = "";
         String globalStderr = "";
         double maxTime = 0;
         long maxMemory = 0;
+        int testIdx = 0;
 
         for (Map<String, Object> r : subs) {
             String token = (String) r.get("token");
             Testcase tc = tokenToTestcase.get(token);
             if (tc == null) continue;
+            testIdx++;
 
             @SuppressWarnings("unchecked")
             Map<String, Object> status = (Map<String, Object>) r.get("status");
@@ -182,8 +187,16 @@ public class SubmissionController extends HttpServlet {
             String thisStderr = Judge0Util.base64Decode((String) r.get("stderr"));
             String thisCompile = Judge0Util.base64Decode((String) r.get("compile_output"));
 
+            Map<String, Object> tr = new HashMap<>();
+            tr.put("index", testIdx);
+            tr.put("status", statusDesc);
+            tr.put("time", r.get("time"));
+            tr.put("memory", r.get("memory"));
+
             // Compile error — stop immediately
             if (statusId == 6) {
+                tr.put("passed", false);
+                testcaseResults.add(tr);
                 error = true;
                 compileOutput = !thisCompile.isEmpty() ? thisCompile : "Compile error";
                 errorMsg = compileOutput;
@@ -204,6 +217,9 @@ public class SubmissionController extends HttpServlet {
                     if (m > maxMemory) maxMemory = m;
                 }
 
+                tr.put("passed", false);
+                testcaseResults.add(tr);
+
                 Map<String, Object> f = new HashMap<>();
                 f.put("input",    tc.getTcInput());
                 f.put("expected", expected);
@@ -218,6 +234,8 @@ public class SubmissionController extends HttpServlet {
 
             // Other non-Accepted (TLE, Runtime error, etc.)
             if (statusId != 3) {
+                tr.put("passed", false);
+                testcaseResults.add(tr);
                 if (!error) {
                     error = true;
                     errorMsg = statusDesc;
@@ -239,7 +257,11 @@ public class SubmissionController extends HttpServlet {
                 if (m > maxMemory) maxMemory = m;
             }
 
-            if (stdout.equals(expected)) {
+            boolean thisPassed = stdout.equals(expected);
+            tr.put("passed", thisPassed);
+            testcaseResults.add(tr);
+
+            if (thisPassed) {
                 passed++;
             } else {
                 Map<String, Object> f = new HashMap<>();
@@ -256,13 +278,14 @@ public class SubmissionController extends HttpServlet {
 
         boolean puzzlePass = failed.isEmpty() && !error;
         if (puzzlePass) {
-            progressDao.upsert(user.getUserId(), puzId);
+            progressDao.upsert(user.getUserId(), puzId, progTime);
         }
 
         Map<String, Object> response = new HashMap<>();
         response.put("testcount",    testcases.size());
         response.put("testpassed",   passed);
         response.put("testfailed",   failed);
+        response.put("testcases",    testcaseResults);
         response.put("puzzlepass",   puzzlePass);
         response.put("error",        error);
         response.put("errorMsg",     errorMsg);
