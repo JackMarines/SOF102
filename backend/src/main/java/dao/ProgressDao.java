@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class ProgressDao {
-    public void upsert(int userId, int puzId) {
+    public void upsert(int userId, int puzId, Integer progTime) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             TypedQuery<Progress> q = em.createQuery(
@@ -24,11 +24,13 @@ public class ProgressDao {
                 Progress p = new Progress();
                 p.setUserId(userId);
                 p.setPuzId(puzId);
-                p.setProgTime(new Timestamp(System.currentTimeMillis()));
+                p.setProgDate(new Timestamp(System.currentTimeMillis()));
+                p.setProgTime(progTime);
                 em.persist(p);
             } else {
                 Progress p = existing.get(0);
-                p.setProgTime(new Timestamp(System.currentTimeMillis()));
+                p.setProgDate(new Timestamp(System.currentTimeMillis()));
+                p.setProgTime(progTime);
                 em.merge(p);
             }
             em.getTransaction().commit();
