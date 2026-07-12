@@ -1,0 +1,343 @@
+/* ===========================
+   PUZZLE SOLVE WORKSPACE
+   =========================== */
+
+html,
+body.solve-page{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body.solve-page{
+    padding-top: 80px;
+}
+
+.workspace{
+    height: calc(100vh - 80px);
+    display: grid;
+    grid-template-rows: 1fr;
+}
+
+.top-panel{
+    display: grid;
+    grid-template-columns: 35% 6px 65%;
+    overflow: hidden;
+}
+
+.panel{
+    background: #0d0819;
+    border: 1px solid #2f2544;
+    overflow: hidden;
+}
+
+.panel-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #2f2544;
+    max-height: 56px;
+}
+
+.panel-header h2,
+.panel-header h3{
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.panel-content{
+    height: 100%;
+    padding: 22px;
+    overflow: auto;
+    color: #e8e8e8;
+}
+
+.panel-content p{
+    white-space: pre-wrap;
+    color: #dddddd;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+.panel-content h5{
+    color: #b388ff;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.panel-content li{
+    color: #dddddd;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.puzzle-panel{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.puzzle-panel .panel-content{
+    flex: 1;
+    min-height: 0;
+}
+
+.right-tabbed{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #2f2544;
+    background: #0d0819;
+}
+
+.right-tabbed .panel{
+    border: none;
+}
+
+.solve-tabs{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0d0819;
+    border-bottom: 1px solid #2f2544;
+    flex-shrink: 0;
+}
+
+.solve-tabs-nav{
+    display: flex;
+}
+
+.solve-tabs-actions{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 20px;
+}
+
+.solve-tab{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    border-bottom: 2px solid transparent;
+    transition: .2s;
+}
+
+.solve-tab + .solve-tab{
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+.solve-tab:hover{
+    color: #d8cfff;
+}
+
+.solve-tab.active{
+    color: #8b5cf6;
+    border-bottom-color: #8b5cf6;
+}
+
+.solve-tab-content{
+    display: none;
+    flex: 1;
+    overflow: auto;
+}
+
+.solve-tab-content.active{
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.editor-panel{
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.editor-body{
+    flex: 1;
+    padding: 18px;
+    min-height: 0;
+}
+
+#codeEditor{
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    resize: none;
+    outline: none;
+    border: 1px solid #2f2544;
+    border-radius: 8px;
+    background: #12101d;
+    color: #ffffff;
+    font-family: Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 18px;
+}
+
+#codeEditor:focus{
+    border-color: #8b5cf6;
+}
+
+#codeEditor .cm-editor{
+    height: 100%;
+    background-color: #050014;
+    border-radius: 8px;
+}
+
+#codeEditor .cm-gutters{
+    background: #171127;
+    color: #d8cfff;
+    border: 1px solid #2f2544;
+}
+
+#codeEditor .cm-activeLineGutter{
+    background: #d8cfff;
+    color: #171127;
+}
+
+#codeEditor .cm-cursor{
+    border-left-color: #d8cfff;
+}
+
+.cm-content{
+    font-family: "JetBrains Mono", monospace;
+}
+
+.cm-selectionBackground{
+    background-color: rgba(139, 92, 246, 0.35) !important;
+}
+
+.btn-submit{
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: .3s;
+    line-height: 1;
+}
+
+.btn-submit:hover{
+    background: #a855f7;
+}
+
+.timer{
+    font-size: 16px;
+    color: #d6d6d6;
+    font-weight: 600;
+}
+
+#timer{
+    color: #8b5cf6;
+}
+
+.result-panel{
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+.result-panel .panel-header{
+    flex-shrink: 0;
+}
+
+.result-panel .panel-content{
+    flex: 1;
+    min-height: 0;
+}
+
+.status-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+#testCases{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vertical-resizer{
+    background: #2f2544;
+    cursor: col-resize;
+    transition: .2s;
+}
+
+.vertical-resizer:hover{
+    background: #8b5cf6;
+}
+
+
+/* Animations */
+.puzzle-panel,
+.editor-panel,
+.result-panel{
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.btn-submit:active{
+    transform: scale(0.96);
+}
+
+.timer.running #timer{
+    animation: timerPulse 1.5s ease-in-out infinite;
+}
+
+
+/* Responsive */
+@media(max-width: 991px){
+    body{
+        overflow: auto;
+    }
+
+    .workspace{
+        display: block;
+        height: auto;
+    }
+
+    .top-panel{
+        display: block;
+    }
+
+    .panel{
+        height: 600px;
+        margin-bottom: 20px;
+    }
+
+    .right-tabbed{
+        height: 600px;
+        margin-bottom: 20px;
+    }
+
+    .solve-tab-content.active{
+        height: 100%;
+    }
+
+    .vertical-resizer{
+        display: none;
+    }
+}
