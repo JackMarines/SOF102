@@ -100,12 +100,10 @@ async function handleSubmit() {
         passResult.textContent = '0/0';
 
         const p = document.createElement('p');
-        p.className = 'placeholder';
         p.textContent = result.errorMsg || result.error;
         testCases.appendChild(p);
 
         if (result.compile_output) {
-            testCases.appendChild(document.createElement('hr'));
             const strong = document.createElement('strong');
             strong.textContent = 'Compiler Output:';
             testCases.appendChild(strong);
@@ -115,7 +113,6 @@ async function handleSubmit() {
         }
 
         if (result.stderr) {
-            testCases.appendChild(document.createElement('hr'));
             const strong = document.createElement('strong');
             strong.textContent = 'Stderr:';
             testCases.appendChild(strong);
@@ -152,7 +149,6 @@ async function handleSubmit() {
 
     // Test cases
     if (result.testcases) {
-        testCases.appendChild(document.createElement('hr'));
         const heading = document.createElement('strong');
         heading.textContent = 'Test Cases';
         testCases.appendChild(heading);
@@ -186,7 +182,6 @@ async function handleSubmit() {
 
     // Compiler output
     if (result.compile_output) {
-        testCases.appendChild(document.createElement('hr'));
         const strong = document.createElement('strong');
         strong.textContent = 'Compiler Output:';
         testCases.appendChild(strong);
@@ -197,7 +192,6 @@ async function handleSubmit() {
 
     // Stderr
     if (result.stderr) {
-        testCases.appendChild(document.createElement('hr'));
         const strong = document.createElement('strong');
         strong.textContent = 'Stderr:';
         testCases.appendChild(strong);
@@ -209,7 +203,6 @@ async function handleSubmit() {
     // Nothing added -> all passed
     if (testCases.children.length === 0) {
         const p = document.createElement('p');
-        p.className = 'placeholder';
         p.textContent = 'All test cases passed!';
         testCases.appendChild(p);
     }
