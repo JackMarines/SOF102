@@ -10,6 +10,16 @@ body{
     background-color: #070311;
     font-family: 'Poppins', sans-serif;
     color: white;
+    overflow-x: hidden;
+}
+
+html{
+    overflow-x:hidden;
+}
+
+img{
+    max-width:100%;
+    height:auto;
 }
 
 a{
@@ -303,31 +313,40 @@ pre{
 }
 
 .search-box{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+    display:flex;
+    width:100%;
+    margin-bottom:10px;
 }
 
 .search-box input{
-    width: 95%;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border: 1px solid #3b2a63;
-    background: #120924;
-    color: white;
+    flex:1;
+    min-width:0;
+
+    padding:10px 15px;
+
+    border-radius:8px 0 0 8px;
+
+    border:1px solid #3b2a63;
+
+    background:#120924;
+
+    color:white;
 }
 
 .search-box button{
-    width: 5%;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    border: 1px solid #3b2a63;
-    background: #120924;
-    color: white;
+
+    width:55px;
+
+    flex-shrink:0;
+
+    border-radius:0 8px 8px 0;
+
+    border:1px solid #3b2a63;
+
+    background:#120924;
+
+    color:white;
+
 }
 
 .input-group:focus{
@@ -555,4 +574,98 @@ footer{
     .custom-btn{
         width: 100%;
     }
+}
+
+/* ===========================
+   MOBILE FIX
+=========================== */
+
+@media (max-width:768px){
+
+.container{
+
+    padding-left:15px;
+    padding-right:15px;
+
+}
+
+.table-header,
+.puzzle-item{
+
+    grid-template-columns:
+    45px
+    1fr
+    75px
+    70px;
+
+    gap:8px;
+
+    font-size:13px;
+
+    padding:12px;
+
+}
+
+.dropdown{
+
+    width:100%;
+
+}
+
+.dropdown-toggle{
+
+    width:100%;
+
+}
+
+.hero{
+
+    margin-top:90px;
+
+}
+
+.hero-title{
+
+    font-size:38px;
+
+}
+
+.hero-text{
+
+    font-size:16px;
+
+}
+
+.stat-card,
+.feature-card,
+.glass-box{
+
+    padding:20px;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.page-title{
+
+    margin-top:110px;
+
+    font-size:28px;
+
+}
+
+.auth-card{
+
+    padding:20px;
+
+}
+
+footer{
+
+    padding:20px;
+
+}
+
 }
