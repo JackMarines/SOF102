@@ -1,55 +1,63 @@
-.navbar{
-    border-bottom: 1px solid #241b36;
-    background-color: rgba(7,3,17,0.95);
+/* --- Guest Navbar --- */
+
+.navbar {
+    border-bottom: 1px solid rgba(67, 70, 84, 0.3);
+    background: rgba(5, 20, 36, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
-.navbar-brand{
-    font-size: 30px;
+.navbar-brand {
+    font-size: 28px;
     font-weight: 700;
 }
 
-.nav-link{
-    color: #c7bddf !important;
+.nav-link {
+    color: #c4c5d6 !important;
     margin-left: 15px;
-    transition: 0.3s;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
-.nav-link:hover{
-    color: #b388ff !important;
+.nav-link:hover {
+    color: #b5c4ff !important;
 }
 
-.nav-link.current-link{
-    color: #b388ff !important;
+.nav-link.current-link {
+    color: #b5c4ff !important;
 }
 
-.nav-link.current-link:hover{
-    color: #c7bddf !important;
+.nav-link.current-link:hover {
+    color: #dce1ff !important;
 }
 
-.nav-link::after{
+.nav-link::after {
     content: '';
     display: block;
     width: 0;
     height: 2px;
-    background: #b388ff;
+    background: #648aff;
     border-radius: 2px;
     transition: width 0.3s ease;
     margin-top: 2px;
 }
 
-.nav-link:hover::after{
+.nav-link:hover::after {
     width: 100%;
 }
 
-@media(max-width:768px){
-    .navbar-collapse{
-        background: #120c22;
+@media (max-width: 768px) {
+    .navbar-collapse {
+        background: #122131;
         margin-top: 15px;
         padding: 15px;
-        border-radius: 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(67, 70, 84, 0.3);
     }
 
-    .nav-link{
+    .nav-link {
         margin: 10px 0;
     }
 }

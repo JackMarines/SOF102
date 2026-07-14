@@ -13,8 +13,8 @@
         .spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid #2b2142;
-            border-top: 4px solid #b388ff;
+            border: 4px solid #434654;
+            border-top: 4px solid #648aff;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -25,15 +25,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(10, 10, 20, 0.6);
+            background: rgba(5, 20, 36, 0.6);
             backdrop-filter: blur(2px);
         }
         .spinner-overlay .spinner {
             width: 48px;
             height: 48px;
             border-width: 5px;
-            border-color: #1e1e2e;
-            border-top-color: #4ade80;
+            border-color: #0d1c2d;
+            border-top-color: #648aff;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }

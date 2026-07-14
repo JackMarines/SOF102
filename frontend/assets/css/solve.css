@@ -1,343 +1,357 @@
 /* ===========================
    PUZZLE SOLVE WORKSPACE
+   Stitch navy + blue palette
    =========================== */
+.dropdown-menu {
+    z-index: 3999;
+}
+
+
 
 html,
-body.solve-page{
+body.solve-page {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-body.solve-page{
+body.solve-page {
     padding-top: 80px;
 }
 
-.workspace{
+.workspace {
     height: calc(100vh - 80px);
     display: grid;
     grid-template-rows: 1fr;
 }
 
-.top-panel{
+.top-panel {
     display: grid;
     grid-template-columns: 35% 6px 65%;
     overflow: hidden;
 }
 
-.panel{
-    background: #0d0819;
-    border: 1px solid #2f2544;
+.panel {
+    background: #0d1c2d;
+    border: 1px solid #434654;
     overflow: hidden;
 }
 
-.panel-header{
+.panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid #2f2544;
+    border-bottom: 1px solid #434654;
     max-height: 56px;
+    background: #1c2b3c;
 }
 
 .panel-header h2,
-.panel-header h3{
+.panel-header h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: #ffffff;
+    color: #d4e4fa;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 0;
 }
 
-.panel-content{
+.panel-content {
     height: 100%;
     padding: 22px;
     overflow: auto;
-    color: #e8e8e8;
-}
-
-.panel-content p{
-    white-space: pre-wrap;
-    color: #dddddd;
-    line-height: 1.8;
-    font-size: 16px;
-}
-
-.panel-content h5{
-    color: #b388ff;
-    margin-bottom: 12px;
-    margin-top: 20px;
-    font-size: 18px;
-}
-
-.panel-content li{
-    color: #dddddd;
-    margin-bottom: 10px;
+    color: #c4c5d6;
+    line-height: 1.7;
     font-size: 15px;
 }
 
-.puzzle-panel{
+.panel-content p {
+    white-space: pre-wrap;
+    color: #c4c5d6;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.panel-content h5 {
+    color: #b5c4ff;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.panel-content li {
+    color: #c4c5d6;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.puzzle-panel {
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-.puzzle-panel .panel-content{
+.puzzle-panel .panel-content {
     flex: 1;
     min-height: 0;
 }
 
-.right-tabbed{
+.right-tabbed {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid #2f2544;
-    background: #0d0819;
+    border: 1px solid #434654;
+    background: #0d1c2d;
 }
 
-.right-tabbed .panel{
+.right-tabbed .panel {
     border: none;
 }
 
-.solve-tabs{
+.solve-tabs {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #0d0819;
-    border-bottom: 1px solid #2f2544;
+    background: #1c2b3c;
+    border-bottom: 1px solid #434654;
     flex-shrink: 0;
 }
 
-.solve-tabs-nav{
+.solve-tabs-nav {
     display: flex;
 }
 
-.solve-tabs-actions{
+.solve-tabs-actions {
     display: flex;
     align-items: center;
     gap: 12px;
     padding-right: 20px;
 }
 
-.solve-tab{
+.solve-tab {
     background: transparent;
     border: none;
     cursor: pointer;
     margin: 0;
     padding: 0;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
-    color: #ffffff;
+    font-family: 'Geist', sans-serif;
+    color: #8d909f;
     border-bottom: 2px solid transparent;
-    transition: .2s;
+    transition: color 0.2s, border-color 0.2s;
 }
 
-.solve-tab + .solve-tab{
+.solve-tab + .solve-tab {
     margin-left: 24px;
     margin-right: 24px;
 }
 
-.solve-tab:hover{
-    color: #d8cfff;
+.solve-tab:hover {
+    color: #d4e4fa;
 }
 
-.solve-tab.active{
-    color: #8b5cf6;
-    border-bottom-color: #8b5cf6;
+.solve-tab.active {
+    color: #648aff;
+    border-bottom-color: #648aff;
 }
 
-.solve-tab-content{
+.solve-tab-content {
     display: none;
     flex: 1;
     overflow: auto;
 }
 
-.solve-tab-content.active{
+.solve-tab-content.active {
     display: flex;
     flex-direction: column;
     min-height: 0;
 }
 
-.editor-panel{
+.editor-panel {
     flex-direction: column;
     flex: 1;
     overflow: hidden;
     min-height: 0;
 }
 
-.editor-body{
+.editor-body {
     flex: 1;
     padding: 18px;
     min-height: 0;
 }
 
-#codeEditor{
+#codeEditor {
     width: 100%;
     height: 100%;
     min-height: 300px;
     resize: none;
     outline: none;
-    border: 1px solid #2f2544;
+    border: 1px solid #434654;
     border-radius: 8px;
-    background: #12101d;
-    color: #ffffff;
-    font-family: Consolas, monospace;
-    font-size: 15px;
-    line-height: 1.6;
+    background: #010f1f;
+    color: #d4e4fa;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
     padding: 18px;
 }
 
-#codeEditor:focus{
-    border-color: #8b5cf6;
+#codeEditor:focus {
+    border-color: #648aff;
 }
 
-#codeEditor .cm-editor{
+#codeEditor .cm-editor {
     height: 100%;
-    background-color: #050014;
+    background-color: #010f1f;
     border-radius: 8px;
 }
 
-#codeEditor .cm-gutters{
-    background: #171127;
-    color: #d8cfff;
-    border: 1px solid #2f2544;
+#codeEditor .cm-gutters {
+    background: #0d1c2d;
+    color: #b5c4ff;
+    border: 1px solid #434654;
 }
 
-#codeEditor .cm-activeLineGutter{
-    background: #d8cfff;
-    color: #171127;
+#codeEditor .cm-activeLineGutter {
+    background: #648aff;
+    color: #fff;
 }
 
-#codeEditor .cm-cursor{
-    border-left-color: #d8cfff;
+#codeEditor .cm-cursor {
+    border-left-color: #d4e4fa;
 }
 
-.cm-content{
-    font-family: "JetBrains Mono", monospace;
+.cm-content {
+    font-family: 'JetBrains Mono', monospace;
 }
 
-.cm-selectionBackground{
-    background-color: rgba(139, 92, 246, 0.35) !important;
+.cm-selectionBackground {
+    background-color: rgba(100, 138, 255, 0.25) !important;
 }
 
-.btn-submit{
-    background: #8b5cf6;
-    color: white;
+.btn-submit {
+    background: #648aff;
+    color: #fff;
     border: none;
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 15px;
     font-weight: 600;
-    transition: .3s;
+    font-family: 'Geist', sans-serif;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     line-height: 1;
 }
 
-.btn-submit:hover{
-    background: #a855f7;
+.btn-submit:hover {
+    background: #8aa8ff;
+    box-shadow: 0 4px 16px rgba(100, 138, 255, 0.25);
 }
 
-.timer{
-    font-size: 16px;
-    color: #d6d6d6;
+.timer {
+    font-size: 14px;
+    color: #8d909f;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+#timer {
+    color: #ffba4b;
     font-weight: 600;
 }
 
-#timer{
-    color: #8b5cf6;
-}
-
-.result-panel{
+.result-panel {
     flex-direction: column;
     flex: 1;
     overflow: auto;
     min-height: 0;
 }
 
-.result-panel .panel-header{
+.result-panel .panel-header {
     flex-shrink: 0;
 }
 
-.result-panel .panel-content{
+.result-panel .panel-content {
     flex: 1;
     min-height: 0;
 }
 
-.status-row{
+.status-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: 14px;
+    color: #c4c5d6;
 }
 
-#testCases{
+#testCases {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.vertical-resizer{
-    background: #2f2544;
+.vertical-resizer {
+    background: #434654;
     cursor: col-resize;
-    transition: .2s;
+    transition: background 0.2s;
 }
 
-.vertical-resizer:hover{
-    background: #8b5cf6;
+.vertical-resizer:hover {
+    background: #648aff;
 }
-
 
 /* Animations */
 .puzzle-panel,
 .editor-panel,
-.result-panel{
+.result-panel {
     animation: fadeIn 0.6s ease forwards;
 }
 
-.btn-submit:active{
+.btn-submit:active {
     transform: scale(0.96);
 }
 
-.timer.running #timer{
+.timer.running #timer {
     animation: timerPulse 1.5s ease-in-out infinite;
 }
 
-
 /* Responsive */
-@media(max-width: 991px){
-    body{
+@media (max-width: 991px) {
+    body {
         overflow: auto;
     }
 
-    .workspace{
+    .workspace {
         display: block;
         height: auto;
     }
 
-    .top-panel{
+    .top-panel {
         display: block;
     }
 
-    .panel{
+    .panel {
         height: 600px;
         margin-bottom: 20px;
     }
 
-    .right-tabbed{
+    .right-tabbed {
         height: 600px;
         margin-bottom: 20px;
     }
 
-    .solve-tab-content.active{
+    .solve-tab-content.active {
         height: 100%;
     }
 
-    .vertical-resizer{
+    .vertical-resizer {
         display: none;
     }
 }
