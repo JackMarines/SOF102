@@ -27,8 +27,8 @@ body.solve-page{
 }
 
 .panel{
-    background: #0d0819;
-    border: 1px solid #2f2544;
+    background: var(--bg-deep);
+    border: 1px solid var(--border-panel);
     overflow: hidden;
 }
 
@@ -37,7 +37,7 @@ body.solve-page{
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid #2f2544;
+    border-bottom: 1px solid var(--border-panel);
     max-height: 56px;
 }
 
@@ -46,7 +46,7 @@ body.solve-page{
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -57,25 +57,25 @@ body.solve-page{
     height: 100%;
     padding: 22px;
     overflow: auto;
-    color: #e8e8e8;
+    color: var(--text-primary);
 }
 
 .panel-content p{
     white-space: pre-wrap;
-    color: #dddddd;
+    color: var(--text-muted);
     line-height: 1.8;
     font-size: 16px;
 }
 
 .panel-content h5{
-    color: #b388ff;
+    color: var(--accent);
     margin-bottom: 12px;
     margin-top: 20px;
     font-size: 18px;
 }
 
 .panel-content li{
-    color: #dddddd;
+    color: var(--text-muted);
     margin-bottom: 10px;
     font-size: 15px;
 }
@@ -95,8 +95,8 @@ body.solve-page{
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid #2f2544;
-    background: #0d0819;
+    border: 1px solid var(--border-panel);
+    background: var(--bg-deep);
 }
 
 .right-tabbed .panel{
@@ -107,8 +107,8 @@ body.solve-page{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #0d0819;
-    border-bottom: 1px solid #2f2544;
+    background: var(--bg-deep);
+    border-bottom: 1px solid var(--border-panel);
     flex-shrink: 0;
 }
 
@@ -131,7 +131,7 @@ body.solve-page{
     padding: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
     border-bottom: 2px solid transparent;
     transition: .2s;
 }
@@ -142,12 +142,12 @@ body.solve-page{
 }
 
 .solve-tab:hover{
-    color: #d8cfff;
+    color: var(--accent-light);
 }
 
 .solve-tab.active{
-    color: #8b5cf6;
-    border-bottom-color: #8b5cf6;
+    color: var(--accent-dark);
+    border-bottom-color: var(--accent-dark);
 }
 
 .solve-tab-content{
@@ -181,10 +181,10 @@ body.solve-page{
     min-height: 300px;
     resize: none;
     outline: none;
-    border: 1px solid #2f2544;
+    border: 1px solid var(--border-panel);
     border-radius: 8px;
-    background: #12101d;
-    color: #ffffff;
+    background: var(--cm-code-bg);
+    color: var(--text-primary);
     font-family: Consolas, monospace;
     font-size: 15px;
     line-height: 1.6;
@@ -192,28 +192,28 @@ body.solve-page{
 }
 
 #codeEditor:focus{
-    border-color: #8b5cf6;
+    border-color: var(--accent-dark);
 }
 
 #codeEditor .cm-editor{
     height: 100%;
-    background-color: #050014;
+    background-color: var(--cm-editor-bg);
     border-radius: 8px;
 }
 
 #codeEditor .cm-gutters{
-    background: #171127;
-    color: #d8cfff;
-    border: 1px solid #2f2544;
+    background: var(--bg-code);
+    color: var(--accent-light);
+    border: 1px solid var(--border-panel);
 }
 
 #codeEditor .cm-activeLineGutter{
-    background: #d8cfff;
-    color: #171127;
+    background: var(--accent-light);
+    color: var(--bg-code);
 }
 
 #codeEditor .cm-cursor{
-    border-left-color: #d8cfff;
+    border-left-color: var(--accent-light);
 }
 
 .cm-content{
@@ -221,12 +221,12 @@ body.solve-page{
 }
 
 .cm-selectionBackground{
-    background-color: rgba(139, 92, 246, 0.35) !important;
+    background-color: var(--cm-selection) !important;
 }
 
 .btn-submit{
-    background: #8b5cf6;
-    color: white;
+    background: var(--accent-dark);
+    color: var(--text-primary);
     border: none;
     border-radius: 8px;
     padding: 6px 14px;
@@ -237,17 +237,17 @@ body.solve-page{
 }
 
 .btn-submit:hover{
-    background: #a855f7;
+    background: var(--accent-hover);
 }
 
 .timer{
     font-size: 16px;
-    color: #d6d6d6;
+    color: var(--text-muted);
     font-weight: 600;
 }
 
 #timer{
-    color: #8b5cf6;
+    color: var(--accent-dark);
 }
 
 .result-panel{
@@ -282,13 +282,13 @@ body.solve-page{
 }
 
 .vertical-resizer{
-    background: #2f2544;
+    background: var(--resizer-bg);
     cursor: col-resize;
     transition: .2s;
 }
 
 .vertical-resizer:hover{
-    background: #8b5cf6;
+    background: var(--accent-dark);
 }
 
 

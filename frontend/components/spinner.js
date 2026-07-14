@@ -13,8 +13,8 @@
         .spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid #2b2142;
-            border-top: 4px solid #b388ff;
+            border: 4px solid var(--spinner-border);
+            border-top: 4px solid var(--spinner-accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -25,15 +25,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(10, 10, 20, 0.6);
+            background: var(--spinner-overlay);
             backdrop-filter: blur(2px);
         }
         .spinner-overlay .spinner {
             width: 48px;
             height: 48px;
             border-width: 5px;
-            border-color: #1e1e2e;
-            border-top-color: #4ade80;
+            border-color: var(--spinner-overlay-border);
+            border-top-color: var(--spinner-overlay-accent);
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -58,7 +58,7 @@ function showSpinner(containerId) {
     wrapper.className = "spinner-wrapper";
     wrapper.id = "spinner-" + containerId;
     wrapper.innerHTML = '<div class="spinner"></div>';
-    wrapper.style.cssText = "position:absolute;inset:0;z-index:10;display:flex;justify-content:center;align-items:center;padding:40px;background:rgba(10,10,20,0.6);border-radius:inherit;";
+    wrapper.style.cssText = "position:absolute;inset:0;z-index:10;display:flex;justify-content:center;align-items:center;padding:40px;background:var(--spinner-overlay);border-radius:inherit;";
     container.appendChild(wrapper);
 }
 

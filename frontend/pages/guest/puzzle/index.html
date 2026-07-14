@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="/frontend/assets/css/style.css">
     <link rel="icon" href="/frontend/assets/images/icon.png">
+<script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light-mode')}catch(e){}</script>
 </head>
 
 <body>
@@ -32,47 +33,7 @@
 
             </a>
 
-            <!-- Search UI -->
-            <div class="search-box input-group">
-                <input type="text" id="input" class="form-control" placeholder="Search puzzles..." onkeydown="if(event.key==='Enter') searchPuzzles()">
-                <button class="btn" type="submit" id="searchButton" onclick=searchPuzzles()>
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-
-            <!-- Dropdown filter -->
-
-            <div class="d-flex">
-                <div class="dropdown ms-auto">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" id="dropdownButton">
-                        Difficulty
-                    </button>
-
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" onclick="clearFilter()">None</a></li>
-                        <li><a class="dropdown-item" onclick="sortPuzzlesDifficulty('Easy')">Easy</a></li>
-                        <li><a class="dropdown-item" onclick="sortPuzzlesDifficulty('Medium')">Medium</a></li>
-                        <li><a class="dropdown-item" onclick="sortPuzzlesDifficulty('Hard')">Hard</a></li>
-                    </ul>
-                </div>
-            </div>
-
-
-            <!-- Table Header -->
-            <div class="table-header">
-                <span>#</span>
-                <span>Title</span>
-                <span>Language</span>
-                <span>Difficulty</span>
-            </div>
-
-            <!-- List -->
-            <div class="puzzle-list" id="puzzleList">
-            </div>
-
-            <!-- Pagination UI -->
-            <div class="pagination" id="pagination">
-            </div>
+            <div id="puzzle-table"></div>
 
             <div id="footer"></div>
     </section>
@@ -89,6 +50,7 @@
     <script>redirectIfAuthenticated()</script>
 
     <script src="/frontend/services/puzzleService.js"></script>
+    <script src="/frontend/components/puzzle-table.js"></script>
     <script src="/frontend/services/puzzleListService.js"></script>
     <script src="puzzle.js"></script>
 
