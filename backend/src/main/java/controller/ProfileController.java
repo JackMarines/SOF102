@@ -118,12 +118,27 @@ public class ProfileController extends HttpServlet {
     }
 
     // Lấy danh sách puzzle đã hoàn thành (có phân trang + lọc)
+    // Nếu có ?id=X → xem public profile của user khác (không cần auth)
+    // Nếu không có ?id → xem của chính mình (cần auth)
     private void handleCompletedPuzzles(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        User sessionUser = (User) req.getSession().getAttribute("user");
-        if (sessionUser == null) {
-            ResponseUtil.error(resp, 401, "Not authenticated");
-            return;
+        String targetIdParam = req.getParameter("id");
+        int targetUserId;
+
+        if (targetIdParam != null && !targetIdParam.trim().isEmpty()) {
+            try {
+                targetUserId = Integer.parseInt(targetIdParam.trim());
+            } catch (NumberFormatException e) {
+                ResponseUtil.error(resp, 400, "Invalid userId format");
+                return;
+            }
+        } else {
+            User sessionUser = (User) req.getSession().getAttribute("user");
+            if (sessionUser == null) {
+                ResponseUtil.error(resp, 401, "Not authenticated");
+                return;
+            }
+            targetUserId = sessionUser.getUserId();
         }
 
         int page = 1;
@@ -147,10 +162,10 @@ public class ProfileController extends HttpServlet {
         }
 
         long total = progressDao.countCompletedPuzzles(
-            sessionUser.getUserId(), search, difficulty, language);
+            targetUserId, search, difficulty, language);
         int totalPages = (int) Math.ceil((double) total / limit);
         List<Puzzle> puzzles = progressDao.getCompletedPuzzles(
-            sessionUser.getUserId(), page, limit, search, difficulty, language);
+            targetUserId, page, limit, search, difficulty, language);
 
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (Puzzle p : puzzles) {
