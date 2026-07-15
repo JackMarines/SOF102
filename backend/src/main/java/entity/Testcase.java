@@ -1,3 +1,5 @@
+// Lớp ánh xạ bảng `testcase` trong MySQL
+// Lưu các bộ test đầu vào / đầu ra cho từng puzzle
 package entity;
 
 import jakarta.persistence.*;

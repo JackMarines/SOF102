@@ -13,10 +13,10 @@ public class Language {
     private Integer langId;
 
     @Column(name = "lang_judge0")
-    private Integer langJudge0;
+    private Integer langJudge0; // ID tương ứng với Judge0 (vd: 71 = Python)
 
     @Column(name = "lang_name")
-    private String langName;
+    private String langName;    // Tên ngôn ngữ (Python, JavaScript, PHP)
 
     public Language() {}
 

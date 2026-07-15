@@ -6,9 +6,20 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebFilter("/*")
 public class CorsFilter implements Filter {
+
+    // Danh sách origin được phép (frontend)
+    private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "https://devclimb.online",
+        "https://api.devclimb.online"
+    );
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -16,7 +27,7 @@ public class CorsFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
 
         String origin = req.getHeader("Origin");
-        if (origin != null && !origin.isBlank()) {
+        if (origin != null && !origin.isBlank() && ALLOWED_ORIGINS.contains(origin)) {
             res.setHeader("Access-Control-Allow-Origin", origin);
             res.setHeader("Vary", "Origin");
         } else {

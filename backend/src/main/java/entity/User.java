@@ -24,6 +24,15 @@ public class User {
     @Column(name = "user_isadmin")
     private Boolean userIsadmin = false;
 
+    @Column(name = "user_avatar")
+    private String userAvatar;
+
+    @Column(name = "user_bio")
+    private String userBio;
+
+    @Column(name = "user_isactive")
+    private Boolean userIsactive = true;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
@@ -40,6 +49,12 @@ public class User {
     public void setUserFirebaseuid(String userFirebaseuid) { this.userFirebaseuid = userFirebaseuid; }
     public Boolean getUserIsadmin() { return userIsadmin; }
     public void setUserIsadmin(Boolean userIsadmin) { this.userIsadmin = userIsadmin; }
+    public String getUserAvatar() { return userAvatar; }
+    public void setUserAvatar(String userAvatar) { this.userAvatar = userAvatar; }
+    public String getUserBio() { return userBio; }
+    public void setUserBio(String userBio) { this.userBio = userBio; }
+    public Boolean getUserIsactive() { return userIsactive; }
+    public void setUserIsactive(Boolean userIsactive) { this.userIsactive = userIsactive; }
     public Team getTeam() { return team; }
     public void setTeam(Team team) { this.team = team; }
 }

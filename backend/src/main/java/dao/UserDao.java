@@ -1,6 +1,7 @@
 // DAO - chứa các hàm thao tác với bảng user trong CSDL
 package dao;
 
+import entity.Team;
 import entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -59,6 +60,54 @@ public class UserDao {
             query.setParameter("name", username);
             List<User> result = query.getResultList();
             return result.isEmpty() ? null : result.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Tìm user theo ID (kèm team để lấy groupName)
+    public User findById(int id) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u LEFT JOIN FETCH u.team WHERE u.userId = :id", User.class);
+            query.setParameter("id", id);
+            List<User> result = query.getResultList();
+            return result.isEmpty() ? null : result.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Cập nhật profile: chỉ update các field không null
+    public void update(int userId, String name, String bio, String avatar) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                if (name != null) user.setUserName(name);
+                if (bio != null) user.setUserBio(bio);
+                if (avatar != null) user.setUserAvatar(avatar);
+                em.merge(user);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Thay đổi team của user (null = rời team)
+    public void setTeam(int userId, Team team) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                user.setTeam(team);
+                em.merge(user);
+            }
+            em.getTransaction().commit();
         } finally {
             em.close();
         }
