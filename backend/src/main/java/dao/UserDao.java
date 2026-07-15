@@ -112,4 +112,41 @@ public class UserDao {
             em.close();
         }
     }
+
+    // Tìm user theo tên (LIKE), có phân trang + sắp xếp A-Z, kèm score + team
+    public List<Object[]> search(int page, int limit, String query) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String sql =
+                "SELECT u.user_id, u.user_name, u.user_avatar, u.user_isadmin, " +
+                "t.team_name, " +
+                "COALESCE((SELECT SUM(p.puz_score) FROM progress pr " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore " +
+                "FROM user u " +
+                "LEFT JOIN team t ON u.team_id = t.team_id " +
+                "WHERE LOWER(u.user_name) LIKE :query " +
+                "ORDER BY u.user_name ASC";
+
+            jakarta.persistence.Query q = em.createNativeQuery(sql);
+            q.setParameter("query", "%" + query.toLowerCase() + "%");
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm số user khớp với tìm kiếm (dùng cho phân trang)
+    public long countSearch(String query) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Long> q = em.createQuery(
+                "SELECT COUNT(u) FROM User u WHERE LOWER(u.userName) LIKE :query", Long.class);
+            q.setParameter("query", "%" + query.toLowerCase() + "%");
+            return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 }
