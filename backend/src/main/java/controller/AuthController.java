@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.FirebaseService;
 import util.ResponseUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class AuthController extends HttpServlet {
 
     private UserDao userDao = new UserDao();
     private ObjectMapper objectMapper = new ObjectMapper();
-
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Override
     public void init() throws ServletException {
         FirebaseService.init();
@@ -96,7 +98,11 @@ public class AuthController extends HttpServlet {
             return;
         }
 
+        // Chống session fixation: tạo session ID mới trước khi set attribute
+        req.changeSessionId();
         req.getSession().setAttribute("user", user);
+
+        logger.info("User logged in: userId={}, email={}", user.getUserId(), user.getUserEmail());
 
         Map<String, Object> data = new HashMap<>();
         data.put("userId", user.getUserId());
@@ -149,7 +155,11 @@ public class AuthController extends HttpServlet {
 
         userDao.create(user);
 
+        // Chống session fixation: tạo session ID mới trước khi set attribute
+        req.changeSessionId();
         req.getSession().setAttribute("user", user);
+
+        logger.info("User registered: userId={}, username={}", user.getUserId(), username);
 
         Map<String, Object> data = new HashMap<>();
         data.put("userId", user.getUserId());
@@ -162,6 +172,10 @@ public class AuthController extends HttpServlet {
 
     // Xóa session -> đăng xuất
     private void doLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        User user = (User) req.getSession().getAttribute("user");
+        if (user != null) {
+            logger.info("User logged out: userId={}", user.getUserId());
+        }
         req.getSession().invalidate();
         Map<String, Object> data = new HashMap<>();
         data.put("message", "Logged out");

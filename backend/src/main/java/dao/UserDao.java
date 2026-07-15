@@ -1,6 +1,7 @@
 // DAO - chứa các hàm thao tác với bảng user trong CSDL
 package dao;
 
+import entity.Team;
 import entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -59,6 +60,91 @@ public class UserDao {
             query.setParameter("name", username);
             List<User> result = query.getResultList();
             return result.isEmpty() ? null : result.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Tìm user theo ID (kèm team để lấy groupName)
+    public User findById(int id) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u LEFT JOIN FETCH u.team WHERE u.userId = :id", User.class);
+            query.setParameter("id", id);
+            List<User> result = query.getResultList();
+            return result.isEmpty() ? null : result.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Cập nhật profile: chỉ update các field không null
+    public void update(int userId, String name, String bio, String avatar) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                if (name != null) user.setUserName(name);
+                if (bio != null) user.setUserBio(bio);
+                if (avatar != null) user.setUserAvatar(avatar);
+                em.merge(user);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Thay đổi team của user (null = rời team)
+    public void setTeam(int userId, Team team) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                user.setTeam(team);
+                em.merge(user);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Tìm user theo tên (LIKE), có phân trang + sắp xếp A-Z, kèm score + team
+    public List<Object[]> search(int page, int limit, String query) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String sql =
+                "SELECT u.user_id, u.user_name, u.user_avatar, u.user_isadmin, " +
+                "t.team_name, " +
+                "COALESCE((SELECT SUM(p.puz_score) FROM progress pr " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore " +
+                "FROM user u " +
+                "LEFT JOIN team t ON u.team_id = t.team_id " +
+                "WHERE LOWER(u.user_name) LIKE :query " +
+                "ORDER BY u.user_name ASC";
+
+            jakarta.persistence.Query q = em.createNativeQuery(sql);
+            q.setParameter("query", "%" + query.toLowerCase() + "%");
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm số user khớp với tìm kiếm (dùng cho phân trang)
+    public long countSearch(String query) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Long> q = em.createQuery(
+                "SELECT COUNT(u) FROM User u WHERE LOWER(u.userName) LIKE :query", Long.class);
+            q.setParameter("query", "%" + query.toLowerCase() + "%");
+            return q.getSingleResult();
         } finally {
             em.close();
         }

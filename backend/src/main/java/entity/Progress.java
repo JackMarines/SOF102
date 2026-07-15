@@ -1,3 +1,5 @@
+// Lớp ánh xạ bảng `progress` trong MySQL
+// Lưu lịch sử hoàn thành puzzle của user
 package entity;
 
 import jakarta.persistence.*;

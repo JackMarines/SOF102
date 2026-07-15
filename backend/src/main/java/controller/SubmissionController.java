@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import util.Judge0Util;
 import util.ResponseUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +29,7 @@ public class SubmissionController extends HttpServlet {
     private static final Map<Integer, String> TEMPLATES = new HashMap<>();
     private static final Map<Integer, Long> LAST_SUBMIT = new ConcurrentHashMap<>();
     private static final int RATE_LIMIT_MS = 2000;
+    private static final Logger logger = LoggerFactory.getLogger(SubmissionController.class);
     private static final int MAX_RETRIES = 60;
     private static final long RETRY_DELAY_MS = 500;
 
@@ -69,6 +72,7 @@ public class SubmissionController extends HttpServlet {
         long now = System.currentTimeMillis();
         Long last = LAST_SUBMIT.get(userId);
         if (last != null && (now - last) < RATE_LIMIT_MS) {
+            logger.warn("Rate limit hit: userId={}", userId);
             ResponseUtil.error(resp, 429, "Please wait before submitting again");
             return;
         }
@@ -121,8 +125,11 @@ public class SubmissionController extends HttpServlet {
         List<Map<String, Object>> tokens;
         try {
             tokens = Judge0Util.callJudge0(submissions);
+            logger.info("Judge0 submitted: userId={}, puzId={}, testcases={}",
+                userId, puzId, submissions.size());
         } catch (Exception e) {
             LAST_SUBMIT.remove(userId);
+            logger.error("Judge0 submission failed: userId={}, error={}", userId, e.getMessage());
             ResponseUtil.error(resp, 500, "Judge0 submission failed: " + e.getMessage());
             return;
         }
@@ -146,13 +153,17 @@ public class SubmissionController extends HttpServlet {
                 result = Judge0Util.getJudge0(tokenStr);
                 if (++retries >= MAX_RETRIES) {
                     LAST_SUBMIT.remove(userId);
+                    logger.error("Judge0 polling timed out: userId={}, retries={}", userId, retries);
                     ResponseUtil.error(resp, 504, "Judge0 timed out after "
                         + (MAX_RETRIES * RETRY_DELAY_MS / 1000) + "s");
                     return;
                 }
             } while (isProcessing(result));
+            logger.info("Judge0 poll done: userId={}, retries={}, elapsed={}ms",
+                userId, retries, retries * RETRY_DELAY_MS);
         } catch (Exception e) {
             LAST_SUBMIT.remove(userId);
+            logger.error("Judge0 polling failed: userId={}, error={}", userId, e.getMessage());
             ResponseUtil.error(resp, 500, "Judge0 polling failed: " + e.getMessage());
             return;
         }
@@ -200,6 +211,7 @@ public class SubmissionController extends HttpServlet {
                 error = true;
                 compileOutput = !thisCompile.isEmpty() ? thisCompile : "Compile error";
                 errorMsg = compileOutput;
+                logger.warn("Compile error: userId={}, puzId={}", userId, puzId);
                 break;
             }
 
@@ -279,6 +291,11 @@ public class SubmissionController extends HttpServlet {
         boolean puzzlePass = failed.isEmpty() && !error;
         if (puzzlePass) {
             progressDao.upsert(user.getUserId(), puzId, progTime);
+            logger.info("Puzzle passed: userId={}, puzId={}, passed={}/{}",
+                userId, puzId, passed, testcases.size());
+        } else {
+            logger.info("Puzzle failed: userId={}, puzId={}, passed={}/{}, errors={}",
+                userId, puzId, passed, testcases.size(), failed.size());
         }
 
         Map<String, Object> response = new HashMap<>();

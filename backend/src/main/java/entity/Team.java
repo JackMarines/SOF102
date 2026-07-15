@@ -16,6 +16,18 @@ public class Team {
     @Column(name = "team_name")
     private String teamName;
 
+    @Column(name = "team_avatar")
+    private String teamAvatar;     // URL ảnh đại diện của team (Firebase Storage)
+
+    @Column(name = "team_ownerid")
+    private Integer teamOwnerId;   // ID của user sở hữu team
+
+    @Column(name = "team_shoutout")
+    private String teamShoutout;   // Câu giới thiệu ngắn của team (tối đa 500 ký tự)
+
+    @Column(name = "team_ispublic")
+    private Boolean teamIsPublic = true; // true = ai cũng có thể join, false = khoá
+
     @OneToMany(mappedBy = "team")
     private List<User> users;
 
@@ -25,6 +37,14 @@ public class Team {
     public void setTeamId(Integer teamId) { this.teamId = teamId; }
     public String getTeamName() { return teamName; }
     public void setTeamName(String teamName) { this.teamName = teamName; }
+    public String getTeamAvatar() { return teamAvatar; }
+    public void setTeamAvatar(String teamAvatar) { this.teamAvatar = teamAvatar; }
+    public Integer getTeamOwnerId() { return teamOwnerId; }
+    public void setTeamOwnerId(Integer teamOwnerId) { this.teamOwnerId = teamOwnerId; }
+    public String getTeamShoutout() { return teamShoutout; }
+    public void setTeamShoutout(String teamShoutout) { this.teamShoutout = teamShoutout; }
+    public Boolean getTeamIsPublic() { return teamIsPublic; }
+    public void setTeamIsPublic(Boolean teamIsPublic) { this.teamIsPublic = teamIsPublic; }
     public List<User> getUsers() { return users; }
     public void setUsers(List<User> users) { this.users = users; }
 }
