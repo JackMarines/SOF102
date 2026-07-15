@@ -4,6 +4,10 @@
     link.href = '/frontend/assets/css/navbar-guest.css';
     document.head.appendChild(link);
 
+    var theme = document.createElement('script');
+    theme.src = '/frontend/components/theme-toggle.js';
+    document.head.appendChild(theme);
+
     document.addEventListener('DOMContentLoaded', function(){
         var placeholder = document.getElementById('navbar');
         if (!placeholder) return;
@@ -31,6 +35,9 @@
                         '</li>' +
                         '<li class="nav-item">' +
                             '<a class="nav-link' + (path.includes('/guest/auth/') ? ' current-link' : '') + '" href="/frontend/pages/guest/auth/login.html">Log in</a>' +
+                        '</li>' +
+                        '<li class="nav-item ms-lg-2">' +
+                            '<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>' +
                         '</li>' +
                     '</ul>' +
                 '</div>' +

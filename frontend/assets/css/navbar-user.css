@@ -1,6 +1,6 @@
 .custom-navbar{
-    background: #070311;
-    border-bottom: 1px solid #241b36;
+    background: var(--bg-body);
+    border-bottom: 1px solid var(--border-subtle);
     padding: 12px 0;
 }
 
@@ -12,7 +12,7 @@
 
 .custom-navbar .navbar-nav .nav-link{
     font-family: 'Poppins', sans-serif;
-    color: #c7bddf !important;
+    color: var(--text-secondary) !important;
     letter-spacing: 0.2px;
     text-shadow: none;
     transition: 0.3s ease;
@@ -20,11 +20,11 @@
 }
 
 .custom-navbar .navbar-nav .nav-link:hover{
-    color: #b388ff !important;
+    color: var(--accent) !important;
 }
 
 .custom-navbar .navbar-nav .nav-link.active{
-    color: #b388ff !important;
+    color: var(--accent) !important;
 }
 
 .custom-navbar .navbar-nav .nav-link::after{
@@ -32,7 +32,7 @@
     display: block;
     width: 0;
     height: 2px;
-    background: #b388ff;
+    background: var(--accent);
     border-radius: 2px;
     transition: width 0.3s ease;
     margin-top: 2px;
@@ -53,12 +53,12 @@
 
 .profile-btn i{
     font-size: 34px;
-    color: #d7dbe2;
+    color: var(--profile-icon);
     transition: .3s;
 }
 
 .profile-btn:hover i{
-    color: #b388ff;
+    color: var(--accent);
 }
 
 .profile-dropdown{
@@ -70,13 +70,13 @@
     position: absolute;
     right: 0;
     top: 100%;
-    background: #1a112a;
-    border: 1px solid #362b4a;
+    background: var(--dropdown-menu-bg);
+    border: 1px solid var(--dropdown-border);
     border-radius: 8px;
     min-width: 150px;
     padding: 8px 0;
     z-index: 1000;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 24px var(--dropdown-shadow);
 }
 
 .profile-dropdown:hover .dropdown-menu-custom{
@@ -86,7 +86,7 @@
 .dropdown-menu-custom a{
     display: block;
     padding: 8px 20px;
-    color: #c7bddf;
+    color: var(--text-secondary);
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
@@ -94,13 +94,13 @@
 }
 
 .dropdown-menu-custom a:hover{
-    background: #2a1d3e;
-    color: #b388ff;
+    background: var(--dropdown-item-hover-bg);
+    color: var(--accent);
 }
 
 .dropdown-menu-custom hr{
     margin: 6px 0;
-    border-color: #362b4a;
+    border-color: var(--dropdown-border);
 }
 
 @media(max-width:991px){
