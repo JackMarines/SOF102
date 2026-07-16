@@ -49,7 +49,8 @@
                 '<div class="collapse navbar-collapse" id="menu">' +
                     '<ul class="navbar-nav ms-auto">' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (isActive('team') ? ' active' : '') + '" href="/frontend/pages/user/team/index.html">Team</a>' +
+                            // Team link: defaults to team-search, updated to team page after checkAuth
+                            '<a class="nav-link' + (isActive('team') ? ' active' : '') + '" id="nav-team-link" href="/frontend/pages/user/team-search/index.html">Team</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
                             '<a class="nav-link' + (isActive('puzzles') ? ' active' : '') + '" href="/frontend/pages/user/puzzle/index.html">Puzzles</a>' +
@@ -94,6 +95,10 @@
 
         if (typeof checkAuth === 'function' && typeof apiGet === 'function') {
             checkAuth().then(function (session) {
+                if (session.teamId) {
+                    document.getElementById('nav-team-link').href =
+                        '/frontend/pages/user/team/index.html?id=' + session.teamId;
+                }
                 apiGet('/profile').then(function (p) {
                     if (!p || p.error) return;
                     renderNavAvatar(p.avatar);

@@ -1,5 +1,4 @@
-// ===========================
-// PUZZLE LIST SERVICE
+// Puzzle list service — fetch paginated puzzle catalog with search/filter
 // ===========================
 
 async function fetchPuzzles(page) {

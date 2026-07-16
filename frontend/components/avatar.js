@@ -1,3 +1,4 @@
+// Avatar component — renders user avatars with fallback icon and optional admin badge
 (function () {
 
     var style = document.createElement('style');

@@ -1,3 +1,4 @@
+// User table component — paginated card grid with search, configurable columns, and optional card context menus
 (function () {
 
     var style = document.createElement('style');
@@ -34,14 +35,15 @@
 
         /* --- User Table: Card Grid --- */
         .ut-grid {
-            display: grid !important;
-            grid-template-columns: repeat(6, 1fr) !important;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin-top: 10px;
         }
         .ut-card {
-            text-decoration: none !important;
-            color: var(--text-primary) !important;
+            text-decoration: none;
+            color: var(--text-primary);
+            overflow: hidden;
         }
         .ut-card .glass-box {
             height: 100%;
@@ -78,7 +80,9 @@
         }
         .ut-card-name {
             font-weight: 600;
+            font-size: 14px;
             min-width: 0;
+            flex: 1;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -149,19 +153,19 @@
         .ut-card:nth-child(8) { animation-delay: 0.28s; }
 
         /* --- User Table: Responsive --- */
-        @media (max-width: 991px) {
-            .ut-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        @media (max-width: 768px) {
+        @media (max-width: 1199px) {
             .ut-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 991px) {
             .ut-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 576px) {
+            .ut-grid {
+                grid-template-columns: 1fr;
             }
         }
 

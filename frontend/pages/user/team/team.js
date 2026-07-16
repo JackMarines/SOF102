@@ -1,3 +1,4 @@
+// Team page orchestrator — team detail view with edit/join/leave, owner controls (edit, shoutout, transfer, kick), and member table
 checkAuth().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
@@ -152,11 +153,16 @@ checkAuth().then(async function (session) {
         document.getElementById('edit-popup-overlay').classList.remove('show');
     }
 
+    // --- Edit Team Save (with inline duplicate name error) ---
     document.getElementById('edit-popup-save').addEventListener('click', async function () {
         var btn = this;
         var name = document.getElementById('edit-team-name').value.trim();
+        var nameError = document.getElementById('edit-team-name-error');
+        nameError.classList.add('d-none');
+
         if (!name) {
-            alert('Team name is required');
+            nameError.textContent = 'Team name is required';
+            nameError.classList.remove('d-none');
             return;
         }
 
@@ -174,8 +180,34 @@ checkAuth().then(async function (session) {
         if (res && !res.error) {
             window.location.reload();
         } else {
-            alert(res ? (res.error || 'Failed to update') : 'Failed to update');
+            var err = res ? res.error || 'Failed to update' : 'Failed to update';
+            if (err.toLowerCase().indexOf('duplicate') !== -1 || err.toLowerCase().indexOf('already exist') !== -1) {
+                nameError.textContent = 'A team with this name already exists';
+            } else {
+                nameError.textContent = err;
+            }
+            nameError.classList.remove('d-none');
         }
+    });
+
+    // --- Disband Team ---
+    document.getElementById('edit-popup-disband').addEventListener('click', function () {
+        closeEditPopup();
+        showConfirmPopup(
+            '<i class="bi bi-exclamation-triangle-fill"></i>',
+            'Disband Team',
+            'Are you sure you want to disband ' + (team.name || 'this team') + '? This will remove all members and cannot be undone.',
+            'Disband',
+            'btn-danger',
+            async function () {
+                var res = await disbandTeam();
+                if (res && !res.error) {
+                    window.location.href = '/frontend/pages/user/home/index.html';
+                } else {
+                    alert(res ? (res.error || 'Failed to disband') : 'Failed to disband');
+                }
+            }
+        );
     });
 
     // --- Transfer Ownership Popup ---
@@ -408,6 +440,7 @@ checkAuth().then(async function (session) {
     if (team.topMembers && team.topMembers.length > 0) {
         for (var k = 0; k < team.topMembers.length; k++) {
             var m = team.topMembers[k];
+            // Top contributor rows are clickable links to profile
             var row = document.createElement('a');
             row.className = 'd-flex align-items-center mb-3 text-decoration-none';
             row.href = '/frontend/pages/user/profile/index.html?id=' + m.userId;
@@ -430,10 +463,15 @@ checkAuth().then(async function (session) {
             row.appendChild(rankBadge);
             row.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
 
+            // Info container needs min-width:0 for text ellipsis in flex
             var info = document.createElement('div');
             info.className = 'flex-grow-1 ms-3';
+            info.style.minWidth = '0';
             var nameDiv = document.createElement('div');
             nameDiv.className = 'fw-bold';
+            nameDiv.style.overflow = 'hidden';
+            nameDiv.style.textOverflow = 'ellipsis';
+            nameDiv.style.whiteSpace = 'nowrap';
             nameDiv.textContent = m.displayName || '';
             var scoreSmall = document.createElement('small');
             scoreSmall.className = 'text-secondary';

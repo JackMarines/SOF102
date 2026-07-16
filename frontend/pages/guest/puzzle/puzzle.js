@@ -1,3 +1,4 @@
+// Guest puzzle catalog — read-only puzzle table without auth
 window.puzzleTable = PuzzleTable.init('puzzle-table', {
     columns: [
         { key: 'id', label: '#', width: '60px' },

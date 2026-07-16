@@ -1,3 +1,4 @@
+// Profile page orchestrator — user profile view with edit modal, group card link, and solved puzzles table
 checkAuth().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var targetId = params.get('id');
@@ -22,7 +23,6 @@ checkAuth().then(async function (session) {
     document.title = (p.displayName || 'Profile') + ' - DevClimb';
     document.getElementById('profile-displayname').textContent = p.displayName || 'Unknown';
     document.getElementById('profile-bio').textContent = p.bio || '';
-    document.getElementById('profile-group').textContent = p.groupName || '-';
     document.getElementById('profile-score').textContent = (p.totalScore || 0).toLocaleString();
     document.getElementById('profile-completed').textContent = p.totalCompletedPuzzles || 0;
 
@@ -34,7 +34,67 @@ checkAuth().then(async function (session) {
     }));
 
     if (p.groupName) {
-        document.getElementById('group-name').textContent = p.groupName;
+        var groupEl = document.getElementById('group-name');
+        groupEl.textContent = p.groupName;
+    }
+
+    // Make group card clickable if user has a team
+    if (p.teamId) {
+        var groupBox = document.getElementById('group-box');
+        groupBox.href = '/frontend/pages/user/team/index.html?id=' + p.teamId;
+        groupBox.style.cursor = 'pointer';
+    }
+
+    // --- Edit Profile Modal ---
+    if (isOwn) {
+        var displayNameInput = document.getElementById('edit-username-input');
+        var bioInput = document.getElementById('edit-bio-input');
+        var avatarInput = document.getElementById('edit-avatar-input');
+
+        displayNameInput.value = p.displayName || '';
+        bioInput.value = p.bio || '';
+
+        document.getElementById('save-profile-btn').addEventListener('click', async function () {
+            var btn = this;
+            var displayName = displayNameInput.value.trim();
+            var bio = bioInput.value.trim();
+
+            if (!displayName) {
+                alert('Display name is required');
+                return;
+            }
+
+            var payload = { displayName: displayName, bio: bio || null };
+
+            // Handle avatar upload as base64
+            var file = avatarInput.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = async function (e) {
+                    payload.avatar = e.target.result;
+                    await doSave(btn, payload);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                await doSave(btn, payload);
+            }
+        });
+
+        async function doSave(btn, payload) {
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            var res = await updateProfile(payload);
+
+            btn.disabled = false;
+            btn.textContent = 'Save Changes';
+
+            if (res && !res.error) {
+                window.location.reload();
+            } else {
+                alert(res ? (res.error || 'Failed to update') : 'Failed to update');
+            }
+        }
     }
 
     // --- Solved Puzzles (PuzzleTable) ---

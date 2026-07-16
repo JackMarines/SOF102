@@ -1,3 +1,4 @@
+// User team search — team catalog with search, sort, and pagination
 checkAuth().then(function () {
     window.teamTable = TeamTable.init('team-table', {
         searchPlaceholder: 'Search teams...',

@@ -1,6 +1,17 @@
 // Controller xử lý API home - gom dữ liệu cho trang chủ
 package controller;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dao.TeamDao;
 import dao.UserDao;
 import entity.User;
@@ -11,12 +22,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.JpaUtils;
 import util.ResponseUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
 
 @WebServlet("/api/v1/home")
 public class HomeController extends HttpServlet {
@@ -60,6 +65,7 @@ public class HomeController extends HttpServlet {
                 m.put("displayName", row[1]);
                 m.put("avatar", row[2]);
                 m.put("totalScore", ((Number) row[3]).intValue());
+                m.put("isAdmin", Boolean.TRUE.equals(row[4]));
                 m.put("rank", i + 1);
                 topMembers.add(m);
             }
@@ -69,10 +75,10 @@ public class HomeController extends HttpServlet {
             // Team completions (weekly + recent) via native query
             EntityManager em = JpaUtils.getEntityManager();
             try {
-                // Weekly: last 7 days
+                // Weekly puzzles — includes puz_id so frontend can link to solve page
                 Timestamp weekAgo = new Timestamp(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
                 List<Object[]> weeklyRows = em.createNativeQuery(
-                    "SELECT u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
+                    "SELECT pz.puz_id, u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
                     "FROM progress pr " +
                     "JOIN user u ON pr.user_id = u.user_id " +
                     "JOIN puzzle pz ON pr.puz_id = pz.puz_id " +
@@ -86,17 +92,18 @@ public class HomeController extends HttpServlet {
                 List<Map<String, Object>> weeklyPuzzles = new ArrayList<>();
                 for (Object[] row : weeklyRows) {
                     Map<String, Object> item = new HashMap<>();
-                    item.put("displayName", row[0]);
-                    item.put("title", row[1]);
-                    item.put("language", row[2]);
-                    item.put("difficulty", row[3]);
+                    item.put("id", ((Number) row[0]).intValue());
+                    item.put("displayName", row[1]);
+                    item.put("title", row[2]);
+                    item.put("language", row[3]);
+                    item.put("difficulty", row[4]);
                     weeklyPuzzles.add(item);
                 }
                 result.put("weeklyPuzzles", weeklyPuzzles);
 
-                // Team recent activity (all members except current user)
+                // Team activity — includes puz_id for frontend links, excludes current user
                 List<Object[]> recentRows = em.createNativeQuery(
-                    "SELECT u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
+                    "SELECT pz.puz_id, u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
                     "FROM progress pr " +
                     "JOIN user u ON pr.user_id = u.user_id " +
                     "JOIN puzzle pz ON pr.puz_id = pz.puz_id " +
@@ -110,10 +117,11 @@ public class HomeController extends HttpServlet {
                 List<Map<String, Object>> teamActivity = new ArrayList<>();
                 for (Object[] row : recentRows) {
                     Map<String, Object> item = new HashMap<>();
-                    item.put("displayName", row[0]);
-                    item.put("title", row[1]);
-                    item.put("language", row[2]);
-                    item.put("difficulty", row[3]);
+                    item.put("id", ((Number) row[0]).intValue());
+                    item.put("displayName", row[1]);
+                    item.put("title", row[2]);
+                    item.put("language", row[3]);
+                    item.put("difficulty", row[4]);
                     teamActivity.add(item);
                 }
                 result.put("teamActivity", teamActivity);

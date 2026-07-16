@@ -114,6 +114,12 @@ public class TeamManageController extends HttpServlet {
         Boolean isPublic = (Boolean) body.get("isPublic");
         team.setTeamIsPublic(isPublic != null ? isPublic : true);
 
+        // Reject duplicate team names on create
+        if (teamDao.findByName(name.trim()) != null) {
+            ResponseUtil.error(resp, 409, "A team with this name already exists");
+            return;
+        }
+
         teamDao.create(team);
         team.setTeamOwnerId(user.getUserId());
         teamDao.update(team);
@@ -254,6 +260,12 @@ public class TeamManageController extends HttpServlet {
         if (name != null) {
             if (name.trim().isEmpty() || name.length() > 100) {
                 ResponseUtil.error(resp, 400, "Team name must be 1-100 characters");
+                return;
+            }
+            // Reject duplicate team names on update (allow same team keeping its own name)
+            Team existing = teamDao.findByName(name.trim());
+            if (existing != null && existing.getTeamId() != team.getTeamId()) {
+                ResponseUtil.error(resp, 409, "A team with this name already exists");
                 return;
             }
             team.setTeamName(name.trim());

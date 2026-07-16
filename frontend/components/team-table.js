@@ -1,3 +1,4 @@
+// Team table component — paginated card grid with search, sort, and order controls
 (function () {
 
     var style = document.createElement('style');

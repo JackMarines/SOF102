@@ -1,3 +1,4 @@
+// Authenticated user search — links to user profile pages
 checkAuth().then(function () {
     window.userTable = UserTable.init('user-table', {
         columns: [

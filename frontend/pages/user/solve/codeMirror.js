@@ -1,3 +1,4 @@
+// CodeMirror editor wrapper — handles language switching, code persistence, and submission callback
 import { EditorView, basicSetup } from "https://esm.sh/codemirror";
 import { keymap } from "https://esm.sh/@codemirror/view";
 import { oneDark } from "https://esm.sh/@codemirror/theme-one-dark";

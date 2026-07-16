@@ -1,5 +1,4 @@
-// ===========================
-// PROFILE SERVICE
+// Profile service — fetch profile data, completed puzzles, and update profile
 // ===========================
 
 async function fetchProfile(id) {
@@ -24,4 +23,8 @@ async function loadSolved(page) {
     var targetId = new URLSearchParams(window.location.search).get('id');
     var res = await fetchCompletedPuzzles(targetId, search, difficulty, null, page, 6);
     if (tbl && res) tbl.setData(res);
+}
+
+async function updateProfile(data) {
+    return apiPut('/profile', data);
 }

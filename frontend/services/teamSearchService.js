@@ -1,5 +1,4 @@
-// ===========================
-// TEAM SEARCH SERVICE
+// Team search service — search, sort, and paginate team listings
 // ===========================
 
 async function searchTeams(search, sortBy, order, page, limit) {

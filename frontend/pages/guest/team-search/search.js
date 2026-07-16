@@ -1,3 +1,4 @@
+// Guest team search — unauthenticated team catalog
 window.teamTable = TeamTable.init('team-table', {
     searchPlaceholder: 'Search teams...',
     sortByOptions: [

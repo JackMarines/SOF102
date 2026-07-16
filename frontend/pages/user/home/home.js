@@ -1,3 +1,4 @@
+// Home page orchestrator — dynamic dashboard with team grid, weekly puzzles, and team activity
 checkAuth().then(async function (session) {
     var data = await fetchHome();
     if (!data || data.error) return;
@@ -14,18 +15,18 @@ checkAuth().then(async function (session) {
         for (var i = 0; i < team.topMembers.length; i++) {
             var m = team.topMembers[i];
             var col = document.createElement('div');
-            col.className = 'col-lg-3 col-md-4 col-sm-6';
 
             var card = document.createElement('a');
             card.href = '/frontend/pages/user/profile/index.html?id=' + m.userId;
             card.className = 'text-decoration-none';
 
             var box = document.createElement('div');
-            box.className = 'glass-box p-4 text-center';
+            box.className = 'glass-box p-3 text-center home-member-card';
 
             // Rank badge
             var rankBadge = document.createElement('div');
-            rankBadge.className = 'mb-2 fw-bold';
+            rankBadge.className = 'mb-1 fw-bold';
+            rankBadge.style.fontSize = '13px';
             rankBadge.textContent = '#' + m.rank;
             if (m.rank === 1) rankBadge.style.color = '#FFD700';
             else if (m.rank === 2) rankBadge.style.color = '#C0C0C0';
@@ -34,18 +35,18 @@ checkAuth().then(async function (session) {
 
             // Avatar
             var avatarWrap = document.createElement('div');
-            avatarWrap.className = 'd-flex justify-content-center mb-3';
-            avatarWrap.appendChild(Avatar.render({ size: 90, avatar: m.avatar }));
+            avatarWrap.className = 'd-flex justify-content-center mb-2';
+            avatarWrap.appendChild(Avatar.render({ size: 64, avatar: m.avatar, isAdmin: m.isAdmin }));
 
             // Name
-            var nameEl = document.createElement('h5');
-            nameEl.className = 'mb-1';
-            nameEl.style.color = 'inherit';
+            var nameEl = document.createElement('div');
+            nameEl.className = 'home-member-name';
             nameEl.textContent = m.displayName || '';
 
             // Score
             var scoreEl = document.createElement('small');
             scoreEl.className = 'text-secondary';
+            scoreEl.style.fontSize = '12px';
             scoreEl.textContent = (m.totalScore || 0).toLocaleString() + ' pts';
 
             box.appendChild(rankBadge);
@@ -60,7 +61,7 @@ checkAuth().then(async function (session) {
         document.getElementById('team-section').style.display = 'none';
     }
 
-    // --- Helper: Render puzzle rows ---
+    // --- Helper: Render puzzle rows as clickable links to solve page ---
     function renderPuzzleRows(containerId, items, showUser) {
         var el = document.getElementById(containerId);
         if (!items || items.length === 0) {
@@ -70,8 +71,11 @@ checkAuth().then(async function (session) {
         el.innerHTML = '';
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            var row = document.createElement('div');
-            row.className = 'puzzle-item' + (showUser ? ' has-user' : '');
+            var link = document.createElement('a');
+            link.href = '/frontend/pages/user/solve/index.html?id=' + item.id;
+            link.className = 'puzzle-item' + (showUser ? ' has-user' : '');
+            link.style.textDecoration = 'none';
+            link.style.color = 'inherit';
             var html = '';
             if (showUser) {
                 html += '<span>' + (item.displayName || '') + '</span>';
@@ -79,8 +83,8 @@ checkAuth().then(async function (session) {
             html += '<span class="puzzle-title">' + (item.title || '') + '</span>';
             html += '<span>' + (item.language || '-') + '</span>';
             html += '<span class="' + (item.difficulty || '').toLowerCase() + '">' + (item.difficulty || '-') + '</span>';
-            row.innerHTML = html;
-            el.appendChild(row);
+            link.innerHTML = html;
+            el.appendChild(link);
         }
     }
 

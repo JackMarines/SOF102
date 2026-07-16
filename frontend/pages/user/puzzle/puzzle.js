@@ -1,3 +1,4 @@
+// Puzzle catalog orchestrator — initializes puzzle table with search, difficulty, and language filters
 checkAuth().then(function () {
         window.puzzleTable = PuzzleTable.init('puzzle-table', {
         columns: [

@@ -224,6 +224,8 @@ a{
     background: var(--bg-panel);
     border: 1px solid var(--border-panel);
     border-radius: 20px;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .custom-btn{
@@ -1010,30 +1012,54 @@ textarea {
     max-width: 900px;
 }
 
-/* --- User Table Overrides --- */
-.ut-grid {
-    display: grid !important;
-    grid-template-columns: repeat(6, 1fr) !important;
-}
-.ut-card {
-    text-decoration: none !important;
-    color: var(--text-primary) !important;
-}
+/* --- User Table: h5/h6 color fix --- */
 .ut-card-name {
     color: var(--text-primary) !important;
 }
-@media (max-width: 991px) {
-    .ut-grid {
+
+/* --- Home Page Team Grid: 6 per row --- */
+#team-members {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 16px !important;
+}
+#team-members > div {
+    min-width: 0;
+    overflow: hidden;
+}
+#team-members > div > a {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+}
+.home-member-card {
+    height: 100%;
+    overflow: hidden;
+    min-width: 0;
+}
+.home-member-name {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (max-width: 1199px) {
+    #team-members {
         grid-template-columns: repeat(4, 1fr) !important;
     }
 }
-@media (max-width: 768px) {
-    .ut-grid {
+@media (max-width: 991px) {
+    #team-members {
         grid-template-columns: repeat(3, 1fr) !important;
     }
 }
-@media (max-width: 480px) {
-    .ut-grid {
+@media (max-width: 576px) {
+    #team-members {
         grid-template-columns: repeat(2, 1fr) !important;
     }
 }

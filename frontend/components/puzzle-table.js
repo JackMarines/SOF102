@@ -1,3 +1,4 @@
+// Puzzle table component — paginated table with search, difficulty/language filters, and optional link columns
 (function () {
 
     var style = document.createElement('style');

@@ -1,5 +1,4 @@
-// ===========================
-// TEAM SERVICE
+// Team service — CRUD operations for teams (create, join, leave, update, kick, transfer, disband)
 // ===========================
 
 async function fetchTeamDetail(teamId) {
@@ -28,4 +27,12 @@ async function updateShoutout(shoutout) {
 
 async function kickMember(userId) {
     return apiPost('/teams/kick', { userId: userId });
+}
+
+async function createTeam(data) {
+    return apiPost('/teams/create', data);
+}
+
+async function disbandTeam() {
+    return apiDelete('/teams/disband');
 }

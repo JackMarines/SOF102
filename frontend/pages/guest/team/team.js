@@ -1,3 +1,4 @@
+// Guest team detail — read-only team view with clickable members, top contributors, and owner link
 (async function () {
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
@@ -32,6 +33,7 @@
     }
     var ownerEl = document.getElementById('team-owner');
     if (owner) {
+        ownerEl.href = '/frontend/pages/guest/profile/index.html?id=' + owner.userId;
         ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar }));
         var ownerName = document.createElement('span');
         ownerName.textContent = owner.displayName || 'Unknown';
@@ -71,8 +73,10 @@
     if (team.topMembers && team.topMembers.length > 0) {
         for (var k = 0; k < team.topMembers.length; k++) {
             var m = team.topMembers[k];
-            var row = document.createElement('div');
-            row.className = 'd-flex align-items-center mb-3';
+            var row = document.createElement('a');
+            row.href = '/frontend/pages/guest/profile/index.html?id=' + m.userId;
+            row.className = 'd-flex align-items-center mb-3 text-decoration-none';
+            row.style.color = 'inherit';
 
             var rankBadge = document.createElement('span');
             rankBadge.className = 'me-3 fw-bold';
@@ -114,7 +118,7 @@
             { key: 'puzzles', label: 'Puzzles' },
             { key: 'score', label: 'Score' }
         ],
-        urlTemplate: null,
+        urlTemplate: '/frontend/pages/guest/profile/index.html?id=',
         onSearch: function () { loadMembers(1); },
         onPageChange: function (page) { loadMembers(page); }
     });

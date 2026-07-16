@@ -1,5 +1,4 @@
-// ===========================
-// USER SEARCH SERVICE
+// User search service — search and paginate user/player listings
 // ===========================
 
 async function fetchUsers(page) {
