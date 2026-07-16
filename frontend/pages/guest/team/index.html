@@ -41,54 +41,31 @@
     <!-- ================= CONTENT ================= -->
 
     <section class="container" style="margin-top:120px; margin-bottom:80px;">
+
         <!-- Team Banner -->
-        <div class="glass-box position-relative overflow-hidden mb-5">
+        <div class="glass-box position-relative overflow-hidden mb-5 tt-banner">
 
-            <!-- Banner -->
-            <img src="/frontend/assets/images/team-banner.jpg" class="w-100"
-                style="height:320px;object-fit:cover;filter:brightness(.45);">
+            <img id="team-banner" src="/frontend/assets/images/team-banner.png" class="w-100 tt-banner-img"
+                style="height:320px;object-fit:cover;">
 
-            <!-- Overlay -->
-            <div class="position-absolute top-50 start-0 translate-middle-y w-100 px-5">
+            <div class="tt-banner-overlay"></div>
+
+            <div class="position-absolute top-50 start-0 translate-middle-y w-100 px-5 tt-banner-info">
 
                 <div class="row align-items-center">
 
                     <div class="col-lg-9">
 
                         <h1 class="fw-bold mb-3 text-white">
-
-                            Dev Warriors
-
-                            <span class="badge bg-success ms-2">
-                                Public
-                            </span>
-
+                            <span id="team-name"></span>
+                            <span id="team-visibility-badge" class="badge ms-2"></span>
                         </h1>
 
-                        <p class="text-light mb-2">
+                        <div id="team-owner-wrapper" class="mb-2">
+                            <div id="team-owner" class="d-inline-flex align-items-center gap-2 text-decoration-none" style="color: inherit;"></div>
+                        </div>
 
-                            <strong>Owner:</strong> BachDev
-
-                        </p>
-
-                        <p class="text-light mb-0">
-
-                            Welcome to Dev Warriors.
-                            We solve programming puzzles together,
-                            improve our coding skills and help each other
-                            become better developers every day.
-
-                        </p>
-
-                    </div>
-
-                    <div class="col-lg-3 text-lg-end mt-4 mt-lg-0">
-
-                        <button class="custom-btn">
-
-                            Join
-
-                        </button>
+                        <div id="join-btn-wrapper" class="mt-3"></div>
 
                     </div>
 
@@ -98,257 +75,69 @@
 
         </div>
 
+        <!-- Group Shoutout -->
+        <div class="glass-box p-4 mb-4">
+
+            <div class="d-flex align-items-center mb-3">
+                <h4 class="fw-bold mb-0">
+                    <i class="bi bi-megaphone-fill text-warning"></i>
+                    Group Shoutout
+                </h4>
+            </div>
+
+            <p id="team-shoutout" class="mb-0"></p>
+
+        </div>
+
         <div class="row g-4">
 
             <!-- LEFT -->
             <div class="col-lg-8">
 
-                <!-- GROUP SHOUTOUTS -->
-                <div class="glass-box p-4 mb-4">
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-
-                        <h4 class="fw-bold mb-0">
-                            <i class="bi bi-megaphone"></i>
-                            Group Shoutouts
-                        </h4>
-
-                        <small class="text-secondary">
-                            View Archive
-                        </small>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-
-                            <div class="glass-box p-3 h-100">
-
-                                <span class="badge bg-primary mb-3">
-                                    DAILY MOTIVATION
-                                </span>
-
-                                <h6 class="fw-bold">
-                                    Keep Learning Every Day
-                                </h6>
-
-                                <p class="text-secondary mb-0">
-                                    Every puzzle you solve helps improve your problem-solving skills.
-                                    Stay consistent and enjoy the learning journey!
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-6">
-
-                            <div class="glass-box p-3 h-100">
-
-                                <span class="badge bg-success mb-3">
-                                    TEAM MESSAGE
-                                </span>
-
-                                <h6 class="fw-bold">
-                                    We Grow Better Together
-                                </h6>   
-
-                                <p class="text-secondary mb-0">
-                                    Support your teammates, share your ideas, and work together to
-                                    become stronger developers every day.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- LEADERBOARD -->
-
+                <!-- MEMBERS TABLE -->
                 <div class="glass-box p-4">
 
-                    <h4 class="fw-bold mb-5">
-                        Leaderboard
+                    <h4 class="fw-bold mb-4">
+                        <i class="bi bi-people-fill"></i>
+                        Members
                     </h4>
 
-                    <div class="row text-center">
-
-                        <!-- I -->
-                        <div class="col">
-
-                            <img src="/frontend/assets/images/avatar1.png" class="rounded-circle mb-3" width="80"
-                                height="80">
-
-                            <h6 class="fw-bold">
-                                BachDev
-                            </h6>
-
-                            <p class="text-warning fw-bold mb-0">
-                                I
-                            </p>
-
-                        </div>
-
-                        <!-- II -->
-                        <div class="col">
-
-                            <img src="/frontend/assets/images/avatar2.png" class="rounded-circle mb-3" width="80"
-                                height="80">
-
-                            <h6 class="fw-bold">
-                                Alex
-                            </h6>
-
-                            <p class="text-secondary fw-bold mb-0">
-                                II
-                            </p>
-
-                        </div>
-
-                        <!-- III -->
-                        <div class="col">
-
-                            <img src="/frontend/assets/images/avatar3.png" class="rounded-circle mb-3" width="80"
-                                height="80">
-
-                            <h6 class="fw-bold">
-                                Emma
-                            </h6>
-
-                            <p class="text-warning fw-bold mb-0">
-                                III
-                            </p>
-
-                        </div>
-
-                        <!-- IV -->
-                        <div class="col">
-
-                            <img src="/frontend/assets/images/avatar4.png" class="rounded-circle mb-3" width="80"
-                                height="80">
-
-                            <h6 class="fw-bold">
-                                Lucas
-                            </h6>
-
-                            <p class="text-secondary fw-bold mb-0">
-                                IV
-                            </p>
-
-                        </div>
-
-                        <!-- V -->
-                        <div class="col">
-
-                            <img src="/frontend/assets/images/avatar5.png" class="rounded-circle mb-3" width="80"
-                                height="80">
-
-                            <h6 class="fw-bold">
-                                Sophia
-                            </h6>
-
-                            <p class="text-warning fw-bold mb-0">
-                                V
-                            </p>
-
-                        </div>
-
-                        <!-- VI -->
-                        <div class="col">
-
-                            <img src="/frontend/assets/images/avatar6.png" class="rounded-circle mb-3" width="80"
-                                height="80">
-
-                            <h6 class="fw-bold">
-                                David
-                            </h6>
-
-                            <p class="text-secondary fw-bold mb-0">
-                                VI
-                            </p>
-
-                        </div>
-
-                    </div>
+                    <div id="member-table"></div>
 
                 </div>
 
             </div>
 
             <!-- RIGHT -->
-
             <div class="col-lg-4">
 
                 <!-- PERFORMANCE -->
-
                 <div class="glass-box p-4 mb-4">
 
                     <h4 class="fw-bold mb-4">
-
                         Performance Matrix
-
                     </h4>
 
-                    <p class="mb-1">
-
-                        Group Throughput
-
-                    </p>
-
+                    <p class="mb-1">Group Throughput</p>
                     <div class="progress mb-3">
-
-                        <div class="progress-bar" style="width:89%">
-
-                            89%
-
-                        </div>
-
+                        <div id="perf-throughput-bar" class="progress-bar" style="width:0%"></div>
                     </div>
-
-                    <p class="mb-1">
-
-                        Success Rate
-
-                    </p>
-
-                    <div class="progress mb-4">
-
-                        <div class="progress-bar bg-success" style="width:94%">
-
-                            94%
-
-                        </div>
-
-                    </div>
+                    <p id="perf-throughput-text" class="text-end text-secondary small mb-4">0%</p>
 
                     <div class="row text-center">
 
                         <div class="col">
-
                             <div class="glass-box p-3">
-
-                                <h5>1204</h5>
-
+                                <h5 id="perf-total-solved">0</h5>
                                 <small>Solved</small>
-
                             </div>
-
                         </div>
 
                         <div class="col">
-
                             <div class="glass-box p-3">
-
-                                <h5>2.4s</h5>
-
-                                <small>Latency</small>
-
+                                <h5 id="perf-total-score">0</h5>
+                                <small>Total Score</small>
                             </div>
-
                         </div>
 
                     </div>
@@ -356,159 +145,49 @@
                 </div>
 
                 <!-- TOP CONTRIBUTORS -->
-
                 <div class="glass-box p-4">
 
                     <h4 class="fw-bold mb-4">
+                        <i class="bi bi-trophy-fill text-warning"></i>
                         Top Contributors
                     </h4>
 
-                    <!-- #1 -->
-                    <div class="d-flex align-items-center mb-3">
-
-                        <img src="/frontend/assets/images/avatar1.png" width="45" height="45"
-                            class="rounded-circle me-3">
-
-                        <div class="flex-grow-1">
-
-                            <div class="fw-bold">
-                                BachDev
-                            </div>
-
-                            <small class="text-secondary">
-                                12,400 XP
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <!-- #2 -->
-                    <div class="d-flex align-items-center mb-3">
-
-                        <img src="/frontend/assets/images/avatar2.png" width="45" height="45"
-                            class="rounded-circle me-3">
-
-                        <div class="flex-grow-1">
-
-                            <div class="fw-bold">
-                                Alex
-                            </div>
-
-                            <small class="text-secondary">
-                                11,850 XP
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <!-- #3 -->
-                    <div class="d-flex align-items-center mb-3">
-
-                        <img src="/frontend/assets/images/avatar3.png" width="45" height="45"
-                            class="rounded-circle me-3">
-
-                        <div class="flex-grow-1">
-
-                            <div class="fw-bold">
-                                Emma
-                            </div>
-
-                            <small class="text-secondary">
-                                10,210 XP
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <!-- #4 -->
-                    <div class="d-flex align-items-center mb-3">
-
-                        <img src="/frontend/assets/images/avatar4.png" width="45" height="45"
-                            class="rounded-circle me-3">
-
-                        <div class="flex-grow-1">
-
-                            <div class="fw-bold">
-                                Lucas
-                            </div>
-
-                            <small class="text-secondary">
-                                9,870 XP
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <!-- #5 -->
-                    <div class="d-flex align-items-center mb-3">
-
-                        <img src="/frontend/assets/images/avatar5.png" width="45" height="45"
-                            class="rounded-circle me-3">
-
-                        <div class="flex-grow-1">
-
-                            <div class="fw-bold">
-                                Sophia
-                            </div>
-
-                            <small class="text-secondary">
-                                9,240 XP
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <!-- #6 -->
-                    <div class="d-flex align-items-center">
-
-                        <img src="/frontend/assets/images/avatar6.png" width="45" height="45"
-                            class="rounded-circle me-3">
-
-                        <div class="flex-grow-1">
-
-                            <div class="fw-bold">
-                                David
-                            </div>
-
-                            <small class="text-secondary">
-                                8,910 XP
-                            </small>
-
-                        </div>
-
-                    </div>
+                    <div id="top-contributors"></div>
 
                 </div>
-                <!-- Footer -->
-                <div id="footer"></div>
 
-                <!-- Components -->
-                <script src="/frontend/components/navbar-user.js"></script>
-                <script src="/frontend/components/footer.js"></script>
+            </div>
 
-                <!-- Firebase -->
-                <script src="/frontend/utils/constants.js"></script>
+        </div>
 
-                <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-                <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    </section>
 
-                <!-- Services -->
-                <script src="/frontend/services/api.js"></script>
-                <script src="/frontend/services/authService.js"></script>
+    <div id="footer"></div>
 
-                <script>
+    <!-- Components -->
+    <script src="/frontend/components/navbar-guest.js"></script>
+    <script src="/frontend/components/footer.js"></script>
+    <script src="/frontend/components/spinner.js"></script>
+    <script src="/frontend/components/avatar.js"></script>
+    <script src="/frontend/components/user-table.js"></script>
 
-                    checkAuth();
+    <!-- Firebase -->
+    <script src="/frontend/utils/constants.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
-                </script>
+    <!-- Services -->
+    <script src="/frontend/services/api.js"></script>
+    <script src="/frontend/services/authService.js"></script>
+    <script src="/frontend/services/teamService.js"></script>
 
-                <!-- Bootstrap -->
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Orchestrator -->
+    <script src="/frontend/pages/guest/team/team.js"></script>
+
+    <script>redirectIfAuthenticated();</script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

@@ -18,7 +18,7 @@ import util.ResponseUtil;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet({"/api/v1/teams/create", "/api/v1/teams/join", "/api/v1/teams/leave",
+@WebServlet({"/api/v1/teams/create", "/api/v1/teams/join", "/api/v1/teams/leave", "/api/v1/teams/kick",
              "/api/v1/teams/update", "/api/v1/teams/shoutout",
              "/api/v1/teams/transfer", "/api/v1/teams/disband"})
 public class TeamManageController extends HttpServlet {
@@ -37,6 +37,8 @@ public class TeamManageController extends HttpServlet {
             handleJoin(req, resp);
         } else if (uri.endsWith("/leave")) {
             handleLeave(req, resp);
+        } else if (uri.endsWith("/kick")) {
+            handleKick(req, resp);
         } else {
             ResponseUtil.error(resp, 404, "Not found");
         }
@@ -380,6 +382,70 @@ public class TeamManageController extends HttpServlet {
 
         Map<String, Object> data = new HashMap<>();
         data.put("message", "Ownership transferred");
+        ResponseUtil.success(resp, data);
+    }
+
+    // POST /api/v1/teams/kick — đá thành viên
+    private void handleKick(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "Not authenticated");
+            return;
+        }
+
+        User user = userDao.findById(sessionUser.getUserId());
+        if (user == null || user.getTeam() == null) {
+            ResponseUtil.error(resp, 400, "Not in a team");
+            return;
+        }
+
+        Team team = user.getTeam();
+        if (!teamDao.isOwner(team.getTeamId(), user.getUserId())) {
+            ResponseUtil.error(resp, 403, "Only the team owner can kick members");
+            return;
+        }
+
+        Map<String, Object> body;
+        try {
+            body = objectMapper.readValue(req.getReader(), Map.class);
+        } catch (Exception e) {
+            ResponseUtil.error(resp, 400, "Invalid JSON");
+            return;
+        }
+
+        Object userIdObj = body.get("userId");
+        if (userIdObj == null) {
+            ResponseUtil.error(resp, 400, "userId is required");
+            return;
+        }
+
+        int targetUserId;
+        try {
+            targetUserId = ((Number) userIdObj).intValue();
+        } catch (Exception e) {
+            ResponseUtil.error(resp, 400, "Invalid userId");
+            return;
+        }
+
+        if (targetUserId == user.getUserId()) {
+            ResponseUtil.error(resp, 400, "Cannot kick yourself");
+            return;
+        }
+
+        User targetUser = userDao.findById(targetUserId);
+        if (targetUser == null || targetUser.getTeam() == null
+                || targetUser.getTeam().getTeamId() != team.getTeamId()) {
+            ResponseUtil.error(resp, 400, "User is not a member of your team");
+            return;
+        }
+
+        userDao.setTeam(targetUserId, null);
+
+        logger.info("User {} kicked from team {} by {}", targetUserId, team.getTeamId(), user.getUserId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", "Member kicked");
         ResponseUtil.success(resp, data);
     }
 

@@ -51,13 +51,19 @@
     text-decoration: none;
 }
 
-.profile-btn i{
+.nav-avatar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-btn > i{
     font-size: 34px;
     color: var(--profile-icon);
     transition: .3s;
 }
 
-.profile-btn:hover i{
+.profile-btn:hover > i{
     color: var(--accent);
 }
 

@@ -13,3 +13,11 @@ async function getFilteredPuzzles(search, difficulty, page, limit) {
     if (difficulty) url += '&difficulty=' + difficulty;
     return apiGet(url);
 }
+
+async function getPuzzlesWithLanguage(search, difficulty, language, page, limit) {
+    let url = '/puzzles?page=' + page + '&limit=' + limit;
+    if (search) url += '&search=' + encodeURIComponent(search);
+    if (difficulty) url += '&difficulty=' + difficulty;
+    if (language) url += '&language=' + encodeURIComponent(language);
+    return apiGet(url);
+}

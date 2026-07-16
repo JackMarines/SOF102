@@ -1,0 +1,153 @@
+(async function () {
+    var params = new URLSearchParams(window.location.search);
+    var teamId = params.get('id');
+    if (!teamId) return;
+
+    var team = await fetchTeamDetail(teamId);
+    if (!team || team.error) return;
+
+    document.title = (team.name || 'Team') + ' - DevClimb';
+
+    // --- Banner ---
+    var banner = document.getElementById('team-banner');
+    if (team.avatar) {
+        banner.src = team.avatar;
+    }
+
+    // --- Team Name + Badge ---
+    document.getElementById('team-name').textContent = team.name || '';
+    var badge = document.getElementById('team-visibility-badge');
+    badge.textContent = team.isPublic ? 'Public' : 'Private';
+    badge.className = 'badge ms-2 ' + (team.isPublic ? 'bg-success' : 'bg-secondary');
+
+    // --- Owner ---
+    var owner = null;
+    if (team.members) {
+        for (var i = 0; i < team.members.length; i++) {
+            if (String(team.members[i].userId) === String(team.ownerId)) {
+                owner = team.members[i];
+                break;
+            }
+        }
+    }
+    var ownerEl = document.getElementById('team-owner');
+    if (owner) {
+        ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar }));
+        var ownerName = document.createElement('span');
+        ownerName.textContent = owner.displayName || 'Unknown';
+        ownerEl.appendChild(ownerName);
+        document.getElementById('team-owner-wrapper').appendChild(ownerEl);
+    }
+
+    // --- Join Button (redirect to login) ---
+    if (team.isPublic) {
+        var joinWrapper = document.getElementById('join-btn-wrapper');
+        var joinBtn = document.createElement('a');
+        joinBtn.className = 'custom-btn';
+        joinBtn.textContent = 'Join Team';
+        joinBtn.href = '/frontend/pages/guest/auth/login.html';
+        joinWrapper.appendChild(joinBtn);
+    }
+
+    // --- Shoutout ---
+    document.getElementById('team-shoutout').textContent = team.shoutout || '';
+
+    // --- Performance Matrix ---
+    document.getElementById('perf-throughput-bar').style.width = (team.throughput || 0) + '%';
+    document.getElementById('perf-throughput-text').textContent = (team.throughput || 0) + '%';
+    document.getElementById('perf-total-solved').textContent = (team.totalSolved || 0).toLocaleString();
+
+    var totalScore = 0;
+    if (team.members) {
+        for (var j = 0; j < team.members.length; j++) {
+            totalScore += team.members[j].totalScore || 0;
+        }
+    }
+    document.getElementById('perf-total-score').textContent = totalScore.toLocaleString();
+
+    // --- Top Contributors ---
+    var topEl = document.getElementById('top-contributors');
+    topEl.innerHTML = '';
+    if (team.topMembers && team.topMembers.length > 0) {
+        for (var k = 0; k < team.topMembers.length; k++) {
+            var m = team.topMembers[k];
+            var row = document.createElement('div');
+            row.className = 'd-flex align-items-center mb-3';
+
+            var rankBadge = document.createElement('span');
+            rankBadge.className = 'me-3 fw-bold';
+            rankBadge.style.minWidth = '24px';
+            rankBadge.textContent = '#' + m.rank;
+            if (m.rank === 1) {
+                rankBadge.style.color = '#FFD700';
+            } else if (m.rank === 2) {
+                rankBadge.style.color = '#C0C0C0';
+            } else if (m.rank === 3) {
+                rankBadge.style.color = '#CD7F32';
+            } else {
+                rankBadge.className += ' text-secondary';
+            }
+
+            row.appendChild(rankBadge);
+            row.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
+
+            var info = document.createElement('div');
+            info.className = 'flex-grow-1 ms-3';
+            var nameDiv = document.createElement('div');
+            nameDiv.className = 'fw-bold';
+            nameDiv.textContent = m.displayName || '';
+            var scoreSmall = document.createElement('small');
+            scoreSmall.className = 'text-secondary';
+            scoreSmall.textContent = (m.totalScore || 0).toLocaleString() + ' pts';
+            info.appendChild(nameDiv);
+            info.appendChild(scoreSmall);
+            row.appendChild(info);
+
+            topEl.appendChild(row);
+        }
+    }
+
+    // --- Members Table (UserTable) ---
+    window.memberTable = UserTable.init('member-table', {
+        columns: [
+            { key: 'user', label: 'Member' },
+            { key: 'puzzles', label: 'Puzzles' },
+            { key: 'score', label: 'Score' }
+        ],
+        urlTemplate: null,
+        onSearch: function () { loadMembers(1); },
+        onPageChange: function (page) { loadMembers(page); }
+    });
+
+    window.loadMembers = async function (page) {
+        var tbl = window.memberTable;
+        var searchTerm = tbl ? tbl.getSearchTerm() : '';
+        var allMembers = team.members || [];
+
+        if (searchTerm) {
+            var lower = searchTerm.toLowerCase();
+            allMembers = allMembers.filter(function (m) {
+                return (m.displayName || '').toLowerCase().indexOf(lower) !== -1;
+            });
+        }
+
+        var pageSize = 12;
+        var p = page || 1;
+        var start = (p - 1) * pageSize;
+        var paged = allMembers.slice(start, start + pageSize);
+
+        var fakeResponse = {
+            data: paged,
+            pagination: {
+                page: p,
+                totalPages: Math.max(1, Math.ceil(allMembers.length / pageSize)),
+                total: allMembers.length,
+                limit: pageSize
+            }
+        };
+
+        if (tbl) tbl.setData(fakeResponse);
+    };
+
+    loadMembers(1);
+})();

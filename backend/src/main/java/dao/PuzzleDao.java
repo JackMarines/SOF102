@@ -12,7 +12,7 @@ import java.util.List;
 public class PuzzleDao {
 
     // Lấy danh sách puzzle có phân trang + tìm kiếm + lọc theo độ khó
-    public List<Puzzle> findAll(int page, int limit, String search, String difficulty) {
+    public List<Puzzle> findAll(int page, int limit, String search, String difficulty, String language) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             StringBuilder jpql = new StringBuilder(
@@ -23,6 +23,9 @@ public class PuzzleDao {
             if (difficulty != null && !difficulty.trim().isEmpty()) {
                 jpql.append(" AND p.puzDifficulty = :difficulty");
             }
+            if (language != null && !language.trim().isEmpty()) {
+                jpql.append(" AND p.language.langName = :language");
+            }
             jpql.append(" ORDER BY p.puzId");
 
             TypedQuery<Puzzle> query = em.createQuery(jpql.toString(), Puzzle.class);
@@ -31,6 +34,9 @@ public class PuzzleDao {
             }
             if (difficulty != null && !difficulty.trim().isEmpty()) {
                 query.setParameter("difficulty", difficulty.trim());
+            }
+            if (language != null && !language.trim().isEmpty()) {
+                query.setParameter("language", language.trim());
             }
             query.setFirstResult((page - 1) * limit);
             query.setMaxResults(limit);
@@ -41,7 +47,7 @@ public class PuzzleDao {
     }
 
     // Đếm tổng số puzzle (dùng cho phân trang)
-    public long count(String search, String difficulty) {
+    public long count(String search, String difficulty, String language) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             StringBuilder jpql = new StringBuilder(
@@ -52,6 +58,9 @@ public class PuzzleDao {
             if (difficulty != null && !difficulty.trim().isEmpty()) {
                 jpql.append(" AND p.puzDifficulty = :difficulty");
             }
+            if (language != null && !language.trim().isEmpty()) {
+                jpql.append(" AND p.language.langName = :language");
+            }
 
             TypedQuery<Long> query = em.createQuery(jpql.toString(), Long.class);
             if (search != null && !search.trim().isEmpty()) {
@@ -59,6 +68,9 @@ public class PuzzleDao {
             }
             if (difficulty != null && !difficulty.trim().isEmpty()) {
                 query.setParameter("difficulty", difficulty.trim());
+            }
+            if (language != null && !language.trim().isEmpty()) {
+                query.setParameter("language", language.trim());
             }
             return query.getSingleResult();
         } finally {

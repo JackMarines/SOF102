@@ -18,3 +18,14 @@ async function apiGet(path) {
   });
   return res.json();
 }
+
+// Gửi PUT request
+async function apiPut(path, body) {
+  const res = await fetch(API_BASE + path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(body),
+  });
+  return res.json();
+}

@@ -52,6 +52,7 @@ public class UserSearchController extends HttpServlet {
             item.put("isAdmin", row[3]);
             item.put("groupName", row[4]);
             item.put("totalScore", row[5]);
+            item.put("totalPuzzles", row[6]);
             dataList.add(item);
         }
 

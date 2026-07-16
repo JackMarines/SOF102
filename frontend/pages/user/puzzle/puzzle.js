@@ -1,5 +1,5 @@
 checkAuth().then(function () {
-    window.puzzleTable = PuzzleTable.init('puzzle-table', {
+        window.puzzleTable = PuzzleTable.init('puzzle-table', {
         columns: [
             { key: 'id', label: '#', width: '60px' },
             { key: 'title', label: 'Title' },
@@ -13,9 +13,12 @@ checkAuth().then(function () {
         searchPlaceholder: 'Search puzzles...',
         filterOptions: ['Easy', 'Medium', 'Hard'],
         filterLabel: 'Difficulty',
+        filter2Options: ['Python', 'Javascript', 'PHP'],
+        filter2Label: 'Language',
         urlTemplate: '/frontend/pages/user/solve/index.html?id=',
         onSearch: function () { loadPuzzles(1); },
         onFilter: function () { loadPuzzles(1); },
+        onFilter2: function () { loadPuzzles(1); },
         onPageChange: function (page) { loadPuzzles(page); }
     });
 

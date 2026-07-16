@@ -117,6 +117,8 @@ public class TeamBrowseController extends HttpServlet {
             m.put("displayName", row[1]);
             m.put("avatar", row[2]);
             m.put("totalScore", row[3]);
+            m.put("totalPuzzles", row[4]);
+            m.put("isAdmin", Boolean.TRUE.equals(row[5]));
             members.add(m);
         }
 

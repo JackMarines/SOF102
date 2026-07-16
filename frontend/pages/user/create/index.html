@@ -31,66 +31,7 @@
         } catch (e) { }
     </script>
 
-    <style>
-        .create-team-container {
-            max-width: 750px;
-            margin: auto;
-        }
 
-        .upload-box {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 50px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .upload-box:hover {
-            border-color: #8b5cf6;
-        }
-
-        .upload-box i {
-            font-size: 40px;
-            color: #8b5cf6;
-        }
-
-        .preview-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: none;
-            margin: auto;
-        }
-
-        .visibility-card {
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .visibility-card.active {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.15);
-        }
-
-        .create-btn {
-            background: linear-gradient(90deg, #8b5cf6, #a855f7);
-            border: none;
-            font-weight: 600;
-        }
-
-        .create-btn:hover {
-            opacity: 0.9;
-        }
-
-        textarea {
-            resize: none;
-        }
-    </style>
 
 </head>
 
@@ -237,6 +178,7 @@
     <!-- Components -->
     <script src="/frontend/components/navbar-user.js"></script>
     <script src="/frontend/components/footer.js"></script>
+    <script src="/frontend/components/spinner.js"></script>
 
     <!-- Firebase -->
     <script src="/frontend/utils/constants.js"></script>

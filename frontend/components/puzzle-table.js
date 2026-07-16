@@ -35,9 +35,11 @@
         /* --- Puzzle Table: Dropdown --- */
         .pt-filter-row {
             display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
         }
         .pt-filter-row .dropdown {
-            margin-left: auto;
+            margin-left: 0;
         }
         .pt-filter-row .dropdown .btn {
             background: var(--bg-input);
@@ -46,6 +48,8 @@
             border-radius: 8px;
             min-width: 8rem;
             text-align: left;
+            position: relative;
+            padding-right: 20px;
         }
         .pt-filter-row .dropdown .btn:hover,
         .pt-filter-row .dropdown .btn:focus,
@@ -55,6 +59,21 @@
             color: var(--text-primary);
             border-color: var(--border-input);
             box-shadow: none;
+        }
+        .pt-filter-row .dropdown .btn::after {
+            content: "";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-left: 0.3em solid transparent;
+            border-bottom: 0;
+        }
+        .pt-filter-row .dropdown .btn.show::after {
+            border-top: 0;
+            border-bottom: 0.3em solid;
         }
         .pt-filter-row .dropdown-menu {
             background: var(--bg-input);
@@ -82,9 +101,6 @@
         .pt-filter-row .dropdown-item:active {
             background: var(--bg-active);
             color: var(--text-primary);
-        }
-        .pt-filter-row .dropdown-toggle::after {
-            margin-left: 0.6rem;
         }
 
         /* --- Puzzle Table: Header & Rows --- */
@@ -192,14 +208,18 @@
             searchPlaceholder: 'Search...',
             filterOptions: [],
             filterLabel: 'Filter',
+            filter2Options: [],
+            filter2Label: 'Filter',
             urlTemplate: null,
             onSearch: function () {},
             onFilter: function () {},
+            onFilter2: function () {},
             onPageChange: function () {}
         }, options || {});
 
         this._search = '';
         this._filter = '';
+        this._filter2 = '';
         this._page = 1;
         this._totalPages = 1;
 
@@ -246,48 +266,69 @@
         searchBox.appendChild(btn);
         this.container.appendChild(searchBox);
 
-        // Filter dropdown
-        if (this.opts.filterOptions.length > 0) {
+        // Filter dropdowns
+        if (this.opts.filterOptions.length > 0 || this.opts.filter2Options.length > 0) {
             var filterRow = document.createElement('div');
-            filterRow.className = 'pt-filter-row d-flex';
+            filterRow.className = 'pt-filter-row';
 
-            var dropdown = document.createElement('div');
-            dropdown.className = 'dropdown';
+            function buildDropdown(self, options, label, onSelect) {
+                var dropdown = document.createElement('div');
+                dropdown.className = 'dropdown';
 
-            var toggle = document.createElement('button');
-            toggle.className = 'btn btn-secondary dropdown-toggle';
-            toggle.type = 'button';
-            toggle.setAttribute('data-bs-toggle', 'dropdown');
-            toggle.textContent = this.opts.filterLabel;
-            this._toggleBtn = toggle;
+                var toggle = document.createElement('button');
+                toggle.className = 'btn btn-secondary dropdown-toggle';
+                toggle.type = 'button';
+                toggle.setAttribute('data-bs-toggle', 'dropdown');
+                toggle.textContent = label;
 
-            var menu = document.createElement('ul');
-            menu.className = 'dropdown-menu';
+                var menu = document.createElement('ul');
+                menu.className = 'dropdown-menu';
 
-            // "None" option
-            var noneLi = document.createElement('li');
-            var noneA = document.createElement('a');
-            noneA.className = 'dropdown-item';
-            noneA.textContent = 'None';
-            noneA.addEventListener('click', function () { self._doFilter(''); });
-            noneLi.appendChild(noneA);
-            menu.appendChild(noneLi);
+                var noneLi = document.createElement('li');
+                var noneA = document.createElement('a');
+                noneA.className = 'dropdown-item';
+                noneA.textContent = 'None';
+                noneA.addEventListener('click', function () { onSelect(toggle, ''); });
+                noneLi.appendChild(noneA);
+                menu.appendChild(noneLi);
 
-            for (var i = 0; i < this.opts.filterOptions.length; i++) {
-                (function (opt) {
-                    var li = document.createElement('li');
-                    var a = document.createElement('a');
-                    a.className = 'dropdown-item';
-                    a.textContent = opt;
-                    a.addEventListener('click', function () { self._doFilter(opt); });
-                    li.appendChild(a);
-                    menu.appendChild(li);
-                })(this.opts.filterOptions[i]);
+                for (var i = 0; i < options.length; i++) {
+                    (function (opt) {
+                        var li = document.createElement('li');
+                        var a = document.createElement('a');
+                        a.className = 'dropdown-item';
+                        a.textContent = opt;
+                        a.addEventListener('click', function () { onSelect(toggle, opt); });
+                        li.appendChild(a);
+                        menu.appendChild(li);
+                    })(options[i]);
+                }
+
+                dropdown.appendChild(toggle);
+                dropdown.appendChild(menu);
+                return dropdown;
             }
 
-            dropdown.appendChild(toggle);
-            dropdown.appendChild(menu);
-            filterRow.appendChild(dropdown);
+            var self = this;
+
+            if (this.opts.filterOptions.length > 0) {
+                this._toggleBtn = buildDropdown(this, this.opts.filterOptions, this.opts.filterLabel, function (btn, val) {
+                    self._filter = val;
+                    btn.textContent = val || self.opts.filterLabel;
+                    self.opts.onFilter(val);
+                });
+                filterRow.appendChild(this._toggleBtn);
+            }
+
+            if (this.opts.filter2Options.length > 0) {
+                this._toggleBtn2 = buildDropdown(this, this.opts.filter2Options, this.opts.filter2Label, function (btn, val) {
+                    self._filter2 = val;
+                    btn.textContent = val || self.opts.filter2Label;
+                    self.opts.onFilter2(val);
+                });
+                filterRow.appendChild(this._toggleBtn2);
+            }
+
             this.container.appendChild(filterRow);
         }
 
@@ -331,6 +372,7 @@
 
     PuzzleTable.prototype.getSearchTerm = function () { return this._search; };
     PuzzleTable.prototype.getFilter = function () { return this._filter; };
+    PuzzleTable.prototype.getFilter2 = function () { return this._filter2; };
     PuzzleTable.prototype.getCurrentPage = function () { return this._page; };
 
     PuzzleTable.prototype.setData = function (response) {

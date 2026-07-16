@@ -49,7 +49,7 @@ public class ProfileController extends HttpServlet {
     }
 
     // Gom chung logic build response profile (dùng cho cả own + public)
-    private Map<String, Object> buildProfileResponse(User user, int rank, long totalCompleted) {
+    private Map<String, Object> buildProfileResponse(User user, int rank, long totalCompleted, int totalScore) {
         Map<String, Object> data = new HashMap<>();
         data.put("displayName", user.getUserName());
         data.put("avatar", user.getUserAvatar());
@@ -57,7 +57,9 @@ public class ProfileController extends HttpServlet {
         data.put("groupName", user.getTeam() != null ? user.getTeam().getTeamName() : null);
         data.put("teamId", user.getTeam() != null ? user.getTeam().getTeamId() : null);
         data.put("rank", rank);
+        data.put("totalScore", totalScore);
         data.put("totalCompletedPuzzles", totalCompleted);
+        data.put("isAdmin", user.getUserIsadmin());
         return data;
     }
 
@@ -85,7 +87,7 @@ public class ProfileController extends HttpServlet {
                 user.getTeam().getTeamId(), user.getUserId(), totalScore);
         }
 
-        ResponseUtil.success(resp, buildProfileResponse(user, rank, totalCompleted));
+        ResponseUtil.success(resp, buildProfileResponse(user, rank, totalCompleted, totalScore));
     }
 
     // Xem profile public của user khác (không cần đăng nhập)
@@ -114,7 +116,7 @@ public class ProfileController extends HttpServlet {
                 user.getTeam().getTeamId(), user.getUserId(), totalScore);
         }
 
-        ResponseUtil.success(resp, buildProfileResponse(user, rank, totalCompleted));
+        ResponseUtil.success(resp, buildProfileResponse(user, rank, totalCompleted, totalScore));
     }
 
     // Lấy danh sách puzzle đã hoàn thành (có phân trang + lọc)

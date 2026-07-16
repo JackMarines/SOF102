@@ -60,6 +60,7 @@ public class PuzzleController extends HttpServlet {
         int limit = 10;
         String search = req.getParameter("search");
         String difficulty = req.getParameter("difficulty");
+        String language = req.getParameter("language");
 
         if (req.getParameter("page") != null) {
             try {
@@ -79,9 +80,9 @@ public class PuzzleController extends HttpServlet {
             }
         }
 
-        long total = puzzleDao.count(search, difficulty);
+        long total = puzzleDao.count(search, difficulty, language);
         int totalPages = (int) Math.ceil((double) total / limit);
-        List<Puzzle> puzzles = puzzleDao.findAll(page, limit, search, difficulty);
+        List<Puzzle> puzzles = puzzleDao.findAll(page, limit, search, difficulty, language);
 
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (Puzzle p : puzzles) {
