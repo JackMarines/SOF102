@@ -182,9 +182,9 @@ public class AuthController extends HttpServlet {
         ResponseUtil.success(resp, data);
     }
 
-    // Lấy thông tin user từ session hiện tại
+    // Lấy thông tin user — re-fetches from DB so teamId stays current after join/leave
     private void doMe(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User user = (User) req.getSession().getAttribute("user");
+        User user = userDao.findById(((User) req.getSession().getAttribute("user")).getUserId());
         if (user == null) {
             ResponseUtil.error(resp, 401, "Not authenticated");
             return;

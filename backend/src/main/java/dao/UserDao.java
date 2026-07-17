@@ -121,7 +121,8 @@ public class UserDao {
                 "SELECT u.user_id, u.user_name, u.user_avatar, u.user_isadmin, " +
                 "t.team_name, " +
                 "COALESCE((SELECT SUM(p.puz_score) FROM progress pr " +
-                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore, " +
+                "COALESCE((SELECT COUNT(*) FROM progress pr2 WHERE pr2.user_id = u.user_id), 0) as totalPuzzles " +
                 "FROM user u " +
                 "LEFT JOIN team t ON u.team_id = t.team_id " +
                 "WHERE LOWER(u.user_name) LIKE :query " +

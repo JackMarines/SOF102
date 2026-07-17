@@ -24,6 +24,19 @@ public class TeamDao {
         }
     }
 
+    // Tìm team theo tên
+    public Team findByName(String name) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Team> q = em.createQuery("SELECT t FROM Team t WHERE t.teamName = :name", Team.class);
+            q.setParameter("name", name);
+            List<Team> results = q.getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     // Tìm team theo ID
     public Team findById(int id) {
         EntityManager em = JpaUtils.getEntityManager();
@@ -139,7 +152,9 @@ public class TeamDao {
             StringBuilder sql = new StringBuilder(
                 "SELECT u.user_id, u.user_name, u.user_avatar, " +
                 "COALESCE((SELECT SUM(p.puz_score) FROM progress pr " +
-                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore, " +
+                "COALESCE((SELECT COUNT(*) FROM progress pr2 WHERE pr2.user_id = u.user_id), 0) as totalPuzzles, " +
+                "u.user_isadmin " +
                 "FROM user u WHERE u.team_id = ?");
             if (search != null && !search.trim().isEmpty()) {
                 sql.append(" AND LOWER(u.user_name) LIKE ?");
@@ -192,7 +207,8 @@ public class TeamDao {
             jakarta.persistence.Query q = em.createNativeQuery(
                 "SELECT u.user_id, u.user_name, u.user_avatar, " +
                 "COALESCE((SELECT SUM(p.puz_score) FROM progress pr " +
-                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id WHERE pr.user_id = u.user_id), 0) as totalScore, " +
+                "u.user_isadmin " +
                 "FROM user u WHERE u.team_id = ? " +
                 "ORDER BY totalScore DESC LIMIT ?");
             q.setParameter(1, teamId);

@@ -224,6 +224,8 @@ a{
     background: var(--bg-panel);
     border: 1px solid var(--border-panel);
     border-radius: 20px;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .custom-btn{
@@ -569,11 +571,14 @@ pre{
 
 .table-header{
     display: grid;
-    grid-template-columns: 60px 1fr 150px 120px;
+    grid-template-columns: 1fr 150px 120px;
     padding: 12px 20px;
     font-weight: 600;
     color: var(--text-table-header);
     border-bottom: 1px solid var(--header-border);
+}
+.table-header.has-user{
+    grid-template-columns: 120px 1fr 150px 120px;
 }
 
 .puzzle-list{
@@ -582,12 +587,15 @@ pre{
 
 .puzzle-item{
     display: grid;
-    grid-template-columns: 60px 1fr 150px 120px;
+    grid-template-columns: 1fr 150px 120px;
     padding: 14px 20px;
     border-bottom: 1px solid var(--row-border);
     transition: 0.2s;
     text-decoration: none;
     color: var(--text-primary);
+}
+.puzzle-item.has-user{
+    grid-template-columns: 120px 1fr 150px 120px;
 }
 
 .puzzle-item:hover{
@@ -769,13 +777,19 @@ footer{
 .table-header,
 .puzzle-item{
     grid-template-columns:
-    45px
     1fr
     75px
     70px;
     gap:8px;
     font-size:13px;
-    padding:12px;
+}
+.table-header.has-user,
+.puzzle-item.has-user{
+    grid-template-columns:
+    80px
+    1fr
+    75px
+    70px;
 }
 
 .dropdown{
@@ -821,4 +835,231 @@ footer{
     padding:20px;
 }
 
+}
+
+
+/* --- Team Banner Hover --- */
+.tt-banner {
+    cursor: default;
+}
+.tt-banner-img {
+    filter: brightness(1);
+    transition: filter 0.4s ease;
+}
+.tt-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.tt-banner-info {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+}
+.tt-banner:hover .tt-banner-img {
+    filter: brightness(0.3);
+}
+.tt-banner:hover .tt-banner-overlay {
+    opacity: 1;
+}
+.tt-banner:hover .tt-banner-info {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0);
+    pointer-events: auto;
+}
+
+/* --- Create Team --- */
+
+.create-team-container {
+    max-width: 750px;
+    margin: auto;
+}
+
+.upload-box {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-box:hover {
+    border-color: #8b5cf6;
+}
+
+.upload-box i {
+    font-size: 40px;
+    color: #8b5cf6;
+}
+
+.preview-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    margin: auto;
+}
+
+.visibility-card {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.visibility-card.active {
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.15);
+}
+
+.create-btn {
+    background: linear-gradient(90deg, #8b5cf6, #a855f7);
+    border: none;
+    font-weight: 600;
+}
+
+.create-btn:hover {
+    opacity: 0.9;
+}
+
+textarea {
+    resize: none;
+}
+
+/* ── Confirm Popup ── */
+.confirm-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+.confirm-popup-overlay.show {
+    display: flex;
+}
+.confirm-popup {
+    max-width: 420px;
+    width: 90%;
+    padding: 32px;
+    text-align: center;
+    border: 1px solid var(--border-main);
+    border-radius: 16px;
+    background: var(--bg-panel);
+}
+.confirm-popup-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    color: var(--accent);
+}
+
+.custom-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.custom-btn.btn-danger {
+    background: #ef4444;
+}
+.custom-btn.btn-danger:hover {
+    background: #dc2626;
+    transform: none;
+}
+.custom-btn.btn-secondary {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-main);
+    color: var(--text-primary);
+}
+.custom-btn.btn-secondary:hover {
+    background: var(--bg-secondary);
+    transform: none;
+}
+
+/* ── Form Popup (Edit / Transfer) ── */
+.form-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    padding: 40px 0;
+}
+.form-popup-overlay.show {
+    display: flex;
+}
+.form-popup {
+    max-width: 700px;
+    width: 95%;
+    padding: 32px;
+    border: 1px solid var(--border-main);
+    border-radius: 16px;
+    background: var(--bg-panel);
+    text-align: left;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.form-popup-lg {
+    max-width: 900px;
+}
+
+/* --- User Table: h5/h6 color fix --- */
+.ut-card-name {
+    color: var(--text-primary) !important;
+}
+
+/* --- Home Page Team Grid: 6 per row --- */
+#team-members {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 16px !important;
+}
+#team-members > div {
+    min-width: 0;
+    overflow: hidden;
+}
+#team-members > div > a {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+}
+.home-member-card {
+    height: 100%;
+    overflow: hidden;
+    min-width: 0;
+}
+.home-member-name {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (max-width: 1199px) {
+    #team-members {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
+@media (max-width: 991px) {
+    #team-members {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+@media (max-width: 576px) {
+    #team-members {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }

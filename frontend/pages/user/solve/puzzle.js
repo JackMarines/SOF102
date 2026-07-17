@@ -1,3 +1,4 @@
+// Solve page orchestrator — manages code editor, submission, and result display
 import { setLanguage, setCode, getCode,setSubmitCallback, editor, languages } from './codeMirror.js';
 
 setSubmitCallback(() => document.getElementById("submitBtn").click());
