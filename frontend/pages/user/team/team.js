@@ -580,4 +580,6 @@ checkAuth().then(async function (session) {
     };
 
     loadMembers(1);
+
+    window.__pageReady();
 });

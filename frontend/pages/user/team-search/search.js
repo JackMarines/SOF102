@@ -19,4 +19,6 @@ checkAuth().then(function () {
     });
 
     loadTeams();
+
+    window.__pageReady();
 });

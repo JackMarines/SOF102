@@ -10,4 +10,6 @@ checkAuth().then(function () {
         onSearch: function () { loadUsers(1); },
         onPageChange: function (page) { loadUsers(page); }
     });
+
+    window.__pageReady();
 });

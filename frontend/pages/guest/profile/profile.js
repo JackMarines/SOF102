@@ -68,4 +68,6 @@
     });
 
     loadSolved();
+
+    window.__pageReady();
 })();

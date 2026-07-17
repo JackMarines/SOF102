@@ -133,4 +133,6 @@ checkAuth().then(async function (session) {
     });
 
     loadSolved();
+
+    window.__pageReady();
 });

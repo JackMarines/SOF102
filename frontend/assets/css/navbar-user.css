@@ -1,6 +1,6 @@
 .custom-navbar{
-    background: var(--bg-body);
-    border-bottom: 1px solid var(--border-subtle);
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
     padding: 12px 0;
 }
 
@@ -11,20 +11,21 @@
 }
 
 .custom-navbar .navbar-nav .nav-link{
-    font-family: 'Poppins', sans-serif;
-    color: var(--text-secondary) !important;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+    color: #888888 !important;
     letter-spacing: 0.2px;
     text-shadow: none;
     transition: 0.3s ease;
     padding: 8px 10px;
+    font-size: 12px;
 }
 
 .custom-navbar .navbar-nav .nav-link:hover{
-    color: var(--accent) !important;
+    color: #60a5fa !important;
 }
 
 .custom-navbar .navbar-nav .nav-link.active{
-    color: var(--accent) !important;
+    color: #60a5fa !important;
 }
 
 .custom-navbar .navbar-nav .nav-link::after{
@@ -32,8 +33,8 @@
     display: block;
     width: 0;
     height: 2px;
-    background: var(--accent);
-    border-radius: 2px;
+    background: #60a5fa;
+    border-radius: 0;
     transition: width 0.3s ease;
     margin-top: 2px;
 }
@@ -59,12 +60,12 @@
 
 .profile-btn > i{
     font-size: 34px;
-    color: var(--profile-icon);
+    color: #c8c8c8;
     transition: .3s;
 }
 
 .profile-btn:hover > i{
-    color: var(--accent);
+    color: #60a5fa;
 }
 
 .profile-dropdown{
@@ -76,13 +77,13 @@
     position: absolute;
     right: 0;
     top: 100%;
-    background: var(--dropdown-menu-bg);
-    border: 1px solid var(--dropdown-border);
-    border-radius: 8px;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 0;
     min-width: 150px;
     padding: 8px 0;
     z-index: 1000;
-    box-shadow: 0 8px 24px var(--dropdown-shadow);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
 }
 
 .profile-dropdown:hover .dropdown-menu-custom{
@@ -92,21 +93,21 @@
 .dropdown-menu-custom a{
     display: block;
     padding: 8px 20px;
-    color: var(--text-secondary);
+    color: #888888;
     text-decoration: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 12px;
     transition: 0.2s;
 }
 
 .dropdown-menu-custom a:hover{
-    background: var(--dropdown-item-hover-bg);
-    color: var(--accent);
+    background: rgba(255, 255, 255, .04);
+    color: #60a5fa;
 }
 
 .dropdown-menu-custom hr{
     margin: 6px 0;
-    border-color: var(--dropdown-border);
+    border-color: rgba(255, 255, 255, .07);
 }
 
 @media(max-width:991px){
@@ -117,7 +118,7 @@
     }
 
     .custom-navbar .navbar-nav .nav-link{
-        font-size: 16px;
+        font-size: 14px;
         padding: 12px 0;
     }
 

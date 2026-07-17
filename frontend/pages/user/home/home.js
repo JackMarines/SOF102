@@ -93,4 +93,6 @@ checkAuth().then(async function (session) {
 
     // --- Team Activity (with user column, excludes current user) ---
     renderPuzzleRows('team-activity', data.teamActivity, true);
+
+    window.__pageReady();
 });

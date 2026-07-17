@@ -18,3 +18,5 @@ window.teamTable = TeamTable.init('team-table', {
 });
 
 loadTeams();
+
+window.__pageReady();

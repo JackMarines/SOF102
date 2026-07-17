@@ -154,4 +154,6 @@
     };
 
     loadMembers(1);
+
+    window.__pageReady();
 })();

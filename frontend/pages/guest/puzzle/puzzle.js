@@ -20,3 +20,5 @@ window.puzzleTable = PuzzleTable.init('puzzle-table', {
 });
 
 loadPuzzles();
+
+window.__pageReady();

@@ -27,8 +27,8 @@ body.solve-page{
 }
 
 .panel{
-    background: var(--bg-deep);
-    border: 1px solid var(--border-panel);
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, .07);
     overflow: hidden;
 }
 
@@ -37,7 +37,7 @@ body.solve-page{
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid var(--border-panel);
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
     max-height: 56px;
 }
 
@@ -46,7 +46,7 @@ body.solve-page{
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #f0f0f0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -57,25 +57,25 @@ body.solve-page{
     height: 100%;
     padding: 22px;
     overflow: auto;
-    color: var(--text-primary);
+    color: #c8c8c8;
 }
 
 .panel-content p{
     white-space: pre-wrap;
-    color: var(--text-muted);
+    color: #c8c8c8;
     line-height: 1.8;
     font-size: 16px;
 }
 
 .panel-content h5{
-    color: var(--accent);
+    color: #60a5fa;
     margin-bottom: 12px;
     margin-top: 20px;
     font-size: 18px;
 }
 
 .panel-content li{
-    color: var(--text-muted);
+    color: #c8c8c8;
     margin-bottom: 10px;
     font-size: 15px;
 }
@@ -95,8 +95,8 @@ body.solve-page{
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid var(--border-panel);
-    background: var(--bg-deep);
+    border: 1px solid rgba(255, 255, 255, .07);
+    background: #0a0a0a;
 }
 
 .right-tabbed .panel{
@@ -107,8 +107,8 @@ body.solve-page{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--bg-deep);
-    border-bottom: 1px solid var(--border-panel);
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
     flex-shrink: 0;
 }
 
@@ -131,7 +131,7 @@ body.solve-page{
     padding: 0;
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #f0f0f0;
     border-bottom: 2px solid transparent;
     transition: .2s;
 }
@@ -142,12 +142,12 @@ body.solve-page{
 }
 
 .solve-tab:hover{
-    color: var(--accent-light);
+    color: #60a5fa;
 }
 
 .solve-tab.active{
-    color: var(--accent-dark);
-    border-bottom-color: var(--accent-dark);
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
 }
 
 .solve-tab-content{
@@ -181,73 +181,74 @@ body.solve-page{
     min-height: 300px;
     resize: none;
     outline: none;
-    border: 1px solid var(--border-panel);
-    border-radius: 8px;
-    background: var(--cm-code-bg);
-    color: var(--text-primary);
-    font-family: Consolas, monospace;
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 0;
+    background: #0a0a0a;
+    color: #f0f0f0;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
     font-size: 15px;
     line-height: 1.6;
     padding: 18px;
 }
 
 #codeEditor:focus{
-    border-color: var(--accent-dark);
+    border-color: #60a5fa;
 }
 
 #codeEditor .cm-editor{
     height: 100%;
-    background-color: var(--cm-editor-bg);
-    border-radius: 8px;
+    background-color: #0a0a0a;
+    border-radius: 0;
 }
 
 #codeEditor .cm-gutters{
-    background: var(--bg-code);
-    color: var(--accent-light);
-    border: 1px solid var(--border-panel);
+    background: #111111;
+    color: #888888;
+    border: 1px solid rgba(255, 255, 255, .07);
 }
 
 #codeEditor .cm-activeLineGutter{
-    background: var(--accent-light);
-    color: var(--bg-code);
+    background: #60a5fa;
+    color: #0a0a0a;
 }
 
 #codeEditor .cm-cursor{
-    border-left-color: var(--accent-light);
+    border-left-color: #60a5fa;
 }
 
 .cm-content{
-    font-family: "JetBrains Mono", monospace;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
 }
 
 .cm-selectionBackground{
-    background-color: var(--cm-selection) !important;
+    background-color: rgba(96, 165, 250, .25) !important;
 }
 
 .btn-submit{
-    background: var(--accent-dark);
-    color: var(--text-primary);
+    background: #60a5fa;
+    color: #0a0a0a;
     border: none;
-    border-radius: 8px;
+    border-radius: 0;
     padding: 6px 14px;
     font-size: 15px;
     font-weight: 600;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
     transition: .3s;
     line-height: 1;
 }
 
 .btn-submit:hover{
-    background: var(--accent-hover);
+    background: #93c5fd;
 }
 
 .timer{
     font-size: 16px;
-    color: var(--text-muted);
+    color: #c8c8c8;
     font-weight: 600;
 }
 
 #timer{
-    color: var(--accent-dark);
+    color: #60a5fa;
 }
 
 .result-panel{
@@ -282,13 +283,13 @@ body.solve-page{
 }
 
 .vertical-resizer{
-    background: var(--resizer-bg);
+    background: rgba(255, 255, 255, .07);
     cursor: col-resize;
     transition: .2s;
 }
 
 .vertical-resizer:hover{
-    background: var(--accent-dark);
+    background: #60a5fa;
 }
 
 

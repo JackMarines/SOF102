@@ -9,10 +9,6 @@
     link.href = '/frontend/assets/css/navbar-user.css';
     document.head.appendChild(link);
 
-    var theme = document.createElement('script');
-    theme.src = '/frontend/components/theme-toggle.js';
-    document.head.appendChild(theme);
-
     var avatar = document.createElement('script');
     avatar.src = '/frontend/components/avatar.js';
     document.head.appendChild(avatar);

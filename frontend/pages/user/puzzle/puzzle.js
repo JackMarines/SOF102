@@ -24,4 +24,6 @@ checkAuth().then(function () {
     });
 
     loadPuzzles();
+
+    window.__pageReady();
 });
