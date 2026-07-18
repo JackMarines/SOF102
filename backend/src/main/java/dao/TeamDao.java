@@ -58,7 +58,7 @@ public class TeamDao {
                 "(SELECT COALESCE(SUM(p.puz_score), 0) FROM progress pr " +
                 " JOIN puzzle p ON pr.puz_id = p.puz_id " +
                 " JOIN user u ON pr.user_id = u.user_id WHERE u.team_id = t.team_id) as solvedTotal " +
-                "FROM team t WHERE 1=1");
+                "FROM team t WHERE t.team_isactive = true");
 
             if (search != null && !search.trim().isEmpty()) {
                 sql.append(" AND LOWER(t.team_name) LIKE :search");
@@ -229,6 +229,109 @@ public class TeamDao {
             q.setParameter("tid", teamId);
             q.setParameter("uid", userId);
             return q.getSingleResult() > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+    // ──────────────────────────────────────────────────
+    // ADMIN
+    // ──────────────────────────────────────────────────
+
+    // Lấy danh sách team active (admin)
+    public List<Object[]> findAllActiveWithStats(int page, int limit, String search,
+                                                   String sortBy, String order) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            StringBuilder sql = new StringBuilder(
+                "SELECT t.team_id, t.team_name, t.team_avatar, t.team_ownerid, " +
+                "t.team_ispublic, t.team_isactive, " +
+                "(SELECT COUNT(*) FROM user u WHERE u.team_id = t.team_id) as memberCount, " +
+                "(SELECT COALESCE(SUM(p.puz_score), 0) FROM progress pr " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                " JOIN user u ON pr.user_id = u.user_id WHERE u.team_id = t.team_id) as solvedTotal " +
+                "FROM team t WHERE t.team_isactive = true");
+
+            if (search != null && !search.trim().isEmpty()) {
+                sql.append(" AND LOWER(t.team_name) LIKE :search");
+            }
+
+            if ("members".equals(sortBy) && "asc".equalsIgnoreCase(order)) {
+                sql.append(" ORDER BY memberCount ASC, t.team_id");
+            } else if ("members".equals(sortBy)) {
+                sql.append(" ORDER BY memberCount DESC, t.team_id");
+            } else if ("solved".equals(sortBy) && "asc".equalsIgnoreCase(order)) {
+                sql.append(" ORDER BY solvedTotal ASC, t.team_id");
+            } else if ("solved".equals(sortBy)) {
+                sql.append(" ORDER BY solvedTotal DESC, t.team_id");
+            } else {
+                sql.append(" ORDER BY t.team_id");
+            }
+
+            jakarta.persistence.Query q = em.createNativeQuery(sql.toString());
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("search", "%" + search.trim().toLowerCase() + "%");
+            }
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm team active
+    public long countActive() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(t) FROM Team t WHERE t.teamIsactive = true", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm tất cả team
+    public long countAll() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(t) FROM Team t", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Set inactive (ban team)
+    public void setInactive(int teamId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Team t = em.find(Team.class, teamId);
+            if (t != null) { t.setTeamIsactive(false); em.merge(t); }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Set active (reactivate)
+    public void setActive(int teamId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Team t = em.find(Team.class, teamId);
+            if (t != null) { t.setTeamIsactive(true); em.merge(t); }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy ownerId của team
+    public Integer getOwnerId(int teamId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            Team t = em.find(Team.class, teamId);
+            return t != null ? t.getTeamOwnerId() : null;
         } finally {
             em.close();
         }

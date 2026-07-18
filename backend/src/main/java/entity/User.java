@@ -33,6 +33,12 @@ public class User {
     @Column(name = "user_isactive")
     private Boolean userIsactive = true;
 
+    @Column(name = "user_lastteamname")
+    private String userLastteamname;
+
+    @Column(name = "user_lastleave_reason")
+    private String userLastleaveReason = "NONE";
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
@@ -55,6 +61,10 @@ public class User {
     public void setUserBio(String userBio) { this.userBio = userBio; }
     public Boolean getUserIsactive() { return userIsactive; }
     public void setUserIsactive(Boolean userIsactive) { this.userIsactive = userIsactive; }
+    public String getUserLastteamname() { return userLastteamname; }
+    public void setUserLastteamname(String userLastteamname) { this.userLastteamname = userLastteamname; }
+    public String getUserLastleaveReason() { return userLastleaveReason; }
+    public void setUserLastleaveReason(String userLastleaveReason) { this.userLastleaveReason = userLastleaveReason; }
     public Team getTeam() { return team; }
     public void setTeam(Team team) { this.team = team; }
 }

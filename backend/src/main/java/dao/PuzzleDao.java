@@ -92,4 +92,45 @@ public class PuzzleDao {
             em.close();
         }
     }
+
+    // ──────────────────────────────────────────────────
+    // ADMIN CRUD
+    // ──────────────────────────────────────────────────
+
+    // Tạo puzzle mới
+    public void create(Puzzle entity) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(entity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Cập nhật puzzle
+    public void update(Puzzle entity) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(entity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Xoá puzzle
+    public void delete(int id) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Puzzle p = em.find(Puzzle.class, id);
+            if (p != null) em.remove(p);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 }

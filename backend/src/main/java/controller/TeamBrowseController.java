@@ -2,7 +2,10 @@
 package controller;
 
 import dao.TeamDao;
+import dao.UserDao;
+import dao.WarningDao;
 import entity.Team;
+import entity.Warning;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,6 +22,8 @@ import java.util.*;
 public class TeamBrowseController extends HttpServlet {
 
     private TeamDao teamDao = new TeamDao();
+    private WarningDao warningDao = new WarningDao();
+    private UserDao userDao = new UserDao();
     private static final Logger logger = LoggerFactory.getLogger(TeamBrowseController.class);
 
     @Override
@@ -96,6 +101,25 @@ public class TeamBrowseController extends HttpServlet {
 
         Team team = teamDao.findById(teamId);
         if (team == null) {
+            ResponseUtil.error(resp, 404, "Team not found");
+            return;
+        }
+
+        // Lazy team ban check
+        Warning teamWarn = warningDao.findActiveByTeamId(teamId);
+        if (teamWarn != null && teamWarn.getWarnEnddate() != null
+                && !teamWarn.getWarnEnddate().after(new java.util.Date())) {
+            String teamName = team.getTeamName();
+            for (Object[] m : teamDao.getMembers(teamId, null)) {
+                userDao.setLastTeamInfo(((Number) m[0]).intValue(), teamName, "TEAM_BANNED");
+            }
+            teamDao.setInactive(teamId);
+            warningDao.deactivate(teamWarn.getWarnId());
+            ResponseUtil.error(resp, 404, "Team not found");
+            return;
+        }
+
+        if (Boolean.FALSE.equals(team.getTeamIsactive())) {
             ResponseUtil.error(resp, 404, "Team not found");
             return;
         }
