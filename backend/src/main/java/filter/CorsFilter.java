@@ -1,6 +1,10 @@
 // Cho phép frontend (chạy ở domain khác) gọi API mà không bị chặn bởi CORS
+// Đồng thời kiểm tra maintenance mode (chặn non-admin khi bảo trì)
 package filter;
 
+import dao.MaintenanceDao;
+import entity.Maintenance;
+import entity.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +23,16 @@ public class CorsFilter implements Filter {
         "https://devclimb.online",
         "https://api.devclimb.online"
     );
+
+    // Các đường dẫn luôn được phép truy cập dù đang bảo trì
+    private static final List<String> EXEMPT_PATHS = Arrays.asList(
+        "/api/v1/auth/",
+        "/api/v1/announcements",
+        "/api/v1/admin/",
+        "/frontend/assets/"
+    );
+
+    private MaintenanceDao maintenanceDao = new MaintenanceDao();
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -43,7 +57,43 @@ public class CorsFilter implements Filter {
             return;
         }
 
+        // Kiểm tra maintenance mode — trả về JSON để frontend tự redirect
+        if (isMaintenanceActive() && !isAdmin(req) && !isPathExempt(req)) {
+            res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            res.setContentType("application/json; charset=UTF-8");
+            res.setCharacterEncoding("UTF-8");
+            res.getWriter().write("{\"error\":\"site_under_maintenance\"}");
+            return;
+        }
+
         chain.doFilter(request, response);
+    }
+
+    // Kiểm tra maintenance có đang bật không
+    private boolean isMaintenanceActive() {
+        try {
+            Maintenance m = maintenanceDao.get();
+            return m != null && Boolean.TRUE.equals(m.getMaintEnabled());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Kiểm tra user có phải admin không
+    private boolean isAdmin(HttpServletRequest req) {
+        User u = (User) req.getSession().getAttribute("user");
+        return u != null && Boolean.TRUE.equals(u.getUserIsadmin());
+    }
+
+    // Kiểm tra đường dẫn có được miễn kiểm tra maintenance không
+    private boolean isPathExempt(HttpServletRequest req) {
+        String uri = req.getRequestURI();
+        for (String prefix : EXEMPT_PATHS) {
+            if (uri.contains(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

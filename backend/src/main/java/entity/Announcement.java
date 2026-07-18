@@ -34,7 +34,7 @@ public class Announcement {
     @Column(name = "ann_ispublished")
     private Boolean annIspublished = true;
 
-    @Column(name = "ann_type")
+    @Column(name = "ann_type", columnDefinition = "ENUM('GENERAL','MAINTENANCE','RELEASE','FEATURE','BUG_FIX','SECURITY','INCIDENT','EVENT')")
     private String annType;
 
     public Announcement() {}

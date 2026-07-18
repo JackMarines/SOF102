@@ -28,7 +28,12 @@ public class PublicAnnouncementController extends HttpServlet {
             item.put("id", a.getAnnId());
             item.put("title", a.getAnnTitle());
             item.put("content", a.getAnnContent());
+            item.put("authorId", a.getAnnAuthorid());
             item.put("createdAt", a.getAnnCreatedat());
+            item.put("updatedAt", a.getAnnUpdatedat());
+            item.put("isPinned", a.getAnnIspinned());
+            item.put("isPublished", a.getAnnIspublished());
+            item.put("type", a.getAnnType());
             dataList.add(item);
         }
         ResponseUtil.success(resp, Map.of("data", dataList));

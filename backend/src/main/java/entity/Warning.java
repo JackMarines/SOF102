@@ -3,7 +3,7 @@
 package entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "warning")
@@ -17,12 +17,10 @@ public class Warning {
     private Boolean warnIsactive = true;
 
     @Column(name = "warn_startdate")
-    @Temporal(TemporalType.DATE)
-    private Date warnStartdate;
+    private Timestamp warnStartdate;
 
     @Column(name = "warn_enddate")
-    @Temporal(TemporalType.DATE)
-    private Date warnEnddate;
+    private Timestamp warnEnddate;
 
     @Column(name = "warn_authorid")
     private Integer warnAuthorid;
@@ -42,10 +40,10 @@ public class Warning {
     public void setWarnId(Integer warnId) { this.warnId = warnId; }
     public Boolean getWarnIsactive() { return warnIsactive; }
     public void setWarnIsactive(Boolean warnIsactive) { this.warnIsactive = warnIsactive; }
-    public Date getWarnStartdate() { return warnStartdate; }
-    public void setWarnStartdate(Date warnStartdate) { this.warnStartdate = warnStartdate; }
-    public Date getWarnEnddate() { return warnEnddate; }
-    public void setWarnEnddate(Date warnEnddate) { this.warnEnddate = warnEnddate; }
+    public Timestamp getWarnStartdate() { return warnStartdate; }
+    public void setWarnStartdate(Timestamp warnStartdate) { this.warnStartdate = warnStartdate; }
+    public Timestamp getWarnEnddate() { return warnEnddate; }
+    public void setWarnEnddate(Timestamp warnEnddate) { this.warnEnddate = warnEnddate; }
     public Integer getWarnAuthorid() { return warnAuthorid; }
     public void setWarnAuthorid(Integer warnAuthorid) { this.warnAuthorid = warnAuthorid; }
     public String getWarnReason() { return warnReason; }

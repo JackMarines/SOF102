@@ -36,7 +36,7 @@ public class User {
     @Column(name = "user_lastteamname")
     private String userLastteamname;
 
-    @Column(name = "user_lastleave_reason")
+    @Column(name = "user_lastleavereason")
     private String userLastleaveReason = "NONE";
 
     @ManyToOne

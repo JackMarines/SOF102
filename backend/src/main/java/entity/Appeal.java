@@ -22,7 +22,7 @@ public class Appeal {
     @Column(name = "app_date")
     private Timestamp appDate;
 
-    @Column(name = "app_status")
+    @Column(name = "app_status", columnDefinition = "ENUM('PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'PENDING'")
     private String appStatus = "PENDING";
 
     @Column(name = "app_reviewedby")

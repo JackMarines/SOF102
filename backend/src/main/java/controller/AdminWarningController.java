@@ -188,11 +188,11 @@ public class AdminWarningController extends HttpServlet {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (instant) {
-                warning.setWarnStartdate(new java.util.Date());
-                warning.setWarnEnddate(new java.util.Date());
+                warning.setWarnStartdate(new java.sql.Timestamp(System.currentTimeMillis()));
+                warning.setWarnEnddate(new java.sql.Timestamp(System.currentTimeMillis()));
             } else {
-                warning.setWarnStartdate(sdf.parse((String) body.get("startDate")));
-                warning.setWarnEnddate(sdf.parse((String) body.get("endDate")));
+                warning.setWarnStartdate(new java.sql.Timestamp(sdf.parse((String) body.get("startDate")).getTime()));
+                warning.setWarnEnddate(new java.sql.Timestamp(sdf.parse((String) body.get("endDate")).getTime()));
             }
         } catch (Exception e) {
             if (!instant) {
@@ -249,8 +249,8 @@ public class AdminWarningController extends HttpServlet {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                if (body.containsKey("startDate")) w.setWarnStartdate(sdf.parse((String) body.get("startDate")));
-                if (body.containsKey("endDate")) w.setWarnEnddate(sdf.parse((String) body.get("endDate")));
+                if (body.containsKey("startDate")) w.setWarnStartdate(new java.sql.Timestamp(sdf.parse((String) body.get("startDate")).getTime()));
+                if (body.containsKey("endDate")) w.setWarnEnddate(new java.sql.Timestamp(sdf.parse((String) body.get("endDate")).getTime()));
             } catch (Exception e) {
                 ResponseUtil.error(resp, 400, "Invalid date format");
                 return;
