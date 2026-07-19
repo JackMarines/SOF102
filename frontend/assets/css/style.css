@@ -788,24 +788,8 @@ footer{
     }
 }
 
-@media(max-width: 768px){
-    .auth-card{
-        padding: 25px;
-    }
-}
-
-@media(max-width: 576px){
-    .hero-title{
-        font-size: 35px;
-    }
-
-    .custom-btn{
-        width: 100%;
-    }
-}
-
 /* ===========================
-   MOBILE FIX
+   RESPONSIVE
 =========================== */
 
 @media (max-width:768px){
@@ -813,6 +797,10 @@ footer{
 .container{
     padding-left:15px;
     padding-right:15px;
+}
+
+.auth-card{
+    padding: 25px;
 }
 
 .table-header,
@@ -862,6 +850,14 @@ footer{
 }
 
 @media(max-width:576px){
+
+.hero-title{
+    font-size:35px;
+}
+
+.custom-btn{
+    width: 100%;
+}
 
 .page-title{
     margin-top:110px;
