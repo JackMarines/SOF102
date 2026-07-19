@@ -93,17 +93,17 @@
             renderNavAvatar(cachedAvatar);
         }
 
-        if (typeof checkAuth === 'function' && typeof apiGet === 'function') {
-            checkAuth().then(function (session) {
-                if (session.teamId) {
+        if (typeof apiGet === 'function') {
+            getMe().then(function (session) {
+                if (session && session.teamId) {
                     document.getElementById('nav-team-link').href =
                         '/frontend/pages/user/team/index.html?id=' + session.teamId;
                 }
-                apiGet('/profile').then(function (p) {
-                    if (!p || p.error) return;
-                    renderNavAvatar(p.avatar);
-                    try { localStorage.setItem('user_avatar', p.avatar || ''); } catch (e) {}
-                });
+            });
+            apiGet('/profile').then(function (p) {
+                if (!p || p.error) return;
+                renderNavAvatar(p.avatar);
+                try { localStorage.setItem('user_avatar', p.avatar || ''); } catch (e) {}
             });
         }
 

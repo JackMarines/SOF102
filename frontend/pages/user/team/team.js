@@ -1,5 +1,5 @@
 // Team page orchestrator — team detail view with edit/join/leave, owner controls (edit, shoutout, transfer, kick), and member table
-checkAuth().then(async function (session) {
+getMe().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
     if (!teamId) return;

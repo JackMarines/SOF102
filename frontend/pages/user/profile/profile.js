@@ -1,5 +1,5 @@
 // Profile page orchestrator — user profile view with edit modal, group card link, and solved puzzles table
-checkAuth().then(async function (session) {
+getMe().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var targetId = params.get('id');
     var isOwn = !targetId || String(targetId) === String(session.userId);

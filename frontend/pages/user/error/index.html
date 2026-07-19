@@ -28,14 +28,14 @@
 
     <script>
         try {
-            if (localStorage.getItem('theme') === 'light')
-                document.documentElement.classList.add('light-mode');
+            if (localStorage.getItem("theme") === "light")
+                document.documentElement.classList.add("light-mode");
         } catch (e) { }
     </script>
 
 </head>
 
-<body>
+<body data-auth="user">
 
     <!-- NAVBAR -->
 
@@ -306,24 +306,11 @@
 
     <!-- COMPONENTS -->
 
+    <script src="/frontend/utils/core.js"></script>
+
     <script src="/frontend/components/footer.js"></script>
 
-    <!-- SERVICES -->
-
-    <script src="/frontend/utils/constants.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
-    <script src="/frontend/services/api.js"></script>
-
-    <script src="/frontend/services/authService.js"></script>
-
     <script>
-
-        checkAuth();
-
     </script>
 
     <!-- Bootstrap -->

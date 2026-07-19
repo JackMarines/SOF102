@@ -28,7 +28,7 @@
 <script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light-mode')}catch(e){}</script>
 </head>
 
-<body class="solve-page">
+<body class="solve-page" data-auth="user">
 
     <div id="navbar"></div>
 
@@ -103,13 +103,10 @@
         </div>
 
     </div>
+    <script src="/frontend/utils/core.js"></script>
     <script src="/frontend/components/navbar-user.js"></script>
     <script src="/frontend/components/spinner.js"></script>
-    
-    <script src="/frontend/utils/constants.js"></script>
-    <script src="/frontend/services/api.js"></script>
     <script src="/frontend/services/puzzleService.js"></script>
-    <script src="/frontend/services/authService.js"></script>
     <script src="/frontend/services/puzzleSolveService.js"></script>
     <script src="/frontend/services/submissionService.js"></script>
     <script src="puzzle.js" type="module"></script>
