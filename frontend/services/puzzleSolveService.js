@@ -6,7 +6,7 @@ let puzzleLangId = 1;
 // LOAD PUZZLE
 // ===========================
 
-checkAuth();
+checkAuth().then(function () { document.body.style.display=''; });
 
 async function loadPuzzle(setLanguage, setCode) {
     const params = new URLSearchParams(window.location.search);

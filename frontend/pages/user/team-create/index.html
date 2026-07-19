@@ -83,59 +83,54 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        checkAuth().then(function (session) {
-            if (!session) return;
+        // Visibility Toggle
+        var visibilityCards = document.querySelectorAll('.visibility-card');
+        visibilityCards.forEach(function (card) {
+            card.addEventListener('click', function () {
+                visibilityCards.forEach(function (c) { c.classList.remove('active'); });
+                card.classList.add('active');
+            });
+        });
 
+        // Create Team
+        document.getElementById('create-btn').addEventListener('click', async function () {
+            var btn = this;
+            var name = document.getElementById('create-team-name').value.trim();
+            var shoutout = document.getElementById('create-team-shoutout').value.trim();
+            var activeCard = document.querySelector('.visibility-card.active');
+            var isPublic = activeCard ? activeCard.getAttribute('data-type') === 'public' : true;
+            var nameError = document.getElementById('create-team-name-error');
+            nameError.classList.add('d-none');
 
-            // Visibility Toggle
-            var visibilityCards = document.querySelectorAll('.visibility-card');
-            visibilityCards.forEach(function (card) {
-                card.addEventListener('click', function () {
-                    visibilityCards.forEach(function (c) { c.classList.remove('active'); });
-                    card.classList.add('active');
-                });
+            if (!name) {
+                nameError.textContent = 'Team name is required';
+                nameError.classList.remove('d-none');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            var res = await createTeam({
+                name: name,
+                shoutout: shoutout || null,
+                isPublic: isPublic
             });
 
-            // Create Team
-            document.getElementById('create-btn').addEventListener('click', async function () {
-                var btn = this;
-                var name = document.getElementById('create-team-name').value.trim();
-                var shoutout = document.getElementById('create-team-shoutout').value.trim();
-                var activeCard = document.querySelector('.visibility-card.active');
-                var isPublic = activeCard ? activeCard.getAttribute('data-type') === 'public' : true;
-                var nameError = document.getElementById('create-team-name-error');
-                nameError.classList.add('d-none');
+            btn.disabled = false;
+            btn.textContent = 'Create Team';
 
-                if (!name) {
-                    nameError.textContent = 'Team name is required';
-                    nameError.classList.remove('d-none');
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.textContent = 'Creating...';
-
-                var res = await createTeam({
-                    name: name,
-                    shoutout: shoutout || null,
-                    isPublic: isPublic
-                });
-
-                btn.disabled = false;
-                btn.textContent = 'Create Team';
-
-                if (res && res.teamId) {
-                    window.location.href = '/frontend/pages/user/team/index.html?id=' + res.teamId;
+            if (res && res.teamId) {
+                window.location.href = '/frontend/pages/user/team/index.html?id=' + res.teamId;
+            } else {
+                var err = res ? res.error || 'Failed to create team' : 'Failed to create team';
+                if (err.toLowerCase().indexOf('duplicate') !== -1 || err.toLowerCase().indexOf('already exist') !== -1) {
+                    nameError.textContent = 'A team with this name already exists';
                 } else {
-                    var err = res ? res.error || 'Failed to create team' : 'Failed to create team';
-                    if (err.toLowerCase().indexOf('duplicate') !== -1 || err.toLowerCase().indexOf('already exist') !== -1) {
-                        nameError.textContent = 'A team with this name already exists';
-                    } else {
-                        nameError.textContent = err;
-                    }
-                    nameError.classList.remove('d-none');
+                    nameError.textContent = err;
                 }
-            });
+                nameError.classList.remove('d-none');
+            }
         });
     </script>
 

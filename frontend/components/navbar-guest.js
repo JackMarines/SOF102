@@ -28,7 +28,7 @@
                 '<div class="collapse navbar-collapse" id="menu">' +
                     '<ul class="navbar-nav ms-auto align-items-lg-center text-center">' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (path.includes('/guest/home/') ? ' current-link' : '') + '" href="/frontend/pages/guest/home/index.html">Help</a>' +
+                            '<a class="nav-link' + (path.includes('/guest/team') ? ' current-link' : '') + '" href="/frontend/pages/guest/team-search/index.html">Team</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
                             '<a class="nav-link' + (path.includes('/puzzle') ? ' current-link' : '') + '" href="/frontend/pages/guest/puzzle/index.html">Puzzles</a>' +

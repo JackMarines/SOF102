@@ -1,5 +1,5 @@
 // Home page orchestrator — dynamic dashboard with team grid, weekly puzzles, and team activity
-checkAuth().then(async function (session) {
+getMe().then(async function (session) {
     var data = await fetchHome();
     if (!data || data.error) return;
 

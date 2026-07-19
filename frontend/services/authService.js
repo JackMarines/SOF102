@@ -38,18 +38,28 @@ async function getMe() {
 
 // redirect to login if not authenticated
 async function checkAuth() {
-  const session = await getMe();
-  if (session.error) {
+  document.body.style.display='none';
+  try {
+    const session = await getMe();
+    if (session.error) {
+      window.location.href = '/frontend/pages/guest/auth/login.html';
+    }
+    return session;
+  } catch (e) {
     window.location.href = '/frontend/pages/guest/auth/login.html';
+    return { error: 'Not authenticated' };
   }
-  return session;
 }
 
 // redirect to user home if already authenticated (for guest pages)
 async function redirectIfAuthenticated() {
-  const session = await getMe();
-  if (!session.error) {
-    window.location.href = '/frontend/pages/user/home/index.html';
+  try {
+    const session = await getMe();
+    if (!session.error) {
+      window.location.href = '/frontend/pages/user/home/index.html';
+    }
+  } catch (e) {
+    // not authenticated, stay on page
   }
 }
 
