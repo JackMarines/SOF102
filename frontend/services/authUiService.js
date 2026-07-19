@@ -84,3 +84,42 @@ function initRegisterForm() {
       });
     }
 }
+
+// ── OAUTH BUTTONS ──
+function initOAuthButtons() {
+    var googleBtn = document.getElementById('googleBtn');
+    var githubBtn = document.getElementById('githubBtn');
+    var errorDiv = document.getElementById('loginError') || document.getElementById('registerError');
+
+    function handleError(err) {
+        if (errorDiv) errorDiv.textContent = friendlyAuthError(err);
+    }
+
+    if (googleBtn) {
+        googleBtn.addEventListener('click', async function () {
+            try {
+                var result = await loginWithGoogle();
+                var idToken = await result.user.getIdToken();
+                var res = await loginOAuth(idToken);
+                if (res.error) { handleError(res); return; }
+                window.location.href = '/frontend/pages/user/puzzle/index.html';
+            } catch (err) {
+                handleError(err);
+            }
+        });
+    }
+
+    if (githubBtn) {
+        githubBtn.addEventListener('click', async function () {
+            try {
+                var result = await loginWithGithub();
+                var idToken = await result.user.getIdToken();
+                var res = await loginOAuth(idToken);
+                if (res.error) { handleError(res); return; }
+                window.location.href = '/frontend/pages/user/puzzle/index.html';
+            } catch (err) {
+                handleError(err);
+            }
+        });
+    }
+}

@@ -403,6 +403,47 @@ pre{
     text-decoration: none;
 }
 
+.auth-divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:20px 0;
+    color: var(--text-faint);
+    font-size:13px;
+}
+.auth-divider::before,
+.auth-divider::after{
+    content:'';
+    flex:1;
+    border-top:1px solid var(--border-panel);
+}
+.auth-divider span{
+    white-space:nowrap;
+}
+.oauth-row{
+    display:flex;
+    gap:12px;
+}
+.oauth-btn{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px;
+    border:1px solid var(--border-input);
+    border-radius:12px;
+    background:transparent;
+    color: var(--text-primary);
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+.oauth-btn:hover{
+    background: var(--bg-hover);
+    border-color: var(--accent);
+}
+
 
 /* --- Hero / Landing --- */
 
