@@ -24,6 +24,7 @@ bin/
 
 # Secrets
 firebase-service-account.json
+r2.properties
 
 # SSL truststore (each dev provides their own)
 ca-truststore.jks
