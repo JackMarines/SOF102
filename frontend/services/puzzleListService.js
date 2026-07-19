@@ -6,7 +6,7 @@ async function fetchPuzzles(page) {
     var search = tbl ? tbl.getSearchTerm() : '';
     var difficulty = tbl ? tbl.getFilter() : '';
     var language = tbl ? tbl.getFilter2() : '';
-    var response = await getPuzzlesWithLanguage(search, difficulty, language, page, 6);
+    var response = await getFilteredPuzzles(search, difficulty, language, page, 6);
     if (tbl && response) tbl.setData(response);
 }
 
