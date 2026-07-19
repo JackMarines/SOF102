@@ -128,6 +128,122 @@ public class ProgressDao {
         }
     }
 
+    // ──────────────────────────────────────────────────
+    // ADMIN CRUD
+    // ──────────────────────────────────────────────────
+
+    // Tìm tất cả progress của user
+    public List<Progress> findByUserId(int userId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Progress> q = em.createQuery(
+                "SELECT p FROM Progress p WHERE p.userId = :uid ORDER BY p.progDate DESC", Progress.class);
+            q.setParameter("uid", userId);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Tìm tất cả progress của puzzle
+    public List<Progress> findByPuzId(int puzId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Progress> q = em.createQuery(
+                "SELECT p FROM Progress p WHERE p.puzId = :pid ORDER BY p.progDate DESC", Progress.class);
+            q.setParameter("pid", puzId);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Tìm progress theo email
+    public List<Progress> findByEmail(String email) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Progress> q = em.createQuery(
+                "SELECT p FROM Progress p WHERE p.userId = (SELECT u.userId FROM User u WHERE u.userEmail = :email)", Progress.class);
+            q.setParameter("email", email);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Tạo progress mới
+    public void create(Progress entity) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(entity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Cập nhật progress
+    public void update(Progress entity) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(entity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Xoá progress
+    public void delete(int progId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Progress p = em.find(Progress.class, progId);
+            if (p != null) em.remove(p);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm số lượng progress theo khoảng thời gian (dashboard)
+    public long countByDateRange(int daysBack) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(*) FROM progress WHERE prog_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)");
+            q.setParameter(1, daysBack);
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm số lượng progress hôm nay
+    public long countToday() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(*) FROM progress WHERE DATE(prog_date) = CURDATE()");
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm số lượng progress tất cả
+    public long countAll() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery("SELECT COUNT(*) FROM progress");
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
+
     // Đếm số puzzle đã hoàn thành với filter (dùng cho phân trang)
     public long countCompletedPuzzles(int userId, String search, String difficulty, String language) {
         EntityManager em = JpaUtils.getEntityManager();

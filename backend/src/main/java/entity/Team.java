@@ -28,6 +28,9 @@ public class Team {
     @Column(name = "team_ispublic")
     private Boolean teamIsPublic = true; // true = ai cũng có thể join, false = khoá
 
+    @Column(name = "team_isactive")
+    private Boolean teamIsactive = true;
+
     @OneToMany(mappedBy = "team")
     private List<User> users;
 
@@ -45,6 +48,8 @@ public class Team {
     public void setTeamShoutout(String teamShoutout) { this.teamShoutout = teamShoutout; }
     public Boolean getTeamIsPublic() { return teamIsPublic; }
     public void setTeamIsPublic(Boolean teamIsPublic) { this.teamIsPublic = teamIsPublic; }
+    public Boolean getTeamIsactive() { return teamIsactive; }
+    public void setTeamIsactive(Boolean teamIsactive) { this.teamIsactive = teamIsactive; }
     public List<User> getUsers() { return users; }
     public void setUsers(List<User> users) { this.users = users; }
 }

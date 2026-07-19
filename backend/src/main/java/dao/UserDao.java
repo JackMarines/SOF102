@@ -125,7 +125,7 @@ public class UserDao {
                 "COALESCE((SELECT COUNT(*) FROM progress pr2 WHERE pr2.user_id = u.user_id), 0) as totalPuzzles " +
                 "FROM user u " +
                 "LEFT JOIN team t ON u.team_id = t.team_id " +
-                "WHERE LOWER(u.user_name) LIKE :query " +
+                "WHERE u.user_isactive = true AND LOWER(u.user_name) LIKE :query " +
                 "ORDER BY u.user_name ASC";
 
             jakarta.persistence.Query q = em.createNativeQuery(sql);
@@ -146,6 +146,105 @@ public class UserDao {
                 "SELECT COUNT(u) FROM User u WHERE LOWER(u.userName) LIKE :query", Long.class);
             q.setParameter("query", "%" + query.toLowerCase() + "%");
             return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // ──────────────────────────────────────────────────
+    // ADMIN
+    // ──────────────────────────────────────────────────
+
+    // Lấy danh sách user active (admin)
+    public List<User> findActiveAll(int page, int limit) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<User> q = em.createQuery(
+                "SELECT u FROM User u LEFT JOIN FETCH u.team WHERE u.userIsactive = true ORDER BY u.userId", User.class);
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm user active
+    public long countActive() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(u) FROM User u WHERE u.userIsactive = true", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm tất cả user
+    public long countAll() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Set inactive (soft delete / ban)
+    public void setInactive(int userId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User u = em.find(User.class, userId);
+            if (u != null) { u.setUserIsactive(false); em.merge(u); }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Set active (reactivate)
+    public void setActive(int userId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User u = em.find(User.class, userId);
+            if (u != null) { u.setUserIsactive(true); em.merge(u); }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lưu thông tin team khi user bị ban khỏi team
+    public void setLastTeamInfo(int userId, String teamName, String leaveReason) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User u = em.find(User.class, userId);
+            if (u != null) {
+                u.setUserLastteamname(teamName);
+                u.setUserLastleaveReason(leaveReason);
+                u.setTeam(null);
+                em.merge(u);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Xoá thông tin team ban (sau khi user acknowledge)
+    public void clearLastTeamInfo(int userId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User u = em.find(User.class, userId);
+            if (u != null) {
+                u.setUserLastteamname(null);
+                u.setUserLastleaveReason("NONE");
+                em.merge(u);
+            }
+            em.getTransaction().commit();
         } finally {
             em.close();
         }

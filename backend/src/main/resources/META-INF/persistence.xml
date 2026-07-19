@@ -12,6 +12,9 @@
         <class>entity.Puzzle</class>
         <class>entity.Testcase</class>
         <class>entity.Progress</class>
+        <class>entity.Warning</class>
+        <class>entity.Announcement</class>
+        <class>entity.Appeal</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
