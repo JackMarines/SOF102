@@ -80,7 +80,7 @@ public class UserDao {
     }
 
     // Cập nhật profile: chỉ update các field không null
-    public void update(int userId, String name, String bio, String avatar) {
+    public void update(int userId, String name, String bio, String avatar, String email) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             em.getTransaction().begin();
@@ -89,6 +89,7 @@ public class UserDao {
                 if (name != null) user.setUserName(name);
                 if (bio != null) user.setUserBio(bio);
                 if (avatar != null) user.setUserAvatar(avatar);
+                if (email != null) user.setUserEmail(email);
                 em.merge(user);
             }
             em.getTransaction().commit();

@@ -213,6 +213,7 @@ public class ProfileController extends HttpServlet {
         String displayName = (String) body.get("displayName");
         String bio = (String) body.get("bio");
         String avatar = (String) body.get("avatar");
+        String email = (String) body.get("email");
 
         if (displayName != null && (displayName.trim().isEmpty() || displayName.length() > 50)) {
             ResponseUtil.error(resp, 400, "Display name must be 1-50 characters");
@@ -222,8 +223,13 @@ public class ProfileController extends HttpServlet {
             ResponseUtil.error(resp, 400, "Bio must be at most 500 characters");
             return;
         }
+        // Kiểm tra định dạng email nếu có
+        if (email != null && (!email.contains("@") || email.length() > 255)) {
+            ResponseUtil.error(resp, 400, "Invalid email format");
+            return;
+        }
 
-        userDao.update(sessionUser.getUserId(), displayName, bio, avatar);
+        userDao.update(sessionUser.getUserId(), displayName, bio, avatar, email);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Profile updated");
