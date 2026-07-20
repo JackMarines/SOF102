@@ -26,6 +26,7 @@
 
     <!-- Global CSS -->
     <link rel="stylesheet" href="/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="/frontend/components/tables.css">
 
     <link rel="icon" href="/frontend/assets/images/icon.png">
 
@@ -42,164 +43,7 @@
 <body>
 
     <!-- NAVBAR -->
-
-    <nav class="navbar navbar-expand-lg fixed-top">
-
-        <div class="container">
-
-            <!-- LOGO -->
-
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="/frontend/index.html">
-
-                <img src="/frontend/assets/images/logo.png" style="height:40px" class="me-2">
-
-                Puzzle Solve
-            </a>
-
-            <!-- MOBILE -->
-
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarAdmin">
-
-                <span class="navbar-toggler-icon"></span>
-
-            </button>
-
-            <!-- MENU -->
-
-            <div class="collapse navbar-collapse" id="navbarAdmin">
-
-                <ul class="navbar-nav mx-auto">
-
-                    <li class="nav-item">
-
-                        <a class="nav-link active" href="/frontend/pages/admin/dashboard/index.html">
-
-                            Dashboard
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/users/index.html">
-
-                            Users
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/team/index.html">
-
-                            Teams
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/puzzle/index.html">
-
-                            Puzzles
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/progress/index.html">
-
-                            Progress
-
-                        </a>
-
-                    </li>
-
-                </ul>
-
-                <!-- RIGHT -->
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <button class="btn btn-link text-white p-0">
-
-                        <i class="bi bi-bell fs-5"></i>
-
-                    </button>
-
-                    <button class="btn btn-link text-white p-0">
-
-                        <i class="bi bi-gear fs-5"></i>
-
-                    </button>
-
-                    <div class="dropdown">
-
-                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown">
-
-                            <div class="rounded-circle d-flex justify-content-center align-items-center" style="width:40px;
-                                       height:40px;
-                                       background:#241243;
-                                       border:2px solid #b388ff;">
-
-                                <i class="bi bi-person-fill text-white"></i>
-
-                            </div>
-
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-
-                            <li>
-
-                                <a class="dropdown-item" href="#">
-
-                                    Profile
-
-                                </a>
-
-                            </li>
-
-                            <li>
-
-                                <a class="dropdown-item" href="#">
-
-                                    Settings
-
-                                </a>
-
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
-                            <li>
-
-                                <a class="dropdown-item text-danger" href="#">
-
-                                    Logout
-
-                                </a>
-
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </nav>
+    <div id="navbar"></div>
 
     <!-- DASHBOARD -->
 
@@ -226,7 +70,7 @@
 
             </div>
 
-            <button class="custom-btn border-0 mt-3 mt-lg-0">
+            <button id="btn-maintenance" class="custom-btn btn-secondary border-0 mt-3 mt-lg-0">
 
                 <i class="bi bi-tools me-2"></i>
 
@@ -262,19 +106,13 @@
 
                     </div>
 
-                    <h2 class="fw-bold mb-1">
+                    <h2 class="fw-bold mb-1" id="stat-total-users">
 
-                        1,234
+                        -
 
                     </h2>
 
-                    <small class="text-success">
-
-                        <i class="bi bi-arrow-up"></i>
-
-                        +18 New Users
-
-                    </small>
+                    <small class="text-secondary" id="stat-total-users-sub">&nbsp;</small>
 
                 </div>
 
@@ -303,19 +141,13 @@
 
                     </div>
 
-                    <h2 class="fw-bold mb-1">
+                    <h2 class="fw-bold mb-1" id="stat-total-teams">
 
-                        86
+                        -
 
                     </h2>
 
-                    <small class="text-success">
-
-                        <i class="bi bi-arrow-up"></i>
-
-                        +4 Teams
-
-                    </small>
+                    <small class="text-secondary" id="stat-total-teams-sub">&nbsp;</small>
 
                 </div>
 
@@ -344,19 +176,13 @@
 
                     </div>
 
-                    <h2 class="fw-bold mb-1">
+                    <h2 class="fw-bold mb-1" id="stat-total-puzzles">
 
-                        412
+                        -
 
                     </h2>
 
-                    <small class="text-success">
-
-                        <i class="bi bi-arrow-up"></i>
-
-                        +12 Added
-
-                    </small>
+                    <small class="text-secondary" id="stat-total-puzzles-sub">&nbsp;</small>
 
                 </div>
 
@@ -385,19 +211,13 @@
 
                     </div>
 
-                    <h2 class="fw-bold mb-1">
+                    <h2 class="fw-bold mb-1" id="stat-solved-puzzles">
 
-                        3,892
+                        -
 
                     </h2>
 
-                    <small class="text-success">
-
-                        <i class="bi bi-graph-up-arrow"></i>
-
-                        +42 Today
-
-                    </small>
+                    <small class="text-secondary" id="stat-solved-puzzles-sub">&nbsp;</small>
 
                 </div>
 
@@ -437,7 +257,7 @@
 
                     </button>
 
-                    <button class="custom-btn border-0">
+                    <button id="btn-manage-users" class="custom-btn border-0">
 
                         <i class="bi bi-people me-2"></i>
 
@@ -514,9 +334,9 @@
 
                         <div class="col">
 
-                            <h5 class="fw-bold text-success">
+                            <h5 class="fw-bold text-success" id="stat-solved-today">
 
-                                42
+                                -
 
                             </h5>
 
@@ -530,9 +350,9 @@
 
                         <div class="col">
 
-                            <h5 class="fw-bold text-info">
+                            <h5 class="fw-bold text-info" id="stat-solved-week">
 
-                                236
+                                -
 
                             </h5>
 
@@ -546,9 +366,9 @@
 
                         <div class="col">
 
-                            <h5 class="fw-bold text-warning">
+                            <h5 class="fw-bold text-warning" id="stat-solved-month">
 
-                                928
+                                -
 
                             </h5>
 
@@ -562,9 +382,9 @@
 
                         <div class="col">
 
-                            <h5 class="fw-bold text-primary">
+                            <h5 class="fw-bold text-primary" id="stat-solved-3months">
 
-                                2,614
+                                -
 
                             </h5>
 
@@ -578,9 +398,9 @@
 
                         <div class="col">
 
-                            <h5 class="fw-bold">
+                            <h5 class="fw-bold" id="stat-solved-all">
 
-                                18,932
+                                -
 
                             </h5>
 
@@ -976,109 +796,76 @@
 
     <div id="footer"></div>
 
+    <!-- MANAGE USERS POPUP -->
+    <div id="manage-users-popup-overlay" class="confirm-popup-overlay" style="overflow:hidden;">
+        <div class="confirm-popup" style="max-width:900px;width:95vw;max-height:90vh;display:flex;flex-direction:column;text-align:left;box-sizing:border-box;padding:24px;">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0">
+                <h5 class="fw-bold mb-0" style="color:var(--text-primary);">Manage Users</h5>
+                <button id="manage-users-popup-close" class="btn-close btn-close-white"></button>
+            </div>
+            <div id="manage-users-table" style="overflow-y:auto;min-width:0;"></div>
+        </div>
+    </div>
+
+    <!-- WARN USER POPUP -->
+    <div id="warn-popup-overlay" class="confirm-popup-overlay">
+        <div class="confirm-popup">
+            <div class="confirm-popup-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h5 class="mb-3" style="color:var(--text-primary);">Warn User</h5>
+            <p class="text-secondary mb-3" style="font-size:14px;">Issue a warning to <strong id="warn-user-name"></strong>.</p>
+            <div class="mb-3">
+                <label class="form-label text-secondary" style="font-size:13px;">Reason</label>
+                <textarea id="warn-reason" class="form-control" rows="3" placeholder="Enter warning reason..."></textarea>
+                <div id="warn-reason-error" class="text-danger mt-1 d-none" style="font-size:13px;"></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6">
+                    <label class="form-label text-secondary" style="font-size:13px;">Start Date</label>
+                    <input type="date" id="warn-start-date" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-secondary" style="font-size:13px;">End Date</label>
+                    <input type="date" id="warn-end-date" class="form-control">
+                </div>
+            </div>
+            <div class="d-flex gap-2 justify-content-center">
+                <button id="warn-submit" class="custom-btn btn-danger" style="min-width:120px;">Submit Warning</button>
+                <button id="warn-cancel" class="custom-btn btn-secondary" style="min-width:120px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM POPUP (shared) -->
+    <div id="confirm-popup-overlay" class="confirm-popup-overlay">
+        <div class="confirm-popup">
+            <div class="confirm-popup-icon" id="confirm-popup-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h5 id="confirm-popup-title" class="mb-2" style="color:var(--text-primary);"></h5>
+            <p id="confirm-popup-message" class="text-secondary mb-3" style="font-size:14px;"></p>
+            <div class="d-flex gap-2 justify-content-center">
+                <button id="confirm-popup-ok" class="custom-btn" style="min-width:120px;"></button>
+                <button id="confirm-popup-cancel" class="custom-btn btn-secondary" style="min-width:120px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- COMPONENTS -->
 
     <script src="/frontend/components/footer.js"></script>
+    <script src="/frontend/components/spinner.js"></script>
+    <script src="/frontend/components/avatar.js"></script>
 
     <!-- SERVICES -->
 
-    <script src="/frontend/utils/constants.js"></script>
+    <script src="/frontend/utils/core.js"></script>
+    <script src="/frontend/components/navbar-user.js"></script>
+    <script src="/frontend/services/adminAuthService.js"></script>
+    <script src="/frontend/components/card-table.js"></script>
+    <script src="/frontend/services/adminDashboardService.js"></script>
+    <script src="dashboard.js"></script>
 
     <script>
 
-        // Maintenance Button
-        document.querySelector(".custom-btn")?.addEventListener("click", function () {
-            if (confirm("Enable Maintenance Mode?")) {
-                alert("Maintenance Mode Enabled.");
-            }
-        });
-
-        // Delete Buttons
-        document.querySelectorAll(".btn-danger").forEach(function (button) {
-            button.addEventListener("click", function () {
-                const action = this.innerText.trim();
-                if (confirm("Are you sure you want to " + action + "?")) {
-                    alert(action + " completed successfully.");
-                }
-            });
-        });
-
-        // ── CHART ──
-        const chartData = {
-            today: {
-                labels: ['00-06', '06-12', '12-18', '18-00'],
-                data: [3, 8, 14, 17]
-            },
-            week: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                data: [28, 35, 42, 31, 38, 40, 22]
-            },
-            month: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                data: [198, 247, 283, 200]
-            },
-            '3months': {
-                labels: ['Month 1', 'Month 2', 'Month 3'],
-                data: [712, 896, 1006]
-            },
-            total: {
-                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                data: [980, 1240, 1560, 1820, 2100, 2450, 2780, 3050, 3380, 3620, 3920, 4210]
-            }
-        };
-
-        const ctx = document.getElementById('solvedChart').getContext('2d');
-
-        const solvedChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: chartData.today.labels,
-                datasets: [{
-                    label: 'Puzzles Solved',
-                    data: chartData.today.data,
-                    borderColor: '#b388ff',
-                    backgroundColor: 'rgba(179,136,255,0.1)',
-                    borderWidth: 3,
-                    pointBackgroundColor: '#b388ff',
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    x: {
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#888' }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#888' }
-                    }
-                }
-            }
-        });
-
-        // ── FILTER BUTTONS ──
-        document.querySelectorAll('[data-filter]').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('[data-filter]').forEach(function (b) { b.classList.remove('active'); });
-                btn.classList.add('active');
-
-                var key = btn.getAttribute('data-filter');
-                var d = chartData[key];
-                solvedChart.data.labels = d.labels;
-                solvedChart.data.datasets[0].data = d.data;
-                solvedChart.update();
-            });
-        });
+        initDashboard();
 
     </script>
 

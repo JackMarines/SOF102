@@ -157,10 +157,46 @@ public class UserDao {
 
     // Lấy danh sách user active (admin)
     public List<User> findActiveAll(int page, int limit) {
+        return findActiveAll(page, limit, null);
+    }
+
+    public List<User> findActiveAll(int page, int limit, String search) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
-            TypedQuery<User> q = em.createQuery(
-                "SELECT u FROM User u LEFT JOIN FETCH u.team WHERE u.userIsactive = true ORDER BY u.userId", User.class);
+            String jpql = "SELECT u FROM User u LEFT JOIN FETCH u.team WHERE u.userIsactive = true";
+            if (search != null && !search.trim().isEmpty()) {
+                jpql += " AND (LOWER(u.userName) LIKE :q OR LOWER(u.userEmail) LIKE :q)";
+            }
+            jpql += " ORDER BY u.userId";
+            TypedQuery<User> q = em.createQuery(jpql, User.class);
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("q", "%" + search.trim().toLowerCase() + "%");
+            }
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy tất cả user (bao gồm inactive)
+    public List<User> findAll(int page, int limit) {
+        return findAll(page, limit, null);
+    }
+
+    public List<User> findAll(int page, int limit, String search) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String jpql = "SELECT u FROM User u LEFT JOIN FETCH u.team";
+            if (search != null && !search.trim().isEmpty()) {
+                jpql += " WHERE (LOWER(u.userName) LIKE :q OR LOWER(u.userEmail) LIKE :q)";
+            }
+            jpql += " ORDER BY u.userId";
+            TypedQuery<User> q = em.createQuery(jpql, User.class);
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("q", "%" + search.trim().toLowerCase() + "%");
+            }
             q.setFirstResult((page - 1) * limit);
             q.setMaxResults(limit);
             return q.getResultList();
@@ -171,9 +207,21 @@ public class UserDao {
 
     // Đếm user active
     public long countActive() {
+        return countActive(null);
+    }
+
+    public long countActive(String search) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
-            return em.createQuery("SELECT COUNT(u) FROM User u WHERE u.userIsactive = true", Long.class).getSingleResult();
+            String jpql = "SELECT COUNT(u) FROM User u WHERE u.userIsactive = true";
+            if (search != null && !search.trim().isEmpty()) {
+                jpql += " AND (LOWER(u.userName) LIKE :q OR LOWER(u.userEmail) LIKE :q)";
+            }
+            TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("q", "%" + search.trim().toLowerCase() + "%");
+            }
+            return q.getSingleResult();
         } finally {
             em.close();
         }
@@ -181,9 +229,68 @@ public class UserDao {
 
     // Đếm tất cả user
     public long countAll() {
+        return countAll(null);
+    }
+
+    public long countAll(String search) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
-            return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
+            String jpql = "SELECT COUNT(u) FROM User u";
+            if (search != null && !search.trim().isEmpty()) {
+                jpql += " WHERE (LOWER(u.userName) LIKE :q OR LOWER(u.userEmail) LIKE :q)";
+            }
+            TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("q", "%" + search.trim().toLowerCase() + "%");
+            }
+            return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy danh sách user inactive (banned)
+    public List<User> findInactiveAll(int page, int limit) {
+        return findInactiveAll(page, limit, null);
+    }
+
+    public List<User> findInactiveAll(int page, int limit, String search) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String jpql = "SELECT u FROM User u LEFT JOIN FETCH u.team WHERE u.userIsactive = false";
+            if (search != null && !search.trim().isEmpty()) {
+                jpql += " AND (LOWER(u.userName) LIKE :q OR LOWER(u.userEmail) LIKE :q)";
+            }
+            jpql += " ORDER BY u.userId";
+            TypedQuery<User> q = em.createQuery(jpql, User.class);
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("q", "%" + search.trim().toLowerCase() + "%");
+            }
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm user inactive
+    public long countInactiveAll() {
+        return countInactiveAll(null);
+    }
+
+    public long countInactiveAll(String search) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(u) FROM User u WHERE u.userIsactive = false";
+            if (search != null && !search.trim().isEmpty()) {
+                jpql += " AND (LOWER(u.userName) LIKE :q OR LOWER(u.userEmail) LIKE :q)";
+            }
+            TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("q", "%" + search.trim().toLowerCase() + "%");
+            }
+            return q.getSingleResult();
         } finally {
             em.close();
         }

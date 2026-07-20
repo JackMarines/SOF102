@@ -1,0 +1,456 @@
+/* tables.css — stylesheet tổng hợp cho các bảng component */
+/* pt- = puzzle-table  tt- = team-table  cg- = card-table / user-table */
+
+/* ═══════════════════════════════════════════════
+   PUZZLE TABLE (pt-) — bảng hàng phân trang
+   ═══════════════════════════════════════════════ */
+
+/* Ô tìm kiếm */
+.pt-search-box {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.pt-search-box input {
+    flex: 1; min-width: 0; padding: 10px 15px;
+    border-radius: 8px 0 0 8px;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary);
+}
+.pt-search-box button {
+    width: 55px; flex-shrink: 0;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary); cursor: pointer;
+}
+.pt-search-box button:hover { background: var(--bg-hover); color: var(--accent); }
+
+/* Hàng bộ lọc (dropdown Bootstrap) */
+.pt-filter-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.pt-filter-row .dropdown { margin-left: 0; }
+.pt-filter-row .dropdown .btn {
+    background: var(--bg-input); color: var(--text-primary);
+    border: 1px solid var(--border-input); border-radius: 8px;
+    min-width: 8rem; text-align: left; position: relative; padding-right: 20px;
+}
+/* Giữ style mặc định khi hover/focus/show — không đổi màu */
+.pt-filter-row .dropdown .btn:hover,
+.pt-filter-row .dropdown .btn:focus,
+.pt-filter-row .dropdown .btn:active,
+.pt-filter-row .dropdown .btn.show {
+    background: var(--bg-input); color: var(--text-primary);
+    border-color: var(--border-input); box-shadow: none;
+}
+/* Mũi tên caret tùy chỉnh (thay thế caret Bootstrap) */
+.pt-filter-row .dropdown .btn::after {
+    content: ""; position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    border-top: 0.3em solid; border-right: 0.3em solid transparent;
+    border-left: 0.3em solid transparent; border-bottom: 0;
+}
+/* Caret hướng lên khi dropdown đang mở */
+.pt-filter-row .dropdown .btn.show::after { border-top: 0; border-bottom: 0.3em solid; }
+/* Menu dropdown */
+.pt-filter-row .dropdown-menu {
+    background: var(--bg-input); border: 1px solid var(--border-input);
+    border-radius: 8px; padding: 6px; min-width: 100%; width: 8rem; text-align: center;
+}
+/* Hiệu ứng mở dropdown */
+.pt-filter-row .dropdown-menu.show { animation: ptDropdownIn 0.2s ease forwards; }
+/* Items trong dropdown */
+.pt-filter-row .dropdown-item {
+    color: var(--text-primary); border-radius: 6px;
+    transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+.pt-filter-row .dropdown-item:hover, .pt-filter-row .dropdown-item:focus {
+    background: var(--bg-hover); color: var(--accent); cursor: pointer;
+}
+.pt-filter-row .dropdown-item:active { background: var(--bg-active); color: var(--text-primary); }
+
+/* Header bảng (dòng tiêu đề cột) — dùng CSS grid */
+.pt-table-header {
+    display: grid; grid-template-columns: var(--pt-grid);
+    padding: 12px 20px; font-weight: 600;
+    color: var(--text-table-header); border-bottom: 1px solid var(--header-border);
+}
+/* Vùng danh sách hàng */
+.pt-list { margin-top: 10px; }
+/* Mỗi hàng — dùng CSS grid đồng bộ với header */
+.pt-row {
+    display: grid; grid-template-columns: var(--pt-grid);
+    padding: 14px 20px; border-bottom: 1px solid var(--row-border);
+    transition: 0.2s; text-decoration: none; color: var(--text-primary);
+    animation: ptFadeIn 0.4s ease backwards;
+}
+/* Hiệu ứng fade-in tuần tự cho 6 hàng đầu */
+.pt-row:nth-child(1) { animation-delay: 0s; }
+.pt-row:nth-child(2) { animation-delay: 0.04s; }
+.pt-row:nth-child(3) { animation-delay: 0.08s; }
+.pt-row:nth-child(4) { animation-delay: 0.12s; }
+.pt-row:nth-child(5) { animation-delay: 0.16s; }
+.pt-row:nth-child(6) { animation-delay: 0.2s; }
+.pt-row:hover { background: var(--row-hover); }
+/* Cột tiêu đề: căn trái */
+.pt-row-title { text-align: left; font-weight: 400; }
+/* Màu sắc theo mức độ khó */
+.pt-row-easy { color: #22c55e; }
+.pt-row-medium { color: #fbbf24; }
+.pt-row-hard { color: #ef4444; }
+
+/* Phân trang */
+.pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.pt-page {
+    padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
+    background: transparent; color: var(--text-primary); text-decoration: none;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.pt-page:hover { background: var(--accent-hover); color: var(--text-on-accent); }
+/* Trang hiện tại */
+.pt-page.pt-active { background: var(--accent-hover); color: var(--text-on-accent); font-weight: 600; }
+
+/* Hiệu ứng animation */
+@keyframes ptDropdownIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes ptFadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive: tablet */
+@media (max-width: 768px) {
+    .pt-table-header, .pt-row { font-size: 13px; padding: 12px; gap: 8px; }
+    .pt-filter-row .dropdown { width: 100%; }
+    .pt-filter-row .dropdown .btn { width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════
+   TEAM TABLE (tt-) — lưới thẻ phân trang
+   ═══════════════════════════════════════════════ */
+
+/* Ô tìm kiếm */
+.tt-search-box {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.tt-search-box input {
+    flex: 1; min-width: 0; padding: 10px 15px;
+    border-radius: 8px 0 0 8px;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary);
+}
+.tt-search-box button {
+    width: 55px; flex-shrink: 0;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary); cursor: pointer;
+}
+.tt-search-box button:hover { background: var(--bg-hover); color: var(--accent); }
+
+/* Hàng bộ lọc (dropdown sắp xếp) */
+.tt-filter-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.tt-filter-row .dropdown .btn {
+    background: var(--bg-input); color: var(--text-primary);
+    border: 1px solid var(--border-input); border-radius: 8px;
+    min-width: 8rem; text-align: left; position: relative; padding-right: 20px;
+}
+.tt-filter-row .dropdown .btn:hover,
+.tt-filter-row .dropdown .btn:focus,
+.tt-filter-row .dropdown .btn:active,
+.tt-filter-row .dropdown .btn.show {
+    background: var(--bg-input); color: var(--text-primary);
+    border-color: var(--border-input); box-shadow: none;
+}
+/* Mũi tên-caret tùy chỉnh */
+.tt-filter-row .dropdown .btn::after {
+    content: ""; position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    border-top: 0.3em solid; border-right: 0.3em solid transparent;
+    border-left: 0.3em solid transparent; border-bottom: 0;
+}
+.tt-filter-row .dropdown .btn.show::after { border-top: 0; border-bottom: 0.3em solid; }
+/* Menu dropdown */
+.tt-filter-row .dropdown-menu {
+    background: var(--bg-input); border: 1px solid var(--border-input);
+    border-radius: 8px; padding: 6px; min-width: 100%; width: 8rem;
+}
+.tt-filter-row .dropdown-menu.show { animation: ttDropdownIn 0.2s ease forwards; }
+.tt-filter-row .dropdown-menu .dropdown-item {
+    color: var(--text-primary); border-radius: 6px;
+    transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
+    text-align: center; padding: 4px 8px;
+}
+.tt-filter-row .dropdown-menu .dropdown-item:hover,
+.tt-filter-row .dropdown-menu .dropdown-item:focus {
+    background: var(--bg-hover); color: var(--accent); cursor: pointer;
+}
+.tt-filter-row .dropdown-menu .dropdown-item:active {
+    background: var(--bg-active); color: var(--text-primary);
+}
+
+/* Lưới thẻ — 4 cột mặc định */
+.tt-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 10px;
+}
+/* Thẻ nhóm */
+.tt-card {
+    text-decoration: none; color: var(--text-primary);
+    animation: ttCardIn 0.4s ease backwards;
+}
+/* Hiệu ứng fade-in tuần tự cho 8 thẻ đầu */
+.tt-card:nth-child(1) { animation-delay: 0s; }
+.tt-card:nth-child(2) { animation-delay: 0.04s; }
+.tt-card:nth-child(3) { animation-delay: 0.08s; }
+.tt-card:nth-child(4) { animation-delay: 0.12s; }
+.tt-card:nth-child(5) { animation-delay: 0.16s; }
+.tt-card:nth-child(6) { animation-delay: 0.2s; }
+.tt-card:nth-child(7) { animation-delay: 0.24s; }
+.tt-card:nth-child(8) { animation-delay: 0.28s; }
+/* Glass box effect + hover lift */
+.tt-card .glass-box {
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tt-card:hover .glass-box {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+/* Ảnh đại diện nhóm (hoặc fallback icon) */
+.tt-card-avatar {
+    width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px;
+}
+.tt-card-avatar-fallback {
+    width: 100%; aspect-ratio: 1/1; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-input); color: var(--text-secondary); font-size: 42px;
+}
+/* Hàng tên + badge */
+.tt-card-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 12px; margin-bottom: 6px; min-width: 0;
+}
+.tt-card-name {
+    font-weight: 600; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Dòng thông tin (thành viên, số câu đã giải) */
+.tt-card-meta {
+    font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 5px;
+}
+.tt-card-meta i { font-size: 14px; flex-shrink: 0; }
+/* Badge công khai/riêng tư */
+.tt-badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.tt-badge-public { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+.tt-badge-private { background: rgba(156, 163, 175, 0.15); color: #9ca3af; }
+
+/* Trạng thái rỗng */
+.tt-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+
+/* Phân trang */
+.tt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.tt-page {
+    padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
+    background: transparent; color: var(--text-primary); text-decoration: none;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.tt-page:hover { background: var(--accent-hover); color: var(--text-on-accent); }
+.tt-page.tt-active { background: var(--accent-hover); color: var(--text-on-accent); font-weight: 600; }
+
+/* Hiệu ứng animation */
+@keyframes ttDropdownIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes ttCardIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive: tablet (3 cột) */
+@media (max-width: 991px) { .tt-grid { grid-template-columns: repeat(3, 1fr); } }
+/* Responsive: mobile (2 cột) */
+@media (max-width: 768px) {
+    .tt-filter-row { flex-wrap: wrap; }
+    .tt-filter-row .dropdown { width: 100%; }
+    .tt-filter-row .dropdown .btn { width: 100%; }
+    .tt-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* Responsive: mobile nhỏ (1 cột) */
+@media (max-width: 480px) { .tt-grid { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════════
+   CARD / USER TABLE (cg-) — lưới thẻ phân trang
+   Dùng chung cho CardTable (quản trị) và UserTable
+   ═══════════════════════════════════════════════ */
+
+/* Ô tìm kiếm */
+.cg-search-box {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.cg-search-box input {
+    flex: 1; min-width: 0; padding: 10px 15px;
+    border-radius: 8px 0 0 8px;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary);
+}
+.cg-search-box button {
+    width: 55px; flex-shrink: 0;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary); cursor: pointer;
+}
+.cg-search-box button:hover { background: var(--bg-hover); color: var(--accent); }
+
+/* Lưới thẻ — 4 cột mặc định */
+.cg-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 10px;
+    min-width: 0;
+}
+
+/* Thẻ người dùng/nhóm */
+.cg-card {
+    text-decoration: none; color: var(--text-primary);
+    overflow: hidden; animation: cgFadeIn 0.4s ease backwards;
+}
+/* Hiệu ứng fade-in tuần tự cho 8 thẻ đầu */
+.cg-card:nth-child(1) { animation-delay: 0s; }
+.cg-card:nth-child(2) { animation-delay: 0.04s; }
+.cg-card:nth-child(3) { animation-delay: 0.08s; }
+.cg-card:nth-child(4) { animation-delay: 0.12s; }
+.cg-card:nth-child(5) { animation-delay: 0.16s; }
+.cg-card:nth-child(6) { animation-delay: 0.2s; }
+.cg-card:nth-child(7) { animation-delay: 0.24s; }
+.cg-card:nth-child(8) { animation-delay: 0.28s; }
+/* Glass box effect + hover lift */
+.cg-card .glass-box {
+    height: 100%; max-width: 100%; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.cg-card:hover .glass-box {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+/* Tắt hover lift khi có bộ lọc (tránh conflict với dropdown) */
+.cg-card.cg-no-lift:hover .glass-box { transform: none; }
+/* Hàng tên người dùng */
+.cg-card-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 12px; margin-bottom: 6px; min-width: 0;
+}
+.cg-card-name {
+    font-weight: 600; font-size: 14px; min-width: 0; flex: 1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: var(--text-primary) !important;
+}
+/* Dòng metadata (điểm, nhóm, vai trò) */
+.cg-card-meta {
+    font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 5px;
+}
+.cg-card-meta i { font-size: 14px; flex-shrink: 0; }
+
+/* Trạng thái rỗng */
+.cg-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+
+/* Phân trang */
+.cg-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.cg-page {
+    padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
+    background: transparent; color: var(--text-primary); text-decoration: none;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.cg-page:hover { background: var(--accent-hover); color: var(--text-on-accent); }
+.cg-page.cg-active { background: var(--accent-hover); color: var(--text-on-accent); font-weight: 600; }
+
+/* Hiệu ứng animation */
+@keyframes cgFadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive: tablet (3 cột) */
+@media (max-width: 1199px) { .cg-grid { grid-template-columns: repeat(3, 1fr); } }
+/* Responsive: mobile (2 cột) */
+@media (max-width: 991px) { .cg-grid { grid-template-columns: repeat(2, 1fr); } }
+/* Responsive: mobile nhỏ (1 cột) */
+@media (max-width: 576px) { .cg-grid { grid-template-columns: 1fr; } }
+
+/* ── Menu ngữ cảnh 3 chấm (dùng chung cho CardTable & UserTable) ── */
+
+/* Wrapper bọc thẻ + nút menu */
+.cg-card-wrap { position: relative; min-width: 0; overflow: hidden; }
+/* Nút 3 chấm — góc trên bên phải */
+.cg-card-menu-btn {
+    position: absolute; top: 8px; right: 8px; z-index: 10;
+    width: 30px; height: 30px; border: none; border-radius: 50%;
+    background: transparent; color: var(--text-secondary); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s, color 0.2s;
+}
+.cg-card-menu-btn:hover { background: var(--bg-hover); color: var(--accent); }
+/* Dropdown menu ngữ cảnh */
+.cg-card-dropdown {
+    position: absolute; top: 40px; right: 8px; z-index: 20;
+    min-width: 160px; background: var(--bg-panel);
+    border: 1px solid var(--border-input); border-radius: 8px;
+    padding: 4px 0; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.cg-card-dropdown.show { display: block; }
+/* Các mục trong dropdown */
+.cg-card-dropdown-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; font-size: 14px; color: var(--text-primary);
+    cursor: pointer; white-space: nowrap; transition: background 0.15s;
+}
+.cg-card-dropdown-item:hover { background: var(--bg-hover); }
+/* Mục nguy hiểm (xóa, cấm) */
+.cg-card-dropdown-item.text-danger { color: var(--danger) !important; }
+
+/* ── Bộ lọc tùy chỉnh (dùng trong adminCardTable toolbar) ── */
+
+/* Thanh công cụ: tìm kiếm + bộ lọc */
+.cg-toolbar { display: flex; gap: 10px; margin-bottom: 10px; }
+.cg-toolbar .cg-search-box { flex: 1; margin-bottom: 0; }
+/* Wrapper chứa nút trigger + dropdown */
+.cg-filter-wrap { position: relative; }
+/* Nút trigger bộ lọc (icon funnel) */
+.cg-filter-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 15px; border-radius: 8px;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input); color: var(--text-primary);
+    font-size: 14px; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+}
+.cg-filter-btn:hover { background: var(--bg-hover); color: var(--accent); }
+/* Dropdown tùy chỉnh (không dùng Bootstrap) */
+.cg-filter-dropdown {
+    position: absolute; top: calc(100% + 4px); right: 0; z-index: 25;
+    min-width: 180px; background: var(--bg-panel);
+    border: 1px solid var(--border-input); border-radius: 8px;
+    padding: 4px 0; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.cg-filter-dropdown.show { display: block; }
+/* Các tùy chọn lọc */
+.cg-filter-option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; font-size: 14px; color: var(--text-primary);
+    cursor: pointer; white-space: nowrap; transition: background 0.15s;
+}
+.cg-filter-option:hover { background: var(--bg-hover); }
+/* Tùy chọn đang active */
+.cg-filter-option.cg-filter-active { color: var(--accent); font-weight: 600; }

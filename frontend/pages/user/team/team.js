@@ -1,27 +1,32 @@
-// Team page orchestrator — team detail view with edit/join/leave, owner controls (edit, shoutout, transfer, kick), and member table
+// Trang chi tiết nhóm — xem thông tin nhóm, chỉnh sửa, rời/nhập nhóm, kiểm soát chủ nhóm (chỉnh sửa, chuyển nhượng, đá thành viên), và bảng thành viên
 getMe().then(async function (session) {
+    // Lấy teamId từ URL query string
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
     if (!teamId) return;
 
+    // Fetch chi tiết nhóm từ backend
     var team = await fetchTeamDetail(teamId);
     if (!team || team.error) return;
 
+    // Cập nhật tiêu đề trang
     document.title = (team.name || 'Team') + ' - DevClimb';
 
-    // --- Banner ---
+    // ── Banner ảnh nhóm ──
     var banner = document.getElementById('team-banner');
     if (team.avatar) {
-        banner.src = team.avatar;
+        banner.style.backgroundImage = 'url(' + team.avatar + ')';
+        banner.style.backgroundSize = 'cover';
+        banner.style.backgroundPosition = 'center';
     }
 
-    // --- Team Name + Badge ---
+    // ── Tên nhóm + badge công khai/riêng tư ──
     document.getElementById('team-name').textContent = team.name || '';
     var badge = document.getElementById('team-visibility-badge');
     badge.textContent = team.isPublic ? 'Public' : 'Private';
     badge.className = 'badge ms-2 ' + (team.isPublic ? 'bg-success' : 'bg-secondary');
 
-    // --- Owner ---
+    // ── Tìm chủ nhóm trong danh sách thành viên ──
     var owner = null;
     if (team.members) {
         for (var i = 0; i < team.members.length; i++) {
@@ -31,6 +36,7 @@ getMe().then(async function (session) {
             }
         }
     }
+    // Render thông tin chủ nhóm (avatar + tên + link profile)
     var ownerEl = document.getElementById('team-owner');
     if (owner) {
         ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar }));
@@ -44,7 +50,7 @@ getMe().then(async function (session) {
         document.getElementById('team-owner-wrapper').appendChild(ownerLink);
     }
 
-    // --- Join / Leave Button ---
+    // ── Xác định quyền của user hiện tại ──
     var isOwner = false;
     var isMember = false;
     if (team.members) {
@@ -59,6 +65,7 @@ getMe().then(async function (session) {
 
     var joinWrapper = document.getElementById('join-btn-wrapper');
 
+    // ── Popup xác nhận chung ──
     function showConfirmPopup(icon, title, message, okLabel, okClass, onConfirm) {
         var overlay = document.getElementById('confirm-popup-overlay');
         document.getElementById('confirm-popup-icon').innerHTML = icon;
@@ -97,6 +104,7 @@ getMe().then(async function (session) {
         });
     }
 
+    // Popup lỗi (chỉ có nút Close)
     function showErrorPopup(title, message) {
         showConfirmPopup(
             '<i class="bi bi-exclamation-triangle-fill"></i>',
@@ -108,7 +116,7 @@ getMe().then(async function (session) {
         );
     }
 
-    // --- Edit Team Popup ---
+    // ── Popup chỉnh sửa nhóm (chỉ chủ nhóm) ──
     function openEditPopup() {
         var overlay = document.getElementById('edit-popup-overlay');
         var nameInput = document.getElementById('edit-team-name');
@@ -117,16 +125,19 @@ getMe().then(async function (session) {
         var uploadContent = document.getElementById('edit-upload-content');
         var cards = overlay.querySelectorAll('.visibility-card');
 
+        // Điền dữ liệu hiện tại vào form
         nameInput.value = team.name || '';
         avatarPreview.style.display = 'none';
         uploadContent.style.display = '';
 
+        // Chọn visibility card active
         cards.forEach(function (c) { c.classList.remove('active'); });
         var target = team.isPublic ? 'public' : 'private';
         cards.forEach(function (c) {
             if (c.getAttribute('data-type') === target) c.classList.add('active');
         });
 
+        // Xử lý click chọn visibility
         cards.forEach(function (card) {
             card.onclick = function () {
                 cards.forEach(function (c) { c.classList.remove('active'); });
@@ -134,6 +145,7 @@ getMe().then(async function (session) {
             };
         });
 
+        // Preview avatar khi chọn file
         avatarInput.onchange = function () {
             var file = this.files[0];
             if (!file) return;
@@ -153,7 +165,7 @@ getMe().then(async function (session) {
         document.getElementById('edit-popup-overlay').classList.remove('show');
     }
 
-    // --- Edit Team Save (with inline duplicate name error) ---
+    // ── Lưu chỉnh sửa nhóm (hiển thị lỗi trùng tên inline) ──
     document.getElementById('edit-popup-save').addEventListener('click', async function () {
         var btn = this;
         var name = document.getElementById('edit-team-name').value.trim();
@@ -172,7 +184,27 @@ getMe().then(async function (session) {
         btn.disabled = true;
         btn.textContent = 'Saving...';
 
-        var res = await updateTeam({ name: name, isPublic: isPublic });
+        var payload = { name: name, isPublic: isPublic };
+
+        // Upload team avatar nếu có chọn file mới
+        var avatarInput = document.getElementById('edit-avatar-input');
+        var file = avatarInput.files[0];
+        if (file) {
+            btn.textContent = 'Uploading...';
+            var uploadRes = await apiUpload('/upload/team-avatar', file, { teamId: teamId });
+            if (uploadRes && uploadRes.url) {
+                payload.avatar = uploadRes.url;
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+                var errMsg = uploadRes ? (uploadRes.error || 'Avatar upload failed') : 'Avatar upload failed';
+                nameError.textContent = errMsg;
+                nameError.classList.remove('d-none');
+                return;
+            }
+        }
+
+        var res = await updateTeam(payload);
 
         btn.disabled = false;
         btn.textContent = 'Save Changes';
@@ -190,7 +222,7 @@ getMe().then(async function (session) {
         }
     });
 
-    // --- Disband Team ---
+    // ── Giải tán nhóm ──
     document.getElementById('edit-popup-disband').addEventListener('click', function () {
         closeEditPopup();
         showConfirmPopup(
@@ -210,7 +242,7 @@ getMe().then(async function (session) {
         );
     });
 
-    // --- Transfer Ownership Popup ---
+    // ── Popup chuyển nhượng quyền chủ nhóm ──
     var transferMembersData = [];
     var transferPagedData = [];
 
@@ -222,11 +254,13 @@ getMe().then(async function (session) {
         document.getElementById('transfer-popup-cancel').onclick = closeTransferPopup;
         overlay.onclick = function (e) { if (e.target === overlay) closeTransferPopup(); };
 
+        // Lọc bỏ chủ nhóm khỏi danh sách ứng viên
         transferMembersData = (team.members || []).filter(function (m) {
             return String(m.userId) !== String(team.ownerId);
         });
 
-        window.transferTable = UserTable.init('transfer-member-table', {
+        // Khởi tạo CardTable cho danh sách chuyển nhượng
+        window.transferTable = CardTable.init('transfer-member-table', {
             columns: [
                 { key: 'user', label: 'Member' },
                 { key: 'puzzles', label: 'Puzzles' },
@@ -240,13 +274,14 @@ getMe().then(async function (session) {
 
         loadTransferMembers(1);
 
-        var grid = document.getElementById('ut-grid-transfer-member-table');
+        // Xử lý click chọn thành viên để chuyển nhượng
+        var grid = document.getElementById('cg-grid-transfer-member-table');
         if (grid) {
             grid.addEventListener('click', function (e) {
-                var card = e.target.closest('.ut-card');
+                var card = e.target.closest('.cg-card');
                 if (!card) return;
                 e.preventDefault();
-                var idx = Array.prototype.indexOf.call(grid.querySelectorAll('.ut-card'), card);
+                var idx = Array.prototype.indexOf.call(grid.querySelectorAll('.cg-card'), card);
                 if (idx < 0 || idx >= transferPagedData.length) return;
                 var member = transferPagedData[idx];
                 showConfirmPopup(
@@ -272,11 +307,13 @@ getMe().then(async function (session) {
         document.getElementById('transfer-popup-overlay').classList.remove('show');
     }
 
+    // Fetch + phân trang danh sách thành viên cho popup chuyển nhượng
     window.loadTransferMembers = function (page) {
         var tbl = window.transferTable;
         var searchTerm = tbl ? tbl.getSearchTerm() : '';
         var filtered = transferMembersData;
 
+        // Lọc client-side theo tìm kiếm
         if (searchTerm) {
             var lower = searchTerm.toLowerCase();
             filtered = filtered.filter(function (m) {
@@ -284,11 +321,13 @@ getMe().then(async function (session) {
             });
         }
 
+        // Phân trang thủ công
         var pageSize = 8;
         var p = page || 1;
         var start = (p - 1) * pageSize;
         transferPagedData = filtered.slice(start, start + pageSize);
 
+        // Tạo response giả để setData cho CardTable
         var fakeResponse = {
             data: transferPagedData,
             pagination: {
@@ -302,8 +341,9 @@ getMe().then(async function (session) {
         if (tbl) tbl.setData(fakeResponse);
     };
 
+    // ── Render nút theo quyền ──
     if (isOwner) {
-        // --- Owner Buttons ---
+        // Chủ nhóm: nút Edit + Transfer Ownership
         var editBtn = document.createElement('button');
         editBtn.className = 'custom-btn btn-secondary';
         editBtn.innerHTML = '<i class="bi bi-pencil-square me-1"></i> Edit Team';
@@ -317,6 +357,7 @@ getMe().then(async function (session) {
         joinWrapper.appendChild(transferBtn);
 
     } else if (isMember && !isOwner) {
+        // Thành viên thường: nút Leave Team
         var leaveBtn = document.createElement('button');
         leaveBtn.className = 'custom-btn btn-danger';
         leaveBtn.textContent = 'Leave Team';
@@ -343,6 +384,7 @@ getMe().then(async function (session) {
         });
         joinWrapper.appendChild(leaveBtn);
     } else if (!isMember && team.isPublic) {
+        // Chưa là thành viên + nhóm công khai: nút Join Team
         var joinBtn = document.createElement('button');
         joinBtn.className = 'custom-btn';
         joinBtn.textContent = 'Join Team';
@@ -378,14 +420,15 @@ getMe().then(async function (session) {
         joinWrapper.appendChild(joinBtn);
     }
 
-    // --- Shoutout ---
+    // ── Shoutout ──
     document.getElementById('team-shoutout').textContent = team.shoutout || '';
 
-    // --- Shoutout Edit (owner only) ---
+    // ── Chỉnh sửa shoutout (chỉ chủ nhóm) ──
     if (isOwner) {
         document.getElementById('shoutout-edit-btn').classList.remove('d-none');
     }
 
+    // Bật chế độ chỉnh sửa shoutout
     document.getElementById('shoutout-edit-btn').addEventListener('click', function () {
         document.getElementById('team-shoutout').style.display = 'none';
         document.getElementById('shoutout-edit').classList.remove('d-none');
@@ -393,12 +436,14 @@ getMe().then(async function (session) {
         document.getElementById('shoutout-input').focus();
     });
 
+    // Hủy chỉnh sửa shoutout
     document.getElementById('shoutout-cancel').addEventListener('click', function () {
         document.getElementById('shoutout-edit').classList.add('d-none');
         document.getElementById('team-shoutout').style.display = '';
         document.getElementById('team-shoutout').textContent = team.shoutout || '';
     });
 
+    // Lưu shoutout mới
     document.getElementById('shoutout-save').addEventListener('click', async function () {
         var btn = this;
         var newShoutout = document.getElementById('shoutout-input').value.trim();
@@ -421,11 +466,12 @@ getMe().then(async function (session) {
         }
     });
 
-    // --- Performance Matrix ---
+    // ── Ma trận hiệu suất ──
     document.getElementById('perf-throughput-bar').style.width = (team.throughput || 0) + '%';
     document.getElementById('perf-throughput-text').textContent = (team.throughput || 0) + '%';
     document.getElementById('perf-total-solved').textContent = (team.totalSolved || 0).toLocaleString();
 
+    // Tính tổng điểm của tất cả thành viên
     var totalScore = 0;
     if (team.members) {
         for (var j = 0; j < team.members.length; j++) {
@@ -434,18 +480,19 @@ getMe().then(async function (session) {
     }
     document.getElementById('perf-total-score').textContent = totalScore.toLocaleString();
 
-    // --- Top Contributors ---
+    // ── Top Contributors ──
     var topEl = document.getElementById('top-contributors');
     topEl.innerHTML = '';
     if (team.topMembers && team.topMembers.length > 0) {
         for (var k = 0; k < team.topMembers.length; k++) {
             var m = team.topMembers[k];
-            // Top contributor rows are clickable links to profile
+            // Mỗi hàng top contributor là link tới profile
             var row = document.createElement('a');
             row.className = 'd-flex align-items-center mb-3 text-decoration-none';
             row.href = '/frontend/pages/user/profile/index.html?id=' + m.userId;
             row.style.color = 'inherit';
 
+            // Badge thứ hạng (vàng/bạc/đồng)
             var rankBadge = document.createElement('span');
             rankBadge.className = 'me-3 fw-bold';
             rankBadge.style.minWidth = '24px';
@@ -463,7 +510,7 @@ getMe().then(async function (session) {
             row.appendChild(rankBadge);
             row.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
 
-            // Info container needs min-width:0 for text ellipsis in flex
+            // Container thông tin (tên + điểm) — cần min-width:0 cho text ellipsis
             var info = document.createElement('div');
             info.className = 'flex-grow-1 ms-3';
             info.style.minWidth = '0';
@@ -484,7 +531,7 @@ getMe().then(async function (session) {
         }
     }
 
-    // --- Members Table (UserTable) ---
+    // ── Bảng thành viên (UserTable) ──
     var memberTableOpts = {
         columns: [
             { key: 'user', label: 'Member' },
@@ -496,7 +543,9 @@ getMe().then(async function (session) {
         onPageChange: function (page) { loadMembers(page); }
     };
 
+    // Nếu là chủ nhóm → thêm menu ngữ cảnh (chuyển nhượng + đá thành viên)
     if (isOwner) {
+        // Không hiển thị menu cho chính chủ nhóm
         memberTableOpts.cardMenuFilter = function (member) {
             return String(member.userId) !== String(team.ownerId);
         };
@@ -547,13 +596,16 @@ getMe().then(async function (session) {
         ];
     }
 
+    // Khởi tạo UserTable cho danh sách thành viên
     window.memberTable = UserTable.init('member-table', memberTableOpts);
 
+    // Fetch + phân trang danh sách thành viên (client-side)
     window.loadMembers = async function (page) {
         var tbl = window.memberTable;
         var searchTerm = tbl ? tbl.getSearchTerm() : '';
         var allMembers = team.members || [];
 
+        // Lọc theo tìm kiếm
         if (searchTerm) {
             var lower = searchTerm.toLowerCase();
             allMembers = allMembers.filter(function (m) {
@@ -561,6 +613,7 @@ getMe().then(async function (session) {
             });
         }
 
+        // Phân trang thủ công
         var pageSize = 12;
         var p = page || 1;
         var start = (p - 1) * pageSize;

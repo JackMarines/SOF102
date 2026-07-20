@@ -56,6 +56,26 @@ public class AnnouncementDao {
         }
     }
 
+    // Lấy announcement mới nhất trong 7 ngày qua (chỉ 1 bản ghi)
+    public Announcement findLatestRecent() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            java.sql.Timestamp threshold = new java.sql.Timestamp(
+                System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+            TypedQuery<Announcement> q = em.createQuery(
+                "SELECT a FROM Announcement a WHERE " +
+                "a.annIspublished = true AND " +
+                "a.annCreatedat >= :threshold " +
+                "ORDER BY a.annCreatedat DESC", Announcement.class);
+            q.setParameter("threshold", threshold);
+            q.setMaxResults(1);
+            List<Announcement> results = q.getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     // Lấy announcement chưa hết hạn (7 ngày)
     public List<Announcement> findActive() {
         EntityManager em = JpaUtils.getEntityManager();

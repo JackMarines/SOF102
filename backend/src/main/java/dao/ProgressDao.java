@@ -8,7 +8,10 @@ import jakarta.persistence.TypedQuery;
 import util.JpaUtils;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProgressDao {
     // Thêm mới hoặc cập nhật progress (upsert) dựa trên userId + puzId
@@ -242,6 +245,130 @@ public class ProgressDao {
         } finally {
             em.close();
         }
+    }
+
+    // ── CHART DATA (dashboard) ──
+
+    // Today — 4 segments: 00-06, 06-12, 12-18, 18-00
+    public Map<String, Object> getTodayChart() {
+        String[] labels = {"00-06", "06-12", "12-18", "18-00"};
+        long[] data = new long[4];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT FLOOR(HOUR(prog_date) / 6) AS seg, COUNT(*) AS cnt " +
+                "FROM progress WHERE DATE(prog_date) = CURDATE() GROUP BY seg");
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int seg = ((Number) row[0]).intValue();
+                if (seg >= 0 && seg < 4) data[seg] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        result.put("data", List.of(data[0], data[1], data[2], data[3]));
+        return result;
+    }
+
+    // Week — 7 segments: Mon-Sun
+    public Map<String, Object> getWeekChart() {
+        String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        long[] data = new long[7];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT DAYOFWEEK(prog_date) AS dow, COUNT(*) AS cnt " +
+                "FROM progress WHERE prog_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) " +
+                "GROUP BY dow");
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int dow = ((Number) row[0]).intValue(); // 1=Sun, 2=Mon, ..., 7=Sat
+                int idx = (dow + 5) % 7; // map to 0=Mon..6=Sun
+                data[idx] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        result.put("data", List.of(data[0], data[1], data[2], data[3], data[4], data[5], data[6]));
+        return result;
+    }
+
+    // Month — 4 segments: Week 1-4
+    public Map<String, Object> getMonthChart() {
+        String[] labels = {"Week 1", "Week 2", "Week 3", "Week 4"};
+        long[] data = new long[4];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT FLOOR((DAY(prog_date) - 1) / 7) AS wk, COUNT(*) AS cnt " +
+                "FROM progress WHERE prog_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) " +
+                "GROUP BY wk");
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int wk = ((Number) row[0]).intValue();
+                if (wk >= 0 && wk < 4) data[wk] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        result.put("data", List.of(data[0], data[1], data[2], data[3]));
+        return result;
+    }
+
+    // 3 Months — 3 segments: Month 1-3
+    public Map<String, Object> getThreeMonthsChart() {
+        String[] labels = {"Month 1", "Month 2", "Month 3"};
+        long[] data = new long[3];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT TIMESTAMPDIFF(MONTH, prog_date, CURDATE()) AS mo, COUNT(*) AS cnt " +
+                "FROM progress WHERE prog_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) " +
+                "GROUP BY mo");
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int mo = ((Number) row[0]).intValue();
+                if (mo >= 0 && mo < 3) data[mo] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        result.put("data", List.of(data[0], data[1], data[2]));
+        return result;
+    }
+
+    // Total — 12 segments: Jan-Dec (current year)
+    public Map<String, Object> getTotalChart() {
+        String[] labels = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        long[] data = new long[12];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT MONTH(prog_date) AS mo, COUNT(*) AS cnt " +
+                "FROM progress WHERE YEAR(prog_date) = YEAR(CURDATE()) " +
+                "GROUP BY mo");
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int mo = ((Number) row[0]).intValue();
+                if (mo >= 1 && mo <= 12) data[mo - 1] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        List<Long> dataList = new ArrayList<>();
+        for (long d : data) dataList.add(d);
+        result.put("data", dataList);
+        return result;
     }
 
     // Đếm số puzzle đã hoàn thành với filter (dùng cho phân trang)

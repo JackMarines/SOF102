@@ -36,3 +36,20 @@ async function apiDelete(path) {
   });
   return res.json();
 }
+
+// Upload file via multipart/form-data (dùng cho avatar, team avatar, v.v.)
+async function apiUpload(path, file, extraFields) {
+  var formData = new FormData();
+  formData.append('file', file);
+  if (extraFields) {
+    Object.keys(extraFields).forEach(function (key) {
+      formData.append(key, extraFields[key]);
+    });
+  }
+  var res = await fetch(API_BASE + path, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData,
+  });
+  return res.json();
+}

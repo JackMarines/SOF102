@@ -2,6 +2,7 @@
 package controller;
 
 import dao.ProgressDao;
+import dao.PuzzleDao;
 import dao.TeamDao;
 import dao.UserDao;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,7 @@ public class AdminController extends HttpServlet {
 
     private UserDao userDao = new UserDao();
     private TeamDao teamDao = new TeamDao();
+    private PuzzleDao puzzleDao = new PuzzleDao();
     private ProgressDao progressDao = new ProgressDao();
 
     @Override
@@ -28,24 +30,17 @@ public class AdminController extends HttpServlet {
 
         long totalUsers = userDao.countActive();
         long totalTeams = teamDao.countActive();
-        long totalPuzzles = progressDao.countAll(); // actually progressDao.countAll() is progress count
-        // Get puzzle count from a separate method
-        long progressToday = progressDao.countToday();
-        long progressWeek = progressDao.countByDateRange(7);
-        long progressMonth = progressDao.countByDateRange(30);
-        long progress3Months = progressDao.countByDateRange(90);
-        long progressAll = progressDao.countAll();
+        long totalPuzzles = puzzleDao.count(null, null, null);
 
         Map<String, Object> data = new HashMap<>();
         data.put("totalUsers", totalUsers);
         data.put("totalTeams", totalTeams);
-        data.put("solvedPuzzles", Map.of(
-            "today", progressToday,
-            "week", progressWeek,
-            "month", progressMonth,
-            "3months", progress3Months,
-            "all", progressAll
-        ));
+        data.put("totalPuzzles", totalPuzzles);
+        data.put("todayChart", progressDao.getTodayChart());
+        data.put("weekChart", progressDao.getWeekChart());
+        data.put("monthChart", progressDao.getMonthChart());
+        data.put("threeMonthsChart", progressDao.getThreeMonthsChart());
+        data.put("totalChart", progressDao.getTotalChart());
 
         ResponseUtil.success(resp, data);
     }

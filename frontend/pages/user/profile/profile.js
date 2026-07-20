@@ -66,18 +66,23 @@ getMe().then(async function (session) {
 
             var payload = { displayName: displayName, bio: bio || null };
 
-            // Handle avatar upload as base64
+            // Upload avatar lên R2 nếu có chọn file
             var file = avatarInput.files[0];
             if (file) {
-                var reader = new FileReader();
-                reader.onload = async function (e) {
-                    payload.avatar = e.target.result;
-                    await doSave(btn, payload);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                await doSave(btn, payload);
+                btn.disabled = true;
+                btn.textContent = 'Uploading...';
+                var uploadRes = await apiUpload('/upload/avatar', file);
+                if (uploadRes && uploadRes.url) {
+                    payload.avatar = uploadRes.url;
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Changes';
+                    alert(uploadRes ? (uploadRes.error || 'Avatar upload failed') : 'Avatar upload failed');
+                    return;
+                }
             }
+
+            await doSave(btn, payload);
         });
 
         async function doSave(btn, payload) {

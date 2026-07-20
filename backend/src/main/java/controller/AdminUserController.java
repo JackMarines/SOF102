@@ -81,9 +81,26 @@ public class AdminUserController extends HttpServlet {
             } catch (NumberFormatException e) {}
         }
 
-        long total = userDao.countActive();
+        String status = req.getParameter("status") != null ? req.getParameter("status").trim().toLowerCase() : "active";
+        String search = req.getParameter("search");
+
+        long total;
+        List<User> users;
+        switch (status) {
+            case "banned":
+                total = userDao.countInactiveAll(search);
+                users = userDao.findInactiveAll(page, limit, search);
+                break;
+            case "all":
+                total = userDao.countAll(search);
+                users = userDao.findAll(page, limit, search);
+                break;
+            default:
+                total = userDao.countActive(search);
+                users = userDao.findActiveAll(page, limit, search);
+                break;
+        }
         int totalPages = (int) Math.ceil((double) total / limit);
-        List<User> users = userDao.findActiveAll(page, limit);
 
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (User u : users) {

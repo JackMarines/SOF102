@@ -24,6 +24,7 @@ async function register(email, password, username) {
 // 1. Firebase signOut (xóa token local)
 // 2. Gọi backend để hủy session
 async function logout() {
+  sessionStorage.removeItem('warningChecked');
   await auth.signOut();
   return apiPost('/auth/logout', {});
 }

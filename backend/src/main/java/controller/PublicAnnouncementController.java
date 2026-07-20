@@ -13,7 +13,7 @@ import util.ResponseUtil;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet("/api/v1/announcements")
+@WebServlet({"/api/v1/announcements", "/api/v1/announcements/latest"})
 public class PublicAnnouncementController extends HttpServlet {
 
     private AnnouncementDao announcementDao = new AnnouncementDao();
@@ -21,6 +21,32 @@ public class PublicAnnouncementController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        String uri = req.getRequestURI();
+        if (uri.endsWith("/latest")) {
+            handleLatest(req, resp);
+        } else {
+            handleAll(req, resp);
+        }
+    }
+
+    private void handleLatest(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        Announcement a = announcementDao.findLatestRecent();
+        if (a == null) {
+            ResponseUtil.success(resp, Map.of("data", null));
+            return;
+        }
+
+        Map<String, Object> item = new HashMap<>();
+        item.put("type", a.getAnnType());
+        item.put("title", a.getAnnTitle());
+        item.put("createdAt", a.getAnnCreatedat());
+
+        ResponseUtil.success(resp, Map.of("data", item));
+    }
+
+    private void handleAll(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
         List<Announcement> list = announcementDao.findActive();
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (Announcement a : list) {
