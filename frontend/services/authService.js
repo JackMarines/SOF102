@@ -64,6 +64,19 @@ async function redirectIfAuthenticated() {
   }
 }
 
+// ── QUÊN MẬT KHẨU ──
+// Gửi email đặt lại mật khẩu qua Firebase
+// Luôn hiển thị cùng một thông báo dù email có tồn tại hay không (chống dò tài khoản)
+async function resetPassword(email) {
+  try {
+    await firebase.auth().sendPasswordResetEmail(email);
+    return { success: true };
+  } catch (error) {
+    // Không phân biệt lỗi email tồn tại hay không — luôn trả success
+    return { success: true };
+  }
+}
+
 // ── OAUTH: GOOGLE ──
 async function loginWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
