@@ -12,7 +12,9 @@
     // --- Banner ---
     var banner = document.getElementById('team-banner');
     if (team.avatar) {
-        banner.src = team.avatar;
+        banner.style.backgroundImage = 'url(' + team.avatar + ')';
+        banner.style.backgroundSize = 'cover';
+        banner.style.backgroundPosition = 'center';
     }
 
     // --- Team Name + Badge ---

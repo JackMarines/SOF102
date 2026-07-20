@@ -56,6 +56,62 @@ public class AnnouncementDao {
         }
     }
 
+    // Lấy tất cả announcement đã published (có phân trang)
+    public List<Announcement> findAllPublished(int page, int limit) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Announcement> q = em.createQuery(
+                "SELECT a FROM Announcement a WHERE a.annIspublished = true ORDER BY a.annIspinned DESC, a.annCreatedat DESC", Announcement.class);
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm số announcement đã published
+    public long countPublished() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(a) FROM Announcement a WHERE a.annIspublished = true", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy tất cả announcement đã published và pinned
+    public List<Announcement> findAllPinned() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            TypedQuery<Announcement> q = em.createQuery(
+                "SELECT a FROM Announcement a WHERE a.annIspublished = true AND a.annIspinned = true ORDER BY a.annCreatedat DESC", Announcement.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy announcement mới nhất trong 7 ngày qua (chỉ 1 bản ghi)
+    public Announcement findLatestRecent() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            java.sql.Timestamp threshold = new java.sql.Timestamp(
+                System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+            TypedQuery<Announcement> q = em.createQuery(
+                "SELECT a FROM Announcement a WHERE " +
+                "a.annIspublished = true AND " +
+                "a.annCreatedat >= :threshold " +
+                "ORDER BY a.annCreatedat DESC", Announcement.class);
+            q.setParameter("threshold", threshold);
+            q.setMaxResults(1);
+            List<Announcement> results = q.getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     // Lấy announcement chưa hết hạn (7 ngày)
     public List<Announcement> findActive() {
         EntityManager em = JpaUtils.getEntityManager();

@@ -57,13 +57,17 @@ public class AdminAppealController extends HttpServlet {
             } catch (NumberFormatException e) {}
         }
 
-        long total = appealDao.count();
+        String status = req.getParameter("status");
+        if (status != null && status.trim().isEmpty()) status = null;
+
+        long total = appealDao.countByStatus(status);
         int totalPages = (int) Math.ceil((double) total / limit);
-        List<Appeal> appeals = appealDao.findAll(page, limit);
+        List<Appeal> appeals = appealDao.findAllByStatus(page, limit, status);
 
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (Appeal a : appeals) {
             Map<String, Object> item = new HashMap<>();
+            item.put("id", a.getAppId());
             item.put("appealId", a.getAppId());
             item.put("applicantId", a.getAppByid());
             item.put("message", a.getAppContent());
@@ -71,6 +75,15 @@ public class AdminAppealController extends HttpServlet {
             item.put("status", a.getAppStatus());
             item.put("reviewerId", a.getAppReviewedby());
             item.put("reviewDate", a.getAppReviewdate());
+            // Look up applicant user info
+            var em = util.JpaUtils.getEntityManager();
+            try {
+                User u = em.find(User.class, a.getAppByid());
+                item.put("userName", u != null ? u.getUserName() : "Unknown");
+                item.put("avatar", u != null ? u.getUserAvatar() : null);
+            } finally {
+                em.close();
+            }
             dataList.add(item);
         }
 
@@ -158,7 +171,6 @@ public class AdminAppealController extends HttpServlet {
             if ("APPROVED".equals(status)) {
                 appealDao.approve(appealId, sessionUser.getUserId());
                 // Deactivate the related warning
-                // Find warning for the applicant
                 entity.Warning w = warningDao.findActiveByUserId(appeal.getAppByid());
                 if (w != null) {
                     warningDao.deactivate(w.getWarnId());

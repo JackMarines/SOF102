@@ -54,6 +54,8 @@ public class AdminTeamController extends HttpServlet {
         String search = req.getParameter("search");
         String sortBy = req.getParameter("sortBy");
         String order = req.getParameter("order");
+        String status = req.getParameter("status");
+        if (status == null || status.trim().isEmpty()) status = "active";
 
         if (req.getParameter("page") != null) {
             try { page = Integer.parseInt(req.getParameter("page"));
@@ -66,9 +68,9 @@ public class AdminTeamController extends HttpServlet {
             } catch (NumberFormatException e) {}
         }
 
-        long total = teamDao.countActive();
+        long total = teamDao.countFiltered(status);
         int totalPages = (int) Math.ceil((double) total / limit);
-        List<Object[]> rows = teamDao.findAllActiveWithStats(page, limit, search, sortBy, order);
+        List<Object[]> rows = teamDao.findWithStats(page, limit, search, sortBy, order, status);
 
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (Object[] row : rows) {
@@ -81,6 +83,7 @@ public class AdminTeamController extends HttpServlet {
             item.put("isActive", row[5]);
             item.put("memberCount", row[6]);
             item.put("totalSolved", row[7]);
+            item.put("ownerName", row[8]);
             dataList.add(item);
         }
 

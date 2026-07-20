@@ -40,6 +40,16 @@
   --badge-medium-bg: #4a3500;
   --badge-hard-bg: #4a1111;
 
+  /* Announcement Badge BGs */
+  --ann-general-bg: #1a1d36;
+  --ann-maintenance-bg: #3b2a00;
+  --ann-release-bg: #0a3020;
+  --ann-feature-bg: #1a1a3a;
+  --ann-bug-fix-bg: #3a1a1a;
+  --ann-security-bg: #2a1a2a;
+  --ann-incident-bg: #3a0a0a;
+  --ann-event-bg: #1a2a3a;
+
   /* Table */
   --row-border: rgba(255,255,255,0.05);
   --row-hover: rgba(255,255,255,0.03);
@@ -124,6 +134,16 @@ html.light-mode {
   --badge-easy-bg: #e6f9ee;
   --badge-medium-bg: #fef3cd;
   --badge-hard-bg: #fee2e2;
+
+  /* Announcement Badge BGs */
+  --ann-general-bg: #e8eaf6;
+  --ann-maintenance-bg: #fff3cd;
+  --ann-release-bg: #d4edda;
+  --ann-feature-bg: #e0e7ff;
+  --ann-bug-fix-bg: #fee2e2;
+  --ann-security-bg: #f3e8ff;
+  --ann-incident-bg: #fde2e2;
+  --ann-event-bg: #dbeafe;
 
   --row-border: rgba(0,0,0,0.08);
   --row-hover: rgba(0,0,0,0.03);
@@ -273,6 +293,15 @@ a{
     background: var(--lang-bg);
     color: var(--lang-color);
 }
+
+.badges .ann-general{ background: var(--ann-general-bg); color: #93c5fd; }
+.badges .ann-maintenance{ background: var(--ann-maintenance-bg); color: #fbbf24; }
+.badges .ann-release{ background: var(--ann-release-bg); color: #4ade80; }
+.badges .ann-feature{ background: var(--ann-feature-bg); color: #818cf8; }
+.badges .ann-bug-fix{ background: var(--ann-bug-fix-bg); color: #f87171; }
+.badges .ann-security{ background: var(--ann-security-bg); color: #c084fc; }
+.badges .ann-incident{ background: var(--ann-incident-bg); color: #ef4444; }
+.badges .ann-event{ background: var(--ann-event-bg); color: #60a5fa; }
 
 .easy{
     color: #22c55e;
@@ -970,8 +999,8 @@ textarea {
     resize: none;
 }
 
-/* ── Confirm Popup ── */
-.confirm-popup-overlay {
+/* ── Popup Component ── */
+.popup-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -979,11 +1008,66 @@ textarea {
     z-index: 10000;
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
+    padding: 40px 0;
 }
-.confirm-popup-overlay.show {
+.popup-overlay.show {
     display: flex;
 }
-.confirm-popup {
+.popup-panel {
+    width: 90%;
+    padding: 32px;
+    text-align: left;
+    border: 1px solid var(--border-main);
+    border-radius: 16px;
+    background: var(--bg-panel);
+}
+.popup-panel.popup-sm {
+    max-width: 420px;
+    text-align: center;
+}
+.popup-panel.popup-md {
+    max-width: 700px;
+}
+.popup-panel.popup-lg {
+    max-width: 900px;
+}
+
+.popup-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    color: var(--accent);
+    text-align: center;
+}
+.popup-title-centered {
+    color: var(--text-primary);
+    text-align: center;
+}
+.popup-message {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* ── Popup Aliases (backward compat) ── */
+.confirm-popup-overlay,
+.form-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    padding: 40px 0;
+}
+.confirm-popup-overlay.show,
+.form-popup-overlay.show {
+    display: flex;
+}
+.confirm-popup,
+.form-popup {
     max-width: 420px;
     width: 90%;
     padding: 32px;
@@ -991,6 +1075,15 @@ textarea {
     border: 1px solid var(--border-main);
     border-radius: 16px;
     background: var(--bg-panel);
+}
+.form-popup {
+    max-width: 700px;
+    text-align: left;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.form-popup-lg {
+    max-width: 900px;
 }
 .confirm-popup-icon {
     font-size: 48px;
@@ -1019,36 +1112,9 @@ textarea {
     transform: none;
 }
 
-/* ── Form Popup (Edit / Transfer) ── */
-.form-popup-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    padding: 40px 0;
+.tab-pane {
+    overflow-x:hidden;
 }
-.form-popup-overlay.show {
-    display: flex;
-}
-.form-popup {
-    max-width: 700px;
-    width: 95%;
-    padding: 32px;
-    border: 1px solid var(--border-main);
-    border-radius: 16px;
-    background: var(--bg-panel);
-    text-align: left;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-.form-popup-lg {
-    max-width: 900px;
-}
-
 /* --- User Table: h5/h6 color fix --- */
 .ut-card-name {
     color: var(--text-primary) !important;

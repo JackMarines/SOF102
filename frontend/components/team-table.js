@@ -1,283 +1,26 @@
-// Team table component — paginated card grid with search, sort, and order controls
+// Team table component — lưới thẻ phân trang với tìm kiếm, sắp xếp và điều khiển thứ tự
+// Dùng CSS prefix `tt-`
 (function () {
 
-    var style = document.createElement('style');
-    style.id = 'team-table-injected';
-    style.textContent = `
-        /* --- Team Table: Search & Sort --- */
-        .tt-search-box {
-            display: flex;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        .tt-search-box input {
-            flex: 1;
-            min-width: 0;
-            padding: 10px 15px;
-            border-radius: 8px 0 0 8px;
-            border: 1px solid var(--border-input);
-            background: var(--bg-input);
-            color: var(--text-primary);
-        }
-        .tt-search-box button {
-            width: 55px;
-            flex-shrink: 0;
-            border-radius: 0 8px 8px 0;
-            border: 1px solid var(--border-input);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            cursor: pointer;
-        }
-        .tt-search-box button:hover {
-            background: var(--bg-hover);
-            color: var(--accent);
-        }
-        .tt-filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .tt-filter-row .dropdown .btn {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border: 1px solid var(--border-input);
-            border-radius: 8px;
-            min-width: 8rem;
-            text-align: left;
-            position: relative;
-            padding-right: 20px;
-        }
-        .tt-filter-row .dropdown .btn:hover,
-        .tt-filter-row .dropdown .btn:focus,
-        .tt-filter-row .dropdown .btn:active,
-        .tt-filter-row .dropdown .btn.show {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border-color: var(--border-input);
-            box-shadow: none;
-        }
-        .tt-filter-row .dropdown .btn::after {
-            content: "";
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 0.3em solid;
-            border-right: 0.3em solid transparent;
-            border-left: 0.3em solid transparent;
-            border-bottom: 0;
-        }
-        .tt-filter-row .dropdown .btn.show::after {
-            border-top: 0;
-            border-bottom: 0.3em solid;
-        }
-        .tt-filter-row .dropdown-menu {
-            background: var(--bg-input);
-            border: 1px solid var(--border-input);
-            border-radius: 8px;
-            padding: 6px;
-            min-width: 100%;
-            width: 8rem;
-        }
-        .tt-filter-row .dropdown-menu.show {
-            animation: ttDropdownIn 0.2s ease forwards;
-        }
-        .tt-filter-row .dropdown-menu .dropdown-item {
-            color: var(--text-primary);
-            border-radius: 6px;
-            transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
-            text-align: center;
-            padding: 4px 8px;
-        }
-        .tt-filter-row .dropdown-menu .dropdown-item:hover,
-        .tt-filter-row .dropdown-menu .dropdown-item:focus {
-            background: var(--bg-hover);
-            color: var(--accent);
-            cursor: pointer;
-        }
-        .tt-filter-row .dropdown-menu .dropdown-item:active {
-            background: var(--bg-active);
-            color: var(--text-primary);
-        }
-
-        /* --- Team Table: Card Grid --- */
-        .tt-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-top: 10px;
-        }
-        .tt-card {
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-        .tt-card .glass-box {
-            height: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .tt-card:hover .glass-box {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-        }
-        .tt-card-avatar {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-        .tt-card-avatar-fallback {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-input);
-            color: var(--text-secondary);
-            font-size: 42px;
-        }
-        .tt-card-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            margin-bottom: 6px;
-            min-width: 0;
-        }
-        .tt-card-name {
-            font-weight: 600;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .tt-card-meta {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .tt-card-meta i {
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        .tt-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .tt-badge-public {
-            background: rgba(34, 197, 94, 0.15);
-            color: #22c55e;
-        }
-        .tt-badge-private {
-            background: rgba(156, 163, 175, 0.15);
-            color: #9ca3af;
-        }
-
-        /* --- Team Table: Empty State --- */
-        .tt-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-
-        /* --- Team Table: Pagination --- */
-        .tt-pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 25px;
-        }
-        .tt-page {
-            padding: 6px 12px;
-            border: 1px solid var(--border-input);
-            border-radius: 6px;
-            background: transparent;
-            color: var(--text-primary);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .tt-page:hover {
-            background: var(--accent-hover);
-            color: var(--text-on-accent);
-        }
-        .tt-page.tt-active {
-            background: var(--accent-hover);
-            color: var(--text-on-accent);
-            font-weight: 600;
-        }
-
-        /* --- Team Table: Animations --- */
-        @keyframes ttDropdownIn {
-            from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes ttCardIn {
-            from { opacity: 0; transform: translateY(18px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .tt-card {
-            animation: ttCardIn 0.4s ease backwards;
-        }
-        .tt-card:nth-child(1)  { animation-delay: 0s; }
-        .tt-card:nth-child(2)  { animation-delay: 0.04s; }
-        .tt-card:nth-child(3)  { animation-delay: 0.08s; }
-        .tt-card:nth-child(4)  { animation-delay: 0.12s; }
-        .tt-card:nth-child(5)  { animation-delay: 0.16s; }
-        .tt-card:nth-child(6)  { animation-delay: 0.2s; }
-        .tt-card:nth-child(7)  { animation-delay: 0.24s; }
-        .tt-card:nth-child(8)  { animation-delay: 0.28s; }
-
-        /* --- Team Table: Responsive --- */
-        @media (max-width: 991px) {
-            .tt-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        @media (max-width: 768px) {
-            .tt-filter-row {
-                flex-wrap: wrap;
-            }
-            .tt-filter-row .dropdown {
-                width: 100%;
-            }
-            .tt-filter-row .dropdown .btn {
-                width: 100%;
-            }
-            .tt-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        @media (max-width: 480px) {
-            .tt-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
+    // ── Constructor ──
     function TeamTable(containerId, options) {
         this.container = document.getElementById(containerId);
         if (!this.container) return;
 
+        // Gộp options mặc định với options caller truyền vào
         this.opts = Object.assign({
             searchPlaceholder: 'Search teams...',
-            sortByOptions: [],
+            sortByOptions: [],       // Tùy chọn sắp xếp [{label, value}]
             sortByLabel: 'Sort by',
-            orderOptions: [],
+            orderOptions: [],        // Tùy chọn thứ tự [{label, value}]
             orderLabel: 'Order',
-            urlTemplate: null,
-            onSearch: function () {},
-            onSort: function () {},
-            onPageChange: function () {}
+            urlTemplate: null,       // Nếu set, mỗi thẻ sẽ là <a> trỏ đến urlTemplate + item.id
+            onSearch: function () {}, // Callback khi tìm kiếm
+            onSort: function () {},   // Callback khi thay đổi sắp xếp
+            onPageChange: function () {} // Callback khi chuyển trang
         }, options || {});
 
+        // Trạng thái nội bộ
         this._search = '';
         this._sortBy = '';
         this._order = '';
@@ -287,12 +30,13 @@
         this._build();
     }
 
+    // ── Xây dựng khung DOM tĩnh ──
     TeamTable.prototype._build = function () {
         var self = this;
         var id = this.container.id;
         this.container.innerHTML = '';
 
-        // Search box
+        // ── Ô tìm kiếm ──
         var searchBox = document.createElement('div');
         searchBox.className = 'tt-search-box input-group';
 
@@ -315,24 +59,28 @@
         searchBox.appendChild(btn);
         this.container.appendChild(searchBox);
 
-        // Filter row (sort dropdowns)
+        // ── Hàng bộ lọc (dropdown sắp xếp) ──
         if (this.opts.sortByOptions.length > 0) {
             var filterRow = document.createElement('div');
             filterRow.className = 'tt-filter-row';
 
+            // Helper: tạo dropdown Bootstrap từ mảng tùy chọn {label, value}
             function buildDropdown(options, label, onSelect) {
                 var dropdown = document.createElement('div');
                 dropdown.className = 'dropdown';
 
+                // Nút trigger
                 var toggle = document.createElement('button');
                 toggle.className = 'btn btn-secondary dropdown-toggle';
                 toggle.type = 'button';
                 toggle.setAttribute('data-bs-toggle', 'dropdown');
                 toggle.textContent = label;
 
+                // Menu items
                 var menu = document.createElement('ul');
                 menu.className = 'dropdown-menu';
 
+                // Mục "None" để xóa bộ lọc
                 var noneLi = document.createElement('li');
                 var noneA = document.createElement('a');
                 noneA.className = 'dropdown-item';
@@ -344,6 +92,7 @@
                 noneLi.appendChild(noneA);
                 menu.appendChild(noneLi);
 
+                // Các tùy chọn sắp xếp
                 for (var i = 0; i < options.length; i++) {
                     (function (opt) {
                         var li = document.createElement('li');
@@ -364,12 +113,14 @@
                 return dropdown;
             }
 
+            // Dropdown sắp xếp theo (VD: Name, Score, Members)
             this._sortByBtn = buildDropdown(this.opts.sortByOptions, this.opts.sortByLabel, function (val) {
                 self._sortBy = val;
                 self.opts.onSort(self._sortBy, self._order);
             });
             filterRow.appendChild(this._sortByBtn);
 
+            // Dropdown thứ tự (ASC/DESC)
             if (this.opts.orderOptions.length > 0) {
                 this._orderBtn = buildDropdown(this.opts.orderOptions, this.opts.orderLabel, function (val) {
                     self._order = val;
@@ -381,30 +132,33 @@
             this.container.appendChild(filterRow);
         }
 
-        // Card grid container
+        // ── Vùng lưới thẻ ──
         this._gridEl = document.createElement('div');
         this._gridEl.className = 'tt-grid';
         this._gridEl.id = 'tt-grid-' + id;
         this.container.appendChild(this._gridEl);
 
-        // Pagination container
+        // ── Vùng phân trang ──
         this._paginationEl = document.createElement('div');
         this._paginationEl.className = 'tt-pagination';
         this._paginationEl.id = 'tt-pagination-' + id;
         this.container.appendChild(this._paginationEl);
     };
 
+    // ── Đọc giá trị ô tìm kiếm và gọi callback ──
     TeamTable.prototype._doSearch = function () {
         var input = document.getElementById('tt-input-' + this.container.id);
         this._search = input ? input.value.trim() : '';
         this.opts.onSearch(this._search);
     };
 
+    // Getter exposes trạng thái cho caller
     TeamTable.prototype.getSearchTerm = function () { return this._search; };
     TeamTable.prototype.getSortBy = function () { return this._sortBy; };
     TeamTable.prototype.getOrder = function () { return this._order; };
     TeamTable.prototype.getCurrentPage = function () { return this._page; };
 
+    // ── Nhận dữ liệu từ API, cập nhật phân trang và render lại ──
     TeamTable.prototype.setData = function (response) {
         if (!response || !response.data) return;
         this._page = response.pagination.page;
@@ -413,11 +167,13 @@
         this._renderPagination();
     };
 
+    // ── Render lưới thẻ ──
     TeamTable.prototype._renderCards = function (data) {
         showSpinner(this._gridEl.id);
         var grid = this._gridEl;
         grid.innerHTML = '';
 
+        // Trạng thái rỗng
         if (!data || data.length === 0) {
             var empty = document.createElement('div');
             empty.className = 'tt-empty';
@@ -432,14 +188,16 @@
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
 
+            // Thẻ <a> bọc ngoài (điều hướng nếu có urlTemplate)
             var cardWrap = document.createElement('a');
             cardWrap.className = 'tt-card';
             if (urlTpl) cardWrap.href = urlTpl + item.id;
 
+            // Thân thẻ
             var card = document.createElement('div');
             card.className = 'glass-box p-3';
 
-            // Avatar
+            // Ảnh đại diện nhóm (fallback icon nếu không có avatar)
             if (item.avatar) {
                 var img = document.createElement('img');
                 img.src = item.avatar;
@@ -453,7 +211,7 @@
                 card.appendChild(fallback);
             }
 
-            // Name + badge row
+            // Hàng tên + badge công khai/riêng tư
             var header = document.createElement('div');
             header.className = 'tt-card-header';
 
@@ -469,13 +227,13 @@
 
             card.appendChild(header);
 
-            // Members
+            // Thông tin số thành viên
             var members = document.createElement('p');
             members.className = 'tt-card-meta mb-1';
             members.innerHTML = '<i class="bi bi-people-fill"></i> ' + (item.memberCount != null ? item.memberCount : '0') + ' Members';
             card.appendChild(members);
 
-            // Solved
+            // Thông tin số câu đã giải
             var solved = document.createElement('p');
             solved.className = 'tt-card-meta mb-2';
             solved.innerHTML = '<i class="bi bi-puzzle-fill"></i> ' + (item.totalSolved != null ? item.totalSolved.toLocaleString() : '0') + ' Solved';
@@ -488,6 +246,7 @@
         hideSpinner(this._gridEl.id);
     };
 
+    // ── Render phân trang ──
     TeamTable.prototype._renderPagination = function () {
         var self = this;
         var pag = this._paginationEl;
@@ -496,6 +255,7 @@
         var current = this._page;
         var total = this._totalPages;
 
+        // Tính cửa sổ hiển thị 3 số trang quanh trang hiện tại
         var start = Math.max(1, current - 1);
         var end = Math.min(total, current + 1);
         if (end - start < 2) {
@@ -503,6 +263,7 @@
             else start = Math.max(1, total - 2);
         }
 
+        // Helper tạo liên kết phân trang
         function addBtn(text, disabled, onClick) {
             var a = document.createElement('a');
             a.className = 'tt-page';
@@ -518,6 +279,7 @@
         addBtn('First', current <= 1, function () { self.opts.onPageChange(1); });
         addBtn('Prev', current <= 1, function () { self.opts.onPageChange(current - 1); });
 
+        // Render số trang trong cửa sổ
         for (var i = start; i <= end; i++) {
             (function (pageNum) {
                 var a = document.createElement('a');
@@ -533,6 +295,7 @@
         addBtn('Last', current >= total, function () { self.opts.onPageChange(total); });
     };
 
+    // ── Export toàn cục ──
     window.TeamTable = {
         init: function (containerId, options) {
             return new TeamTable(containerId, options);

@@ -16,7 +16,7 @@ import util.ResponseUtil;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet({"/api/v1/admin/puzzles", "/api/v1/admin/puzzle"})
+@WebServlet({"/api/v1/admin/puzzles", "/api/v1/admin/puzzle", "/api/v1/admin/languages"})
 public class AdminPuzzleController extends HttpServlet {
 
     private PuzzleDao puzzleDao = new PuzzleDao();
@@ -29,6 +29,8 @@ public class AdminPuzzleController extends HttpServlet {
         String uri = req.getRequestURI();
         if (uri.endsWith("/puzzles")) {
             handleListPuzzles(req, resp);
+        } else if (uri.endsWith("/languages")) {
+            handleListLanguages(resp);
         } else if (uri.endsWith("/puzzle")) {
             handleGetPuzzle(req, resp);
         } else {
@@ -140,6 +142,20 @@ public class AdminPuzzleController extends HttpServlet {
         } catch (NumberFormatException e) {
             ResponseUtil.error(resp, 400, "Invalid id");
         }
+    }
+
+    private void handleListLanguages(HttpServletResponse resp) throws IOException {
+        List<Language> languages = languageDao.findAll();
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        for (Language l : languages) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("id", l.getLangId());
+            item.put("name", l.getLangName());
+            dataList.add(item);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", dataList);
+        ResponseUtil.success(resp, result);
     }
 
     @SuppressWarnings("unchecked")

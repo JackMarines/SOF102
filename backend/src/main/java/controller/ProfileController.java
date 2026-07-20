@@ -210,10 +210,19 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
+        String email = (String) body.get("email");
         String displayName = (String) body.get("displayName");
         String bio = (String) body.get("bio");
         String avatar = (String) body.get("avatar");
         String email = (String) body.get("email");
+
+        if (email != null) {
+            if (!email.contains("@") || email.length() > 255) {
+                ResponseUtil.error(resp, 400, "Invalid email format");
+                return;
+            }
+            userDao.updateEmail(sessionUser.getUserId(), email);
+        }
 
         if (displayName != null && (displayName.trim().isEmpty() || displayName.length() > 50)) {
             ResponseUtil.error(resp, 400, "Display name must be 1-50 characters");

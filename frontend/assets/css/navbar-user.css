@@ -109,6 +109,73 @@
     border-color: var(--dropdown-border);
 }
 
+/* ── Admin Badge ── */
+.admin-badge{
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    color: #fff;
+    margin-left: 8px;
+    line-height: 1;
+    vertical-align: middle;
+    text-decoration: none;
+    cursor: pointer;
+}
+.admin-badge:hover{
+    color: #fff;
+    opacity: 0.85;
+}
+
+/* ── Announcement Banner (sticky below navbar) ── */
+.announcement-banner{
+    position: fixed;
+    top: 75px;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background: var(--bg-body);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 6px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    animation: fadeIn 0.3s ease;
+}
+.announcement-banner:hover{
+    background: var(--bg-hover);
+}
+
+
+
+.announcement-banner .ann-date{
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.announcement-banner .ann-separator{
+    color: var(--text-faint);
+}
+
+.announcement-banner .ann-title{
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+body.ann-banner-active.solve-page{
+    padding-top: 116px;
+}
+
+body.ann-banner-active.solve-page .workspace{
+    height: calc(100vh - 116px);
+}
+
 @media(max-width:991px){
     .custom-navbar .navbar-nav{
         text-align: center;

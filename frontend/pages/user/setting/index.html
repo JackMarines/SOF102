@@ -153,194 +153,6 @@
             </div>
 
         </div>
-        <!-- LANGUAGE -->
-
-        <div class="glass-box p-4 mb-4">
-
-            <h5 class="fw-bold mb-3">
-
-                <i class="bi bi-translate me-2"></i>
-
-                Language
-
-            </h5>
-
-            <p class="text-secondary mb-4">
-
-                Select your preferred language for the Puzzle Solve interface.
-
-            </p>
-
-            <div class="row align-items-center">
-
-                <div class="col-md-6">
-
-                    <label class="form-label">
-
-                        Display Language
-
-                    </label>
-
-                    <select class="form-select">
-
-                        <option selected>
-
-                            English (US)
-
-                        </option>
-
-                        <option>
-
-                            Vietnamese
-
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="col-md-6 mt-3 mt-md-0">
-
-                    <div class="glass-box p-3 text-center">
-
-                        <i class="bi bi-globe-americas fs-2"></i>
-
-                        <p class="mb-0 mt-2 text-secondary">
-
-                            Changes will be applied after refreshing the page.
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- ANNOUNCEMENTS -->
-
-        <div class="glass-box p-4 mb-4">
-
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
-
-                <div>
-
-                    <h5 class="fw-bold mb-2">
-
-                        <i class="bi bi-megaphone-fill me-2"></i>
-
-                        Announcements
-
-                    </h5>
-
-                    <p class="text-secondary mb-0">
-
-                        Stay informed about updates, maintenance and new features.
-
-                    </p>
-
-                </div>
-
-                <div class="mt-3 mt-lg-0">
-
-                    <button class="custom-btn border-0">
-
-                        <i class="bi bi-box-arrow-up-right me-2"></i>
-
-                        View Announcements
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ABOUT -->
-
-        <div class="glass-box p-4 mb-4">
-
-            <h5 class="fw-bold mb-4">
-
-                <i class="bi bi-info-circle-fill me-2"></i>
-
-                About Puzzle Solve
-
-            </h5>
-
-            <div class="row align-items-center">
-
-                <div class="col-md-2 text-center">
-
-                    <div class="rounded-circle d-flex justify-content-center align-items-center mx-auto"
-                        style="width:80px;height:80px;background:#241243;">
-
-                        <i class="bi bi-puzzle-fill fs-1"></i>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-10 mt-4 mt-md-0">
-
-                    <h5 class="fw-bold">
-
-                        Puzzle Solve
-
-                    </h5>
-
-                    <span class="badge bg-success mb-3">
-
-                        Version 1.0.0
-
-                    </span>
-
-                    <p class="text-secondary mb-3">
-
-                        Puzzle Solve is an online platform where users solve programming
-                        puzzles, improve problem-solving skills, compete with friends,
-                        and participate in teams through an interactive coding environment.
-
-                    </p>
-
-                    <div class="d-flex flex-wrap gap-3">
-
-                        <a href="#" class="text-decoration-none">
-
-                            Website
-
-                        </a>
-
-                        <a href="#" class="text-decoration-none">
-
-                            GitHub
-
-                        </a>
-
-                        <a href="#" class="text-decoration-none">
-
-                            Privacy Policy
-
-                        </a>
-
-                        <a href="#" class="text-decoration-none">
-
-                            Terms of Service
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
 
         <!-- ACCOUNT -->
 
@@ -356,54 +168,25 @@
 
             <div class="d-grid gap-3">
 
-                <button class="btn btn-outline-light">
-
-                    <i class="bi bi-key-fill me-2"></i>
-
-                    Change Password
-
+                <button class="btn btn-outline-light" id="changeEmailBtn">
+                    <i class="bi bi-envelope-fill me-2"></i>
+                    Change Email
                 </button>
 
-                <button class="btn btn-outline-light">
+                <button class="btn btn-outline-light" id="changePasswordBtn">
+                    <i class="bi bi-key-fill me-2"></i>
+                    Change Password
+                </button>
 
+                <button class="btn btn-outline-light" id="logoutBtn">
                     <i class="bi bi-box-arrow-right me-2"></i>
-
                     Logout
-
                 </button>
 
             </div>
 
         </div>
 
-        <!-- DANGER ZONE -->
-
-        <div class="glass-box p-4 border border-danger mb-5">
-
-            <h5 class="fw-bold text-danger mb-3">
-
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-
-                Danger Zone
-
-            </h5>
-
-            <p class="text-secondary">
-
-                Deleting your account is permanent. Your profile, solved puzzles,
-                team history and statistics cannot be recovered.
-
-            </p>
-
-            <button class="btn btn-danger">
-
-                <i class="bi bi-trash-fill me-2"></i>
-
-                Delete My Account
-
-            </button>
-
-        </div>
     </section>
 
     <!-- FOOTER -->
@@ -418,59 +201,11 @@
 
     <script src="/frontend/components/footer.js"></script>
 
-    <script>
+    <script src="/frontend/components/spinner.js"></script>
 
-        // Theme Selection
+    <script src="/frontend/services/warningService.js"></script>
 
-        document.querySelectorAll(".glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill")
-            .forEach(function (icon) {
-
-                icon.parentElement.style.cursor = "pointer";
-
-                icon.parentElement.addEventListener("click", function () {
-
-                    document.querySelectorAll(".glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill")
-                        .forEach(function (item) {
-
-                            item.parentElement.style.border = "";
-
-                        });
-
-                    this.style.border = "2px solid #b388ff";
-
-                });
-
-            });
-
-        // Save Button
-
-        document.querySelector(".custom-btn")?.addEventListener("click", function () {
-
-            alert("Settings saved successfully.");
-
-        });
-
-        // Cancel Button
-
-        document.querySelector(".btn-outline-light")?.addEventListener("click", function () {
-
-            location.reload();
-
-        });
-
-        // Delete Account
-
-        document.querySelector(".btn-danger")?.addEventListener("click", function () {
-
-            if (confirm("Are you sure you want to delete your account?")) {
-
-                alert("Your account has been deleted.");
-
-            }
-
-        });
-
-    </script>
+    <script src="setting.js"></script>
 
     <!-- Bootstrap -->
 

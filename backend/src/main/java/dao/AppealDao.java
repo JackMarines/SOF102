@@ -57,6 +57,37 @@ public class AppealDao {
         }
     }
 
+    // Đếm theo trạng thái
+    public long countByStatus(String status) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(a) FROM Appeal a";
+            if (status != null && !status.trim().isEmpty()) jpql += " WHERE a.appStatus = :status";
+            TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+            if (status != null && !status.trim().isEmpty()) q.setParameter("status", status);
+            return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy appeal theo trạng thái (admin)
+    public List<Appeal> findAllByStatus(int page, int limit, String status) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String jpql = "SELECT a FROM Appeal a";
+            if (status != null && !status.trim().isEmpty()) jpql += " WHERE a.appStatus = :status";
+            jpql += " ORDER BY a.appDate DESC";
+            TypedQuery<Appeal> q = em.createQuery(jpql, Appeal.class);
+            if (status != null && !status.trim().isEmpty()) q.setParameter("status", status);
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     // Lấy appeal theo applicant
     public List<Appeal> findByApplicantId(int applicantId) {
         EntityManager em = JpaUtils.getEntityManager();

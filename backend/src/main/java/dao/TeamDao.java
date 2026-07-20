@@ -8,7 +8,9 @@ import jakarta.persistence.TypedQuery;
 import util.JpaUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TeamDao {
 
@@ -249,7 +251,8 @@ public class TeamDao {
                 "(SELECT COUNT(*) FROM user u WHERE u.team_id = t.team_id) as memberCount, " +
                 "(SELECT COALESCE(SUM(p.puz_score), 0) FROM progress pr " +
                 " JOIN puzzle p ON pr.puz_id = p.puz_id " +
-                " JOIN user u ON pr.user_id = u.user_id WHERE u.team_id = t.team_id) as solvedTotal " +
+                " JOIN user u ON pr.user_id = u.user_id WHERE u.team_id = t.team_id) as solvedTotal, " +
+                "(SELECT u2.user_name FROM user u2 WHERE u2.user_id = t.team_ownerid) as ownerName " +
                 "FROM team t WHERE t.team_isactive = true");
 
             if (search != null && !search.trim().isEmpty()) {
@@ -285,6 +288,72 @@ public class TeamDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             return em.createQuery("SELECT COUNT(t) FROM Team t WHERE t.teamIsactive = true", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Đếm team theo trạng thái (active/banned/all)
+    public long countFiltered(String status) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(t) FROM Team t";
+            if ("active".equalsIgnoreCase(status)) {
+                jpql += " WHERE t.teamIsactive = true";
+            } else if ("banned".equalsIgnoreCase(status)) {
+                jpql += " WHERE t.teamIsactive = false";
+            }
+            return em.createQuery(jpql, Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy danh sách team theo trạng thái (active/banned/all)
+    public List<Object[]> findWithStats(int page, int limit, String search,
+                                        String sortBy, String order, String status) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            StringBuilder sql = new StringBuilder(
+                "SELECT t.team_id, t.team_name, t.team_avatar, t.team_ownerid, " +
+                "t.team_ispublic, t.team_isactive, " +
+                "(SELECT COUNT(*) FROM user u WHERE u.team_id = t.team_id) as memberCount, " +
+                "(SELECT COALESCE(SUM(p.puz_score), 0) FROM progress pr " +
+                " JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                " JOIN user u ON pr.user_id = u.user_id WHERE u.team_id = t.team_id) as solvedTotal, " +
+                "(SELECT u2.user_name FROM user u2 WHERE u2.user_id = t.team_ownerid) as ownerName " +
+                "FROM team t");
+
+            if ("active".equalsIgnoreCase(status)) {
+                sql.append(" WHERE t.team_isactive = true");
+            } else if ("banned".equalsIgnoreCase(status)) {
+                sql.append(" WHERE t.team_isactive = false");
+            }
+
+            if (search != null && !search.trim().isEmpty()) {
+                sql.append(sql.toString().contains("WHERE") ? " AND" : " WHERE");
+                sql.append(" LOWER(t.team_name) LIKE :search");
+            }
+
+            if ("members".equals(sortBy) && "asc".equalsIgnoreCase(order)) {
+                sql.append(" ORDER BY memberCount ASC, t.team_id");
+            } else if ("members".equals(sortBy)) {
+                sql.append(" ORDER BY memberCount DESC, t.team_id");
+            } else if ("solved".equals(sortBy) && "asc".equalsIgnoreCase(order)) {
+                sql.append(" ORDER BY solvedTotal ASC, t.team_id");
+            } else if ("solved".equals(sortBy)) {
+                sql.append(" ORDER BY solvedTotal DESC, t.team_id");
+            } else {
+                sql.append(" ORDER BY t.team_id");
+            }
+
+            jakarta.persistence.Query q = em.createNativeQuery(sql.toString());
+            if (search != null && !search.trim().isEmpty()) {
+                q.setParameter("search", "%" + search.trim().toLowerCase() + "%");
+            }
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
         } finally {
             em.close();
         }
@@ -335,5 +404,63 @@ public class TeamDao {
         } finally {
             em.close();
         }
+    }
+
+    // ── HOME DATA ──
+
+    // Puzzle đã hoàn thành của team trong 7 ngày gần nhất
+    public List<Map<String, Object>> getWeeklyPuzzles(int teamId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            java.sql.Timestamp weekAgo = new java.sql.Timestamp(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+            List<Object[]> rows = em.createNativeQuery(
+                "SELECT u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
+                "FROM progress pr " +
+                "JOIN user u ON pr.user_id = u.user_id " +
+                "JOIN puzzle pz ON pr.puz_id = pz.puz_id " +
+                "LEFT JOIN language l ON pz.lang_id = l.lang_id " +
+                "WHERE u.team_id = ? AND pr.prog_date >= ? " +
+                "ORDER BY pr.prog_date DESC LIMIT 10")
+                .setParameter(1, teamId)
+                .setParameter(2, weekAgo)
+                .getResultList();
+            return mapPuzzleRows(rows);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Hoạt động gần đây của các thành viên khác trong team
+    public List<Map<String, Object>> getTeamActivity(int teamId, int excludeUserId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            List<Object[]> rows = em.createNativeQuery(
+                "SELECT u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
+                "FROM progress pr " +
+                "JOIN user u ON pr.user_id = u.user_id " +
+                "JOIN puzzle pz ON pr.puz_id = pz.puz_id " +
+                "LEFT JOIN language l ON pz.lang_id = l.lang_id " +
+                "WHERE u.team_id = ? AND u.user_id != ? " +
+                "ORDER BY pr.prog_date DESC LIMIT 10")
+                .setParameter(1, teamId)
+                .setParameter(2, excludeUserId)
+                .getResultList();
+            return mapPuzzleRows(rows);
+        } finally {
+            em.close();
+        }
+    }
+
+    private List<Map<String, Object>> mapPuzzleRows(List<Object[]> rows) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object[] row : rows) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("displayName", row[0]);
+            item.put("title", row[1]);
+            item.put("language", row[2]);
+            item.put("difficulty", row[3]);
+            result.add(item);
+        }
+        return result;
     }
 }

@@ -28,8 +28,10 @@ public class CorsFilter implements Filter {
     private static final List<String> EXEMPT_PATHS = Arrays.asList(
         "/api/v1/auth/",
         "/api/v1/announcements",
+        "/api/v1/maintenance",
         "/api/v1/admin/",
-        "/frontend/assets/"
+        "/frontend/assets/",
+        "/frontend/pages/common/maintenance/"
     );
 
     private MaintenanceDao maintenanceDao = new MaintenanceDao();

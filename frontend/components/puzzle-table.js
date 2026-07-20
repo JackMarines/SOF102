@@ -1,223 +1,28 @@
-// Puzzle table component — paginated table with search, difficulty/language filters, and optional link columns
+// Puzzle table component — bảng phân trang với tìm kiếm, bộ lọc difficulty/language, và cột link tùy chọn
+// Dùng CSS prefix `pt-`
 (function () {
 
-    var style = document.createElement('style');
-    style.id = 'puzzle-table-injected';
-    style.textContent = `
-        /* --- Puzzle Table: Search --- */
-        .pt-search-box {
-            display: flex;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        .pt-search-box input {
-            flex: 1;
-            min-width: 0;
-            padding: 10px 15px;
-            border-radius: 8px 0 0 8px;
-            border: 1px solid var(--border-input);
-            background: var(--bg-input);
-            color: var(--text-primary);
-        }
-        .pt-search-box button {
-            width: 55px;
-            flex-shrink: 0;
-            border-radius: 0 8px 8px 0;
-            border: 1px solid var(--border-input);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            cursor: pointer;
-        }
-        .pt-search-box button:hover {
-            background: var(--bg-hover);
-            color: var(--accent);
-        }
-
-        /* --- Puzzle Table: Dropdown --- */
-        .pt-filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .pt-filter-row .dropdown {
-            margin-left: 0;
-        }
-        .pt-filter-row .dropdown .btn {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border: 1px solid var(--border-input);
-            border-radius: 8px;
-            min-width: 8rem;
-            text-align: left;
-            position: relative;
-            padding-right: 20px;
-        }
-        .pt-filter-row .dropdown .btn:hover,
-        .pt-filter-row .dropdown .btn:focus,
-        .pt-filter-row .dropdown .btn:active,
-        .pt-filter-row .dropdown .btn.show {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border-color: var(--border-input);
-            box-shadow: none;
-        }
-        .pt-filter-row .dropdown .btn::after {
-            content: "";
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 0.3em solid;
-            border-right: 0.3em solid transparent;
-            border-left: 0.3em solid transparent;
-            border-bottom: 0;
-        }
-        .pt-filter-row .dropdown .btn.show::after {
-            border-top: 0;
-            border-bottom: 0.3em solid;
-        }
-        .pt-filter-row .dropdown-menu {
-            background: var(--bg-input);
-            border: 1px solid var(--border-input);
-            border-radius: 8px;
-            padding: 6px;
-            min-width: 100%;
-            width: 8rem;
-            text-align: center;
-        }
-        .pt-filter-row .dropdown-menu.show {
-            animation: ptDropdownIn 0.2s ease forwards;
-        }
-        .pt-filter-row .dropdown-item {
-            color: var(--text-primary);
-            border-radius: 6px;
-            transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
-        }
-        .pt-filter-row .dropdown-item:hover,
-        .pt-filter-row .dropdown-item:focus {
-            background: var(--bg-hover);
-            color: var(--accent);
-            cursor: pointer;
-        }
-        .pt-filter-row .dropdown-item:active {
-            background: var(--bg-active);
-            color: var(--text-primary);
-        }
-
-        /* --- Puzzle Table: Header & Rows --- */
-        .pt-table-header {
-            display: grid;
-            grid-template-columns: var(--pt-grid);
-            padding: 12px 20px;
-            font-weight: 600;
-            color: var(--text-table-header);
-            border-bottom: 1px solid var(--header-border);
-        }
-        .pt-list {
-            margin-top: 10px;
-        }
-        .pt-row {
-            display: grid;
-            grid-template-columns: var(--pt-grid);
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--row-border);
-            transition: 0.2s;
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-        .pt-row:hover {
-            background: var(--row-hover);
-        }
-        .pt-row-title {
-            text-align: left;
-            font-weight: 400;
-        }
-        .pt-row-easy { color: #22c55e; }
-        .pt-row-medium { color: #fbbf24; }
-        .pt-row-hard { color: #ef4444; }
-
-        /* --- Puzzle Table: Pagination --- */
-        .pt-pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 25px;
-        }
-        .pt-page {
-            padding: 6px 12px;
-            border: 1px solid var(--border-input);
-            border-radius: 6px;
-            background: transparent;
-            color: var(--text-primary);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .pt-page:hover {
-            background: var(--accent-hover);
-            color: var(--text-on-accent);
-        }
-        .pt-page.pt-active {
-            background: var(--accent-hover);
-            color: var(--text-on-accent);
-            font-weight: 600;
-        }
-
-        /* --- Puzzle Table: Animations --- */
-        @keyframes ptDropdownIn {
-            from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes ptFadeIn {
-            from { opacity: 0; transform: translateY(18px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .pt-row {
-            animation: ptFadeIn 0.4s ease backwards;
-        }
-        .pt-row:nth-child(1) { animation-delay: 0s; }
-        .pt-row:nth-child(2) { animation-delay: 0.04s; }
-        .pt-row:nth-child(3) { animation-delay: 0.08s; }
-        .pt-row:nth-child(4) { animation-delay: 0.12s; }
-        .pt-row:nth-child(5) { animation-delay: 0.16s; }
-        .pt-row:nth-child(6) { animation-delay: 0.2s; }
-
-        /* --- Puzzle Table: Responsive --- */
-        @media (max-width: 768px) {
-            .pt-table-header,
-            .pt-row {
-                font-size: 13px;
-                padding: 12px;
-                gap: 8px;
-            }
-            .pt-filter-row .dropdown {
-                width: 100%;
-            }
-            .pt-filter-row .dropdown .btn {
-                width: 100%;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
+    // ── Constructor ──
     function PuzzleTable(containerId, options) {
         this.container = document.getElementById(containerId);
         if (!this.container) return;
 
+        // Gộp options mặc định với options caller truyền vào
         this.opts = Object.assign({
-            columns: [],
+            columns: [],              // Mảng cột [{key, label, width, render}]
             searchPlaceholder: 'Search...',
-            filterOptions: [],
+            filterOptions: [],        // Tùy chọn bộ lọc 1 (VD: difficulty)
             filterLabel: 'Filter',
-            filter2Options: [],
+            filter2Options: [],       // Tùy chọn bộ lọc 2 (VD: language)
             filter2Label: 'Filter',
-            urlTemplate: null,
-            onSearch: function () {},
-            onFilter: function () {},
-            onFilter2: function () {},
-            onPageChange: function () {}
+            urlTemplate: null,        // Nếu set, mỗi hàng sẽ là <a> trỏ đến urlTemplate + item.id
+            onSearch: function () {}, // Callback khi tìm kiếm
+            onFilter: function () {}, // Callback khi chọn bộ lọc 1
+            onFilter2: function () {}, // Callback khi chọn bộ lọc 2
+            onPageChange: function () {} // Callback khi chuyển trang
         }, options || {});
 
+        // Trạng thái nội bộ
         this._search = '';
         this._filter = '';
         this._filter2 = '';
@@ -227,6 +32,7 @@
         this._build();
     }
 
+    // ── Tạo chuỗi CSS grid template từ cấu hình cột ──
     PuzzleTable.prototype._buildGridTemplate = function () {
         var cols = this.opts.columns;
         var parts = [];
@@ -236,15 +42,17 @@
         return parts.join(' ');
     };
 
+    // ── Xây dựng toàn bộ khung DOM: search + filters + header + danh sách hàng + phân trang ──
     PuzzleTable.prototype._build = function () {
         var self = this;
         var grid = this._buildGridTemplate();
         var id = this.container.id;
 
+        // Set CSS custom property cho grid template
         this.container.style.setProperty('--pt-grid', grid);
         this.container.innerHTML = '';
 
-        // Search box
+        // ── Ô tìm kiếm ──
         var searchBox = document.createElement('div');
         searchBox.className = 'pt-search-box input-group';
 
@@ -267,24 +75,28 @@
         searchBox.appendChild(btn);
         this.container.appendChild(searchBox);
 
-        // Filter dropdowns
+        // ── Hàng bộ lọc (dropdown Bootstrap) ──
         if (this.opts.filterOptions.length > 0 || this.opts.filter2Options.length > 0) {
             var filterRow = document.createElement('div');
             filterRow.className = 'pt-filter-row';
 
+            // Helper: tạo dropdown Bootstrap từ mảng tùy chọn
             function buildDropdown(self, options, label, onSelect) {
                 var dropdown = document.createElement('div');
                 dropdown.className = 'dropdown';
 
+                // Nút trigger
                 var toggle = document.createElement('button');
                 toggle.className = 'btn btn-secondary dropdown-toggle';
                 toggle.type = 'button';
                 toggle.setAttribute('data-bs-toggle', 'dropdown');
                 toggle.textContent = label;
 
+                // Menu items
                 var menu = document.createElement('ul');
                 menu.className = 'dropdown-menu';
 
+                // Mục "None" để xóa bộ lọc
                 var noneLi = document.createElement('li');
                 var noneA = document.createElement('a');
                 noneA.className = 'dropdown-item';
@@ -293,6 +105,7 @@
                 noneLi.appendChild(noneA);
                 menu.appendChild(noneLi);
 
+                // Các tùy chọn lọc
                 for (var i = 0; i < options.length; i++) {
                     (function (opt) {
                         var li = document.createElement('li');
@@ -312,6 +125,7 @@
 
             var self = this;
 
+            // Bộ lọc 1 (VD: difficulty)
             if (this.opts.filterOptions.length > 0) {
                 this._toggleBtn = buildDropdown(this, this.opts.filterOptions, this.opts.filterLabel, function (btn, val) {
                     self._filter = val;
@@ -321,6 +135,7 @@
                 filterRow.appendChild(this._toggleBtn);
             }
 
+            // Bộ lọc 2 (VD: language)
             if (this.opts.filter2Options.length > 0) {
                 this._toggleBtn2 = buildDropdown(this, this.opts.filter2Options, this.opts.filter2Label, function (btn, val) {
                     self._filter2 = val;
@@ -333,7 +148,7 @@
             this.container.appendChild(filterRow);
         }
 
-        // Table header
+        // ── Header bảng (dòng tiêu đề cột) ──
         var header = document.createElement('div');
         header.className = 'pt-table-header';
 
@@ -344,25 +159,27 @@
         }
         this.container.appendChild(header);
 
-        // Row list container
+        // ── Vùng danh sách hàng ──
         this._listEl = document.createElement('div');
         this._listEl.className = 'pt-list';
         this._listEl.id = 'pt-list-' + id;
         this.container.appendChild(this._listEl);
 
-        // Pagination container
+        // ── Vùng phân trang ──
         this._paginationEl = document.createElement('div');
         this._paginationEl.className = 'pt-pagination';
         this._paginationEl.id = 'pt-pagination-' + id;
         this.container.appendChild(this._paginationEl);
     };
 
+    // ── Đọc giá trị ô tìm kiếm và gọi callback ──
     PuzzleTable.prototype._doSearch = function () {
         var input = document.getElementById('pt-input-' + this.container.id);
         this._search = input ? input.value.trim() : '';
         this.opts.onSearch(this._search);
     };
 
+    // ── Áp dụng bộ lọc 1 (gọi từ bên ngoài nếu cần) ──
     PuzzleTable.prototype._doFilter = function (value) {
         this._filter = value;
         if (this._toggleBtn) {
@@ -371,11 +188,13 @@
         this.opts.onFilter(value);
     };
 
+    // Getter exposes trạng thái cho caller
     PuzzleTable.prototype.getSearchTerm = function () { return this._search; };
     PuzzleTable.prototype.getFilter = function () { return this._filter; };
     PuzzleTable.prototype.getFilter2 = function () { return this._filter2; };
     PuzzleTable.prototype.getCurrentPage = function () { return this._page; };
 
+    // ── Nhận dữ liệu từ API, cập nhật phân trang và render lại ──
     PuzzleTable.prototype.setData = function (response) {
         if (!response || !response.data) return;
         this._page = response.pagination.page;
@@ -384,6 +203,7 @@
         this._renderPagination();
     };
 
+    // ── Render danh sách hàng ──
     PuzzleTable.prototype._renderRows = function (data) {
         showSpinner(this._listEl.id);
         var list = this._listEl;
@@ -397,16 +217,24 @@
             var row = document.createElement('div');
             row.className = 'pt-row';
 
+            // Render từng cột trong hàng
             for (var c = 0; c < cols.length; c++) {
                 var col = cols[c];
                 var cell = document.createElement('span');
 
+                // Nếu cột có render function tùy chỉnh, dùng nó
                 if (col.render) {
-                    cell.innerHTML = col.render(item[col.key], item);
+                    var rendered = col.render(item[col.key], item);
+                    if (rendered instanceof Node) {
+                        cell.appendChild(rendered);
+                    } else {
+                        cell.innerHTML = rendered;
+                    }
                 } else {
                     cell.textContent = item[col.key] != null ? item[col.key] : '';
                 }
 
+                // Đánh dấu class cho cột title
                 if (col.key === 'title') {
                     cell.classList.add('pt-row-title');
                 }
@@ -414,6 +242,7 @@
                 row.appendChild(cell);
             }
 
+            // Bọc hàng trong <a> nếu có urlTemplate
             if (urlTpl) {
                 var link = document.createElement('a');
                 link.href = urlTpl + item.id;
@@ -427,6 +256,7 @@
         hideSpinner(this._listEl.id);
     };
 
+    // ── Render phân trang ──
     PuzzleTable.prototype._renderPagination = function () {
         var self = this;
         var pag = this._paginationEl;
@@ -435,6 +265,7 @@
         var current = this._page;
         var total = this._totalPages;
 
+        // Tính cửa sổ hiển thị 3 số trang quanh trang hiện tại
         var start = Math.max(1, current - 1);
         var end = Math.min(total, current + 1);
         if (end - start < 2) {
@@ -442,6 +273,7 @@
             else start = Math.max(1, total - 2);
         }
 
+        // Helper tạo liên kết phân trang
         function addBtn(text, disabled, onClick) {
             var a = document.createElement('a');
             a.className = 'pt-page';
@@ -457,6 +289,7 @@
         addBtn('First', current <= 1, function () { self.opts.onPageChange(1); });
         addBtn('Prev', current <= 1, function () { self.opts.onPageChange(current - 1); });
 
+        // Render số trang trong cửa sổ
         for (var i = start; i <= end; i++) {
             (function (pageNum) {
                 var a = document.createElement('a');
@@ -472,6 +305,7 @@
         addBtn('Last', current >= total, function () { self.opts.onPageChange(total); });
     };
 
+    // ── Export toàn cục ──
     window.PuzzleTable = {
         init: function (containerId, options) {
             return new PuzzleTable(containerId, options);

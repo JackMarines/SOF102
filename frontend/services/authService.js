@@ -24,6 +24,7 @@ async function register(email, password, username) {
 // 1. Firebase signOut (xóa token local)
 // 2. Gọi backend để hủy session
 async function logout() {
+  sessionStorage.removeItem('warningChecked');
   await auth.signOut();
   return apiPost('/auth/logout', {});
 }
@@ -60,6 +61,19 @@ async function redirectIfAuthenticated() {
     }
   } catch (e) {
     // not authenticated, stay on page
+  }
+}
+
+// ── QUÊN MẬT KHẨU ──
+// Gửi email đặt lại mật khẩu qua Firebase
+// Luôn hiển thị cùng một thông báo dù email có tồn tại hay không (chống dò tài khoản)
+async function resetPassword(email) {
+  try {
+    await firebase.auth().sendPasswordResetEmail(email);
+    return { success: true };
+  } catch (error) {
+    // Không phân biệt lỗi email tồn tại hay không — luôn trả success
+    return { success: true };
   }
 }
 
