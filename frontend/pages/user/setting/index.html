@@ -418,59 +418,11 @@
 
     <script src="/frontend/components/footer.js"></script>
 
-    <script>
+    <script src="/frontend/components/spinner.js"></script>
 
-        // Theme Selection
+    <script src="/frontend/services/warningService.js"></script>
 
-        document.querySelectorAll(".glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill")
-            .forEach(function (icon) {
-
-                icon.parentElement.style.cursor = "pointer";
-
-                icon.parentElement.addEventListener("click", function () {
-
-                    document.querySelectorAll(".glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill")
-                        .forEach(function (item) {
-
-                            item.parentElement.style.border = "";
-
-                        });
-
-                    this.style.border = "2px solid #b388ff";
-
-                });
-
-            });
-
-        // Save Button
-
-        document.querySelector(".custom-btn")?.addEventListener("click", function () {
-
-            alert("Settings saved successfully.");
-
-        });
-
-        // Cancel Button
-
-        document.querySelector(".btn-outline-light")?.addEventListener("click", function () {
-
-            location.reload();
-
-        });
-
-        // Delete Account
-
-        document.querySelector(".btn-danger")?.addEventListener("click", function () {
-
-            if (confirm("Are you sure you want to delete your account?")) {
-
-                alert("Your account has been deleted.");
-
-            }
-
-        });
-
-    </script>
+    <script src="setting.js"></script>
 
     <!-- Bootstrap -->
 

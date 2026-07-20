@@ -211,6 +211,18 @@ public class ProgressDao {
         }
     }
 
+    // Xoá toàn bộ progress
+    public void deleteAll() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createNativeQuery("DELETE FROM progress").executeUpdate();
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
     // Đếm số lượng progress theo khoảng thời gian (dashboard)
     public long countByDateRange(int daysBack) {
         EntityManager em = JpaUtils.getEntityManager();

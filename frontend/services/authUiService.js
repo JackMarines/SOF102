@@ -38,7 +38,7 @@ function initLoginForm() {
             return;
           }
 
-          window.location.href = '/frontend/pages/user/puzzle/index.html';
+          window.location.href = '/frontend/pages/user/home/index.html';
         } catch (err) {
           hideSpinner("loginForm");
           errorDiv.textContent = friendlyAuthError(err);
@@ -76,7 +76,7 @@ function initRegisterForm() {
             return;
           }
 
-          window.location.href = '/frontend/pages/user/puzzle/index.html';
+          window.location.href = '/frontend/pages/user/home/index.html';
         } catch (err) {
           hideSpinner("registerForm");
           errorDiv.textContent = friendlyAuthError(err);
@@ -102,7 +102,7 @@ function initOAuthButtons() {
                 var idToken = await result.user.getIdToken();
                 var res = await loginOAuth(idToken);
                 if (res.error) { handleError(res); return; }
-                window.location.href = '/frontend/pages/user/puzzle/index.html';
+                window.location.href = '/frontend/pages/user/home/index.html';
             } catch (err) {
                 handleError(err);
             }
@@ -116,7 +116,7 @@ function initOAuthButtons() {
                 var idToken = await result.user.getIdToken();
                 var res = await loginOAuth(idToken);
                 if (res.error) { handleError(res); return; }
-                window.location.href = '/frontend/pages/user/puzzle/index.html';
+                window.location.href = '/frontend/pages/user/home/index.html';
             } catch (err) {
                 handleError(err);
             }

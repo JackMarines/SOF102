@@ -137,10 +137,16 @@ public class AdminProgressController extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         String idParam = req.getParameter("id");
+
+        // Không có id → xoá toàn bộ progress
         if (idParam == null || idParam.trim().isEmpty()) {
-            ResponseUtil.error(resp, 400, "id is required");
+            progressDao.deleteAll();
+            Map<String, Object> data = new HashMap<>();
+            data.put("message", "All progress deleted");
+            ResponseUtil.success(resp, data);
             return;
         }
+
         try {
             progressDao.delete(Integer.parseInt(idParam.trim()));
             Map<String, Object> data = new HashMap<>();

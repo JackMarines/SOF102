@@ -181,103 +181,6 @@
 
     </section>
 
-    <!-- Custom Confirmation Popup -->
-    <div id="confirm-popup-overlay" class="confirm-popup-overlay">
-        <div class="confirm-popup glass-box">
-            <div id="confirm-popup-icon" class="confirm-popup-icon"></div>
-            <h5 id="confirm-popup-title" class="fw-bold mb-2"></h5>
-            <p id="confirm-popup-message" class="mb-0"></p>
-            <div class="d-flex justify-content-end gap-2 mt-4">
-                <button id="confirm-popup-cancel" class="custom-btn">Cancel</button>
-                <button id="confirm-popup-ok" class="custom-btn"></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Team Popup -->
-    <div id="edit-popup-overlay" class="form-popup-overlay">
-        <div class="form-popup glass-box">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold mb-0">Edit Team</h4>
-                <button id="edit-popup-close" class="btn-close btn-close-white"></button>
-            </div>
-
-            <!-- Avatar Upload -->
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Team Avatar</label>
-                <input type="file" id="edit-avatar-input" accept="image/*" hidden>
-                <label for="edit-avatar-input" class="upload-box w-100">
-                    <img id="edit-avatar-preview" class="preview-avatar mb-3">
-                    <div id="edit-upload-content">
-                        <i class="bi bi-cloud-arrow-up"></i>
-                        <h6 class="mt-3">Click or drag image here</h6>
-                        <small class="text-secondary">PNG, JPG, WEBP supported</small>
-                    </div>
-                </label>
-            </div>
-
-            <!-- Team Name + inline error for duplicate names -->
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Team Name</label>
-                <input type="text" id="edit-team-name" class="form-control" placeholder="Enter your team name">
-                <div id="edit-team-name-error" class="text-danger small mt-1 d-none"></div>
-            </div>
-
-            <!-- Visibility -->
-            <div class="mb-4">
-                <label class="form-label fw-semibold d-block mb-3">Team Visibility</label>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="visibility-card" data-type="public">
-                            <div class="fw-bold"><i class="bi bi-globe me-2"></i>Public</div>
-                            <small class="text-secondary">Anyone can discover and request to join.</small>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="visibility-card" data-type="private">
-                            <div class="fw-bold"><i class="bi bi-lock-fill me-2"></i>Private</div>
-                            <small class="text-secondary">Only invited members can join.</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-flex justify-content-end gap-2">
-                <button id="edit-popup-cancel" class="custom-btn btn-secondary">Cancel</button>
-                <button id="edit-popup-save" class="custom-btn">Save Changes</button>
-            </div>
-
-            <!-- Disband -->
-            <hr class="my-4 border-secondary">
-            <button id="edit-popup-disband" class="custom-btn btn-danger w-100">
-                <i class="bi bi-trash-fill me-1"></i> Disband Team
-            </button>
-
-        </div>
-    </div>
-
-    <!-- Transfer Ownership Popup -->
-    <div id="transfer-popup-overlay" class="form-popup-overlay">
-        <div class="form-popup form-popup-lg glass-box">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold mb-0">Transfer Ownership</h4>
-                <button id="transfer-popup-close" class="btn-close btn-close-white"></button>
-            </div>
-
-            <p class="text-secondary mb-4">Select a member to transfer ownership to. You will become a regular member.</p>
-
-            <div id="transfer-member-table"></div>
-
-            <div class="d-flex justify-content-end gap-2 mt-4">
-                <button id="transfer-popup-cancel" class="custom-btn btn-secondary">Cancel</button>
-            </div>
-
-        </div>
-    </div>
-
     <div id="footer"></div>
 
     <!-- Components -->
@@ -288,6 +191,7 @@
     <script src="/frontend/components/avatar.js"></script>
     <script src="/frontend/components/user-table.js"></script>
     <script src="/frontend/components/card-table.js"></script>
+    <script src="/frontend/components/popup.js"></script>
     <script src="/frontend/services/teamService.js"></script>
 
     <!-- Orchestrator -->

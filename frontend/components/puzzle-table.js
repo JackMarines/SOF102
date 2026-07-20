@@ -224,7 +224,12 @@
 
                 // Nếu cột có render function tùy chỉnh, dùng nó
                 if (col.render) {
-                    cell.innerHTML = col.render(item[col.key], item);
+                    var rendered = col.render(item[col.key], item);
+                    if (rendered instanceof Node) {
+                        cell.appendChild(rendered);
+                    } else {
+                        cell.innerHTML = rendered;
+                    }
                 } else {
                     cell.textContent = item[col.key] != null ? item[col.key] : '';
                 }

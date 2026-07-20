@@ -999,8 +999,8 @@ textarea {
     resize: none;
 }
 
-/* ── Confirm Popup ── */
-.confirm-popup-overlay {
+/* ── Popup Component ── */
+.popup-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -1008,11 +1008,66 @@ textarea {
     z-index: 10000;
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
+    padding: 40px 0;
 }
-.confirm-popup-overlay.show {
+.popup-overlay.show {
     display: flex;
 }
-.confirm-popup {
+.popup-panel {
+    width: 90%;
+    padding: 32px;
+    text-align: left;
+    border: 1px solid var(--border-main);
+    border-radius: 16px;
+    background: var(--bg-panel);
+}
+.popup-panel.popup-sm {
+    max-width: 420px;
+    text-align: center;
+}
+.popup-panel.popup-md {
+    max-width: 700px;
+}
+.popup-panel.popup-lg {
+    max-width: 900px;
+}
+
+.popup-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    color: var(--accent);
+    text-align: center;
+}
+.popup-title-centered {
+    color: var(--text-primary);
+    text-align: center;
+}
+.popup-message {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* ── Popup Aliases (backward compat) ── */
+.confirm-popup-overlay,
+.form-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    padding: 40px 0;
+}
+.confirm-popup-overlay.show,
+.form-popup-overlay.show {
+    display: flex;
+}
+.confirm-popup,
+.form-popup {
     max-width: 420px;
     width: 90%;
     padding: 32px;
@@ -1020,6 +1075,15 @@ textarea {
     border: 1px solid var(--border-main);
     border-radius: 16px;
     background: var(--bg-panel);
+}
+.form-popup {
+    max-width: 700px;
+    text-align: left;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.form-popup-lg {
+    max-width: 900px;
 }
 .confirm-popup-icon {
     font-size: 48px;
@@ -1048,36 +1112,9 @@ textarea {
     transform: none;
 }
 
-/* ── Form Popup (Edit / Transfer) ── */
-.form-popup-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    padding: 40px 0;
+.tab-pane {
+    overflow-x:hidden;
 }
-.form-popup-overlay.show {
-    display: flex;
-}
-.form-popup {
-    max-width: 700px;
-    width: 95%;
-    padding: 32px;
-    border: 1px solid var(--border-main);
-    border-radius: 16px;
-    background: var(--bg-panel);
-    text-align: left;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-.form-popup-lg {
-    max-width: 900px;
-}
-
 /* --- User Table: h5/h6 color fix --- */
 .ut-card-name {
     color: var(--text-primary) !important;

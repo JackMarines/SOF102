@@ -249,19 +249,27 @@
 
                 <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
 
-                    <button class="custom-btn border-0 me-2">
+                    <button id="btn-manage-teams" class="custom-btn border-0 me-2">
 
-                        <i class="bi bi-plus-circle me-2"></i>
+                        <i class="bi bi-people-fill me-2"></i>
 
-                        Add Puzzle
+                        Manage Teams
 
                     </button>
 
-                    <button id="btn-manage-users" class="custom-btn border-0">
+                    <button id="btn-manage-users" class="custom-btn border-0 me-2">
 
                         <i class="bi bi-people me-2"></i>
 
                         Manage Users
+
+                    </button>
+
+                    <button id="btn-manage-puzzles" class="custom-btn border-0">
+
+                        <i class="bi bi-puzzle me-2"></i>
+
+                        Manage Puzzles
 
                     </button>
 
@@ -270,233 +278,172 @@
             </div>
 
         </div>
-        <!-- CHART + ACTIVITY -->
+        <!-- CONTENT MODERATION -->
 
-        <div class="row g-4 mb-5">
+        <div class="glass-box p-4 mb-5">
 
-            <!-- SOLVED CHART -->
+            <div class="row align-items-center">
 
-            <div class="col-lg-8">
+                <div class="col-lg-8">
 
-                <div class="glass-box p-4 h-100">
+                    <h4 class="fw-bold mb-2">Content Moderation</h4>
 
-                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                    <p class="text-secondary mb-0">Create new puzzles and review user appeals.</p>
 
-                        <div>
+                </div>
 
-                            <h4 class="fw-bold mb-1">
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
 
-                                Solved Puzzles Analytics
+                    <button id="btn-add-puzzle" class="custom-btn border-0 me-2">
 
-                            </h4>
+                        <i class="bi bi-plus-circle me-2"></i>Add Puzzle
 
-                            <small class="text-secondary">
+                    </button>
 
-                                Track puzzle solving performance over time
+                    <button id="btn-view-appeals" class="custom-btn border-0">
 
-                            </small>
+                        <i class="bi bi-chat-dots me-2"></i>View Appeals
 
-                        </div>
-
-                        <div class="btn-group mt-3 mt-lg-0">
-
-                            <button class="btn btn-sm btn-outline-light active" data-filter="today">
-                                Today
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-light" data-filter="week">
-                                Week
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-light" data-filter="month">
-                                Month
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-light" data-filter="3months">
-                                3 Months
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-light" data-filter="total">
-                                Total
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    <div class="rounded-4 p-4" style="background:#0b0618;border:1px solid rgba(255,255,255,.05);">
-
-                        <canvas id="solvedChart" height="280"></canvas>
-
-                    </div>
-
-                    <div class="row text-center mt-4">
-
-                        <div class="col">
-
-                            <h5 class="fw-bold text-success" id="stat-solved-today">
-
-                                -
-
-                            </h5>
-
-                            <small class="text-secondary">
-
-                                Today
-
-                            </small>
-
-                        </div>
-
-                        <div class="col">
-
-                            <h5 class="fw-bold text-info" id="stat-solved-week">
-
-                                -
-
-                            </h5>
-
-                            <small class="text-secondary">
-
-                                This Week
-
-                            </small>
-
-                        </div>
-
-                        <div class="col">
-
-                            <h5 class="fw-bold text-warning" id="stat-solved-month">
-
-                                -
-
-                            </h5>
-
-                            <small class="text-secondary">
-
-                                This Month
-
-                            </small>
-
-                        </div>
-
-                        <div class="col">
-
-                            <h5 class="fw-bold text-primary" id="stat-solved-3months">
-
-                                -
-
-                            </h5>
-
-                            <small class="text-secondary">
-
-                                3 Months
-
-                            </small>
-
-                        </div>
-
-                        <div class="col">
-
-                            <h5 class="fw-bold" id="stat-solved-all">
-
-                                -
-
-                            </h5>
-
-                            <small class="text-secondary">
-
-                                Total
-
-                            </small>
-
-                        </div>
-
-                    </div>
+                    </button>
 
                 </div>
 
             </div>
 
-            <!-- RECENT ACTIVITY -->
+        </div>
+        <!-- CHART -->
 
-            <div class="col-lg-4">
+        <div class="mb-5">
 
-                <div class="glass-box p-4 h-100">
+            <div class="glass-box p-4 h-100">
 
-                    <h4 class="fw-bold mb-4">
-
-                        Recent Activity
-
-                    </h4>
-
-                    <div class="border-bottom pb-3 mb-3">
-
-                        <h6 class="mb-1">
-
-                            <i class="bi bi-person-plus-fill text-success me-2"></i>
-
-                            New User Registered
-
-                        </h6>
-
-                        <small class="text-secondary">
-
-                            Alex joined Puzzle Solve.
-
-                        </small>
-
-                    </div>
-
-                    <div class="border-bottom pb-3 mb-3">
-
-                        <h6 class="mb-1">
-
-                            <i class="bi bi-puzzle-fill text-warning me-2"></i>
-
-                            New Puzzle Added
-
-                        </h6>
-
-                        <small class="text-secondary">
-
-                            Dynamic Programming Challenge.
-
-                        </small>
-
-                    </div>
-
-                    <div class="border-bottom pb-3 mb-3">
-
-                        <h6 class="mb-1">
-
-                            <i class="bi bi-people-fill text-info me-2"></i>
-
-                            Team Created
-
-                        </h6>
-
-                        <small class="text-secondary">
-
-                            Code Masters created.
-
-                        </small>
-
-                    </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
 
                     <div>
 
-                        <h6 class="mb-1">
+                        <h4 class="fw-bold mb-1">
 
-                            <i class="bi bi-trophy-fill text-danger me-2"></i>
+                            Solved Puzzles Analytics
 
-                            Daily Record
-
-                        </h6>
+                        </h4>
 
                         <small class="text-secondary">
 
-                            42 puzzles solved today.
+                            Track puzzle solving performance over time
+
+                        </small>
+
+                    </div>
+
+                    <div class="btn-group mt-3 mt-lg-0">
+
+                        <button class="btn btn-sm btn-outline-light active" data-filter="today">
+                            Today
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-light" data-filter="week">
+                            Week
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-light" data-filter="month">
+                            Month
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-light" data-filter="3months">
+                            3 Months
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-light" data-filter="total">
+                            Total
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="rounded-4 p-4" style="background:#0b0618;border:1px solid rgba(255,255,255,.05);">
+
+                    <canvas id="solvedChart" height="280"></canvas>
+
+                </div>
+
+                <div class="row text-center mt-4">
+
+                    <div class="col">
+
+                        <h5 class="fw-bold text-success" id="stat-solved-today">
+
+                            -
+
+                        </h5>
+
+                        <small class="text-secondary">
+
+                            Today
+
+                        </small>
+
+                    </div>
+
+                    <div class="col">
+
+                        <h5 class="fw-bold text-info" id="stat-solved-week">
+
+                            -
+
+                        </h5>
+
+                        <small class="text-secondary">
+
+                            This Week
+
+                        </small>
+
+                    </div>
+
+                    <div class="col">
+
+                        <h5 class="fw-bold text-warning" id="stat-solved-month">
+
+                            -
+
+                        </h5>
+
+                        <small class="text-secondary">
+
+                            This Month
+
+                        </small>
+
+                    </div>
+
+                    <div class="col">
+
+                        <h5 class="fw-bold text-primary" id="stat-solved-3months">
+
+                            -
+
+                        </h5>
+
+                        <small class="text-secondary">
+
+                            3 Months
+
+                        </small>
+
+                    </div>
+
+                    <div class="col">
+
+                        <h5 class="fw-bold" id="stat-solved-all">
+
+                            -
+
+                        </h5>
+
+                        <small class="text-secondary">
+
+                            Total
 
                         </small>
 
@@ -525,7 +472,7 @@
 
                     <p class="text-secondary mb-0">
 
-                        These actions are permanent and cannot be undone.
+                        This action is permanent and cannot be undone.
 
                     </p>
 
@@ -533,167 +480,37 @@
 
             </div>
 
-            <div class="row g-4">
+            <div class="glass-box p-4">
 
-                <!-- DELETE USERS -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <div class="col-lg-6">
+                    <div>
 
-                    <div class="glass-box p-4 h-100">
+                        <h5 class="fw-bold mb-1">
 
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            Delete All Progress
 
-                            <div>
+                        </h5>
 
-                                <h5 class="fw-bold mb-1">
+                        <small class="text-secondary">
 
-                                    Delete All Users
+                            Reset every solved puzzle and leaderboard.
 
-                                </h5>
-
-                                <small class="text-secondary">
-
-                                    Remove every user account except administrators.
-
-                                </small>
-
-                            </div>
-
-                            <i class="bi bi-people-fill text-danger fs-2"></i>
-
-                        </div>
-
-                        <button class="btn btn-danger w-100">
-
-                            <i class="bi bi-trash-fill me-2"></i>
-
-                            Delete Users
-
-                        </button>
+                        </small>
 
                     </div>
 
-                </div>
-
-                <!-- DELETE TEAMS -->
-
-                <div class="col-lg-6">
-
-                    <div class="glass-box p-4 h-100">
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-
-                            <div>
-
-                                <h5 class="fw-bold mb-1">
-
-                                    Delete All Teams
-
-                                </h5>
-
-                                <small class="text-secondary">
-
-                                    Remove every team and all memberships.
-
-                                </small>
-
-                            </div>
-
-                            <i class="bi bi-diagram-3-fill text-danger fs-2"></i>
-
-                        </div>
-
-                        <button class="btn btn-danger w-100">
-
-                            <i class="bi bi-trash-fill me-2"></i>
-
-                            Delete Teams
-
-                        </button>
-
-                    </div>
+                    <i class="bi bi-bar-chart-fill text-danger fs-2"></i>
 
                 </div>
 
-                <!-- DELETE PUZZLES -->
+                <button id="btn-reset-progress" class="btn btn-danger w-100">
 
-                <div class="col-lg-6">
+                    <i class="bi bi-trash-fill me-2"></i>
 
-                    <div class="glass-box p-4 h-100">
+                    Reset Progress
 
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-
-                            <div>
-
-                                <h5 class="fw-bold mb-1">
-
-                                    Delete All Puzzles
-
-                                </h5>
-
-                                <small class="text-secondary">
-
-                                    Remove every puzzle from the database.
-
-                                </small>
-
-                            </div>
-
-                            <i class="bi bi-puzzle-fill text-danger fs-2"></i>
-
-                        </div>
-
-                        <button class="btn btn-danger w-100">
-
-                            <i class="bi bi-trash-fill me-2"></i>
-
-                            Delete Puzzles
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <!-- DELETE PROGRESS -->
-
-                <div class="col-lg-6">
-
-                    <div class="glass-box p-4 h-100">
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-
-                            <div>
-
-                                <h5 class="fw-bold mb-1">
-
-                                    Delete All Progress
-
-                                </h5>
-
-                                <small class="text-secondary">
-
-                                    Reset every solved puzzle and leaderboard.
-
-                                </small>
-
-                            </div>
-
-                            <i class="bi bi-bar-chart-fill text-danger fs-2"></i>
-
-                        </div>
-
-                        <button class="btn btn-danger w-100">
-
-                            <i class="bi bi-trash-fill me-2"></i>
-
-                            Reset Progress
-
-                        </button>
-
-                    </div>
-
-                </div>
+                </button>
 
             </div>
 
@@ -703,156 +520,24 @@
 
                 <strong>Warning:</strong>
 
-                These actions permanently delete data and cannot be recovered.
+                This action permanently deletes all progress data and cannot be recovered.
 
             </div>
 
         </div>
 
-        <!-- SYSTEM STATUS -->
-
-        <div class="glass-box p-4 mb-5">
-
-            <h4 class="fw-bold mb-4">
-
-                <i class="bi bi-hdd-network me-2"></i>
-
-                System Status
-
-            </h4>
-
-            <div class="row text-center g-4">
-
-                <div class="col-md-3">
-
-                    <h5 class="text-success fw-bold">
-
-                        ● Online
-
-                    </h5>
-
-                    <small class="text-secondary">
-
-                        API Server
-
-                    </small>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <h5 class="text-success fw-bold">
-
-                        ● Healthy
-
-                    </h5>
-
-                    <small class="text-secondary">
-
-                        Database
-
-                    </small>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <h5 class="text-warning fw-bold">
-
-                        73%
-
-                    </h5>
-
-                    <small class="text-secondary">
-
-                        Storage Usage
-
-                    </small>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <h5 class="text-info fw-bold">
-
-                        v1.0.0
-
-                    </h5>
-
-                    <small class="text-secondary">
-
-                        System Version
-
-                    </small>
-
-                </div>
-
-            </div>
-
-        </div>
     </section>
 
     <!-- FOOTER -->
 
     <div id="footer"></div>
 
-    <!-- MANAGE USERS POPUP -->
-    <div id="manage-users-popup-overlay" class="confirm-popup-overlay" style="overflow:hidden;">
-        <div class="confirm-popup" style="max-width:900px;width:95vw;max-height:90vh;display:flex;flex-direction:column;text-align:left;box-sizing:border-box;padding:24px;">
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0">
-                <h5 class="fw-bold mb-0" style="color:var(--text-primary);">Manage Users</h5>
-                <button id="manage-users-popup-close" class="btn-close btn-close-white"></button>
-            </div>
-            <div id="manage-users-table" style="overflow-y:auto;min-width:0;"></div>
-        </div>
-    </div>
-
-    <!-- WARN USER POPUP -->
-    <div id="warn-popup-overlay" class="confirm-popup-overlay">
-        <div class="confirm-popup">
-            <div class="confirm-popup-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
-            <h5 class="mb-3" style="color:var(--text-primary);">Warn User</h5>
-            <p class="text-secondary mb-3" style="font-size:14px;">Issue a warning to <strong id="warn-user-name"></strong>.</p>
-            <div class="mb-3">
-                <label class="form-label text-secondary" style="font-size:13px;">Reason</label>
-                <textarea id="warn-reason" class="form-control" rows="3" placeholder="Enter warning reason..."></textarea>
-                <div id="warn-reason-error" class="text-danger mt-1 d-none" style="font-size:13px;"></div>
-            </div>
-            <div class="row g-3 mb-4">
-                <div class="col-6">
-                    <label class="form-label text-secondary" style="font-size:13px;">Start Date</label>
-                    <input type="date" id="warn-start-date" class="form-control">
-                </div>
-                <div class="col-6">
-                    <label class="form-label text-secondary" style="font-size:13px;">End Date</label>
-                    <input type="date" id="warn-end-date" class="form-control">
-                </div>
-            </div>
-            <div class="d-flex gap-2 justify-content-center">
-                <button id="warn-submit" class="custom-btn btn-danger" style="min-width:120px;">Submit Warning</button>
-                <button id="warn-cancel" class="custom-btn btn-secondary" style="min-width:120px;">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONFIRM POPUP (shared) -->
-    <div id="confirm-popup-overlay" class="confirm-popup-overlay">
-        <div class="confirm-popup">
-            <div class="confirm-popup-icon" id="confirm-popup-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
-            <h5 id="confirm-popup-title" class="mb-2" style="color:var(--text-primary);"></h5>
-            <p id="confirm-popup-message" class="text-secondary mb-3" style="font-size:14px;"></p>
-            <div class="d-flex gap-2 justify-content-center">
-                <button id="confirm-popup-ok" class="custom-btn" style="min-width:120px;"></button>
-                <button id="confirm-popup-cancel" class="custom-btn btn-secondary" style="min-width:120px;">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <!-- COMPONENTS -->
 
     <script src="/frontend/components/footer.js"></script>
     <script src="/frontend/components/spinner.js"></script>
     <script src="/frontend/components/avatar.js"></script>
+    <script src="/frontend/components/popup.js"></script>
 
     <!-- SERVICES -->
 
@@ -860,6 +545,7 @@
     <script src="/frontend/components/navbar-user.js"></script>
     <script src="/frontend/services/adminAuthService.js"></script>
     <script src="/frontend/components/card-table.js"></script>
+    <script src="/frontend/components/puzzle-table.js"></script>
     <script src="/frontend/services/adminDashboardService.js"></script>
     <script src="dashboard.js"></script>
 

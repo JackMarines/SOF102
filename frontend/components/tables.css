@@ -97,6 +97,27 @@
 .pt-row-medium { color: #fbbf24; }
 .pt-row-hard { color: #ef4444; }
 
+/* Menu ngữ cảnh hàng (dropdown 3 chấm) */
+.pt-row-actions { position: relative; display: inline-block; }
+.pt-row-menu-btn {
+    background: none; border: none; color: var(--text-secondary); cursor: pointer;
+    padding: 4px 6px; border-radius: 4px; transition: all 0.2s;
+}
+.pt-row-menu-btn:hover { background: var(--bg-hover); color: var(--accent); }
+.pt-row-dropdown {
+    display: none; position: absolute; right: 0; top: 100%; z-index: 100;
+    background: var(--bg-secondary, #1e293b); border: 1px solid var(--border-input);
+    border-radius: 8px; min-width: 140px; padding: 6px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.pt-row-dropdown.show { display: block; }
+.pt-row-dropdown-item {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+    font-size: 13px; color: var(--text-primary); cursor: pointer; transition: background 0.15s;
+}
+.pt-row-dropdown-item:hover { background: var(--bg-hover); }
+.pt-row-dropdown-item i { font-size: 13px; }
+
 /* Phân trang */
 .pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
 .pt-page {

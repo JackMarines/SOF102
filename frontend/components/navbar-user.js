@@ -21,10 +21,6 @@
     avatar.src = '/frontend/components/avatar.js';
     document.head.appendChild(avatar);
 
-    var warning = document.createElement('script');
-    warning.src = '/frontend/services/warningService.js';
-    document.head.appendChild(warning);
-
     document.addEventListener('DOMContentLoaded', function(){
         // Tìm placeholder `#navbar` trong HTML để thay thế bằng navbar thật
         var placeholder = document.getElementById('navbar');
@@ -81,7 +77,7 @@
                             '<div class="dropdown-menu-custom">' +
                                 '<a href="/frontend/pages/user/profile/index.html">Profile</a>' +
                                 '<hr>' +
-                                '<a href="/frontend/pages/user/settings/index.html">Settings</a>' +
+                                '<a href="/frontend/pages/user/setting/index.html">Settings</a>' +
                                 '<hr>' +
                                 '<a href="#" id="logout-btn">Log out</a>' +
                             '</div>' +
@@ -123,10 +119,6 @@
                 if (session && session.userIsadmin) {
                     var badge = document.getElementById('admin-badge');
                     if (badge) badge.classList.remove('d-none');
-                }
-                // Kiểm tra warning của user (chỉ 1 lần mỗi phiên đăng nhập)
-                if (session && !session.error && typeof checkUserWarning === 'function') {
-                    checkUserWarning();
                 }
             });
             // Fetch profile mới nhất để cập nhật avatar

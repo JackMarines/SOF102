@@ -1,69 +1,125 @@
 // Warning check service — kiểm tra cảnh báo active của người dùng và hiển thị popup nếu có
+// Sử dụng Popup.open() thay vì DOM thủ công
 // Chỉ kiểm tra 1 lần mỗi phiên đăng nhập (dùng sessionStorage)
 
 var warningData = null;
 
 async function checkUserWarning() {
-    // Nếu đã kiểm tra rồi trong phiên này → bỏ qua
     if (sessionStorage.getItem('warningChecked')) return;
     sessionStorage.setItem('warningChecked', '1');
 
     var res = await apiGet('/my-warning');
-    if (!res || res.error || !res.warning) return;
+    if (!res || res.error) return;
 
-    warningData = res.warning;
-    buildWarningPopup(warningData);
+    if (res.teamBanNotification) {
+        showTeamBanPopup(res.teamBanNotification);
+    }
+
+    if (res.warning) {
+        warningData = res.warning;
+        showWarningPopup(warningData);
+    }
 }
 
-// ── Xây dựng popup cảnh báo ──
-function buildWarningPopup(w) {
-    var overlay = document.createElement('div');
-    overlay.className = 'confirm-popup-overlay';
-    overlay.id = 'warning-popup';
+// ── Team bị cấm ──
 
-    // Format ngày tháng
+function showTeamBanPopup(ban) {
+    Popup.open({
+        id: 'team-ban-popup',
+        title: null,
+        size: 'sm',
+        closeable: false,
+        onClose: function () { apiPost('/auth/acknowledge', {}); },
+        render: function (ctx) {
+            var icon = document.createElement('div');
+            icon.className = 'popup-icon';
+            icon.innerHTML = '<i class="bi bi-people-fill" style="color:#ef4444;"></i>';
+            ctx.body.appendChild(icon);
+
+            var title = document.createElement('h5');
+            title.className = 'fw-bold mb-3';
+            title.style.color = '#ef4444';
+            title.textContent = 'Team Banned';
+            ctx.body.appendChild(title);
+
+            var info = document.createElement('div');
+            info.className = 'text-start mb-3';
+            info.innerHTML = '<div class="mb-2"><strong>Team:</strong> <span class="text-secondary">' + (ban.lastTeamName || 'Unknown') + '</span></div>';
+            ctx.body.appendChild(info);
+
+            var msg = document.createElement('p');
+            msg.className = 'text-secondary mb-3';
+            msg.style.fontSize = '13px';
+            msg.innerHTML = '<i class="bi bi-info-circle me-1"></i>Your team has been banned and you have been removed. You can join or create a new team.';
+            ctx.body.appendChild(msg);
+
+            var dismiss = document.createElement('button');
+            dismiss.className = 'custom-btn btn-secondary border-0';
+            dismiss.style.minWidth = '120px';
+            dismiss.textContent = 'Dismiss';
+            dismiss.addEventListener('click', function () { ctx.close(); });
+            ctx.footer.appendChild(dismiss);
+        }
+    });
+}
+
+// ── Cảnh báo (tài khoản hoặc nhóm) ──
+
+function showWarningPopup(w) {
     var start = new Date(w.startDate);
     var end = new Date(w.endDate);
     var opts = { day: '2-digit', month: 'short', year: 'numeric' };
     var startStr = start.toLocaleDateString('en-GB', opts);
     var endStr = end.toLocaleDateString('en-GB', opts);
 
-    // Xác định đối tượng bị cảnh báo (tài khoản hoặc nhóm)
-    var target = w.userId ? 'Your account' : 'Your team';
+    var isTeam = !!w.teamId;
+    var target = isTeam ? 'Your team' : 'Your account';
+    var title = isTeam ? 'Team Warning' : 'Account Warning';
 
-    overlay.innerHTML =
-        '<div class="confirm-popup" style="max-width:480px;">' +
-            '<div class="confirm-popup-icon"><i class="bi bi-exclamation-triangle-fill" style="color:#ef4444;"></i></div>' +
-            '<h5 class="fw-bold mb-3" style="color:#ef4444;">Account Warning</h5>' +
-            '<div class="text-start mb-3">' +
+    Popup.open({
+        id: 'warning-popup',
+        title: null,
+        size: 'sm',
+        closeable: false,
+        render: function (ctx) {
+            var icon = document.createElement('div');
+            icon.className = 'popup-icon';
+            icon.innerHTML = '<i class="bi bi-exclamation-triangle-fill" style="color:#ef4444;"></i>';
+            ctx.body.appendChild(icon);
+
+            var titleEl = document.createElement('h5');
+            titleEl.className = 'fw-bold mb-3';
+            titleEl.style.color = '#ef4444';
+            titleEl.textContent = title;
+            ctx.body.appendChild(titleEl);
+
+            var detail = document.createElement('div');
+            detail.className = 'text-start mb-3';
+            detail.innerHTML =
                 '<div class="mb-2"><strong>Reason:</strong> <span class="text-secondary">' + w.reason + '</span></div>' +
                 '<div class="mb-2"><strong>Issued by:</strong> <span class="text-secondary">' + w.authorName + '</span></div>' +
-                '<div class="mb-2"><strong>Period:</strong> <span class="text-secondary">' + startStr + ' — ' + endStr + '</span></div>' +
-            '</div>' +
-            '<p class="text-secondary mb-3" style="font-size:13px;">' +
-                '<i class="bi bi-info-circle me-1"></i>' +
-                target + ' will be automatically banned if you do not submit an appeal before <strong>' + endStr + '</strong>.' +
-            '</p>' +
-            '<div class="d-flex gap-2 justify-content-center">' +
-                '<a href="/frontend/pages/user/setting/index.html" class="custom-btn border-0" style="min-width:120px;">Appeal</a>' +
-                '<button id="warning-dismiss" class="custom-btn btn-secondary border-0" style="min-width:120px;">Dismiss</button>' +
-            '</div>' +
-        '</div>';
+                '<div class="mb-2"><strong>Period:</strong> <span class="text-secondary">' + startStr + ' — ' + endStr + '</span></div>';
+            ctx.body.appendChild(detail);
 
-    document.body.appendChild(overlay);
-    overlay.classList.add('show');
+            var msg = document.createElement('p');
+            msg.className = 'text-secondary mb-3';
+            msg.style.fontSize = '13px';
+            msg.innerHTML = '<i class="bi bi-info-circle me-1"></i>' + target + ' will be automatically banned if you do not submit an appeal before <strong>' + endStr + '</strong>.';
+            ctx.body.appendChild(msg);
 
-    // Đóng popup khi bấm Dismiss
-    document.getElementById('warning-dismiss').addEventListener('click', function () {
-        overlay.classList.remove('show');
-        overlay.remove();
-    });
+            var appeal = document.createElement('a');
+            appeal.href = '/frontend/pages/user/setting/index.html';
+            appeal.className = 'custom-btn border-0';
+            appeal.style.minWidth = '120px';
+            appeal.textContent = 'Appeal';
+            ctx.footer.appendChild(appeal);
 
-    // Đóng popup khi bấm ra ngoài
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) {
-            overlay.classList.remove('show');
-            overlay.remove();
+            var dismiss = document.createElement('button');
+            dismiss.className = 'custom-btn btn-secondary border-0';
+            dismiss.style.minWidth = '120px';
+            dismiss.textContent = 'Dismiss';
+            dismiss.addEventListener('click', function () { ctx.close(); });
+            ctx.footer.appendChild(dismiss);
         }
     });
 }

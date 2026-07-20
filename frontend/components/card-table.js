@@ -220,14 +220,20 @@
             // Render các cột metadata còn lại bằng renderer tương ứng
             for (var c = isUserCard ? 1 : 0; c < cols.length; c++) {
                 var r = renderers[cols[c].key];
-                card.insertAdjacentHTML('beforeend',
-                    '<div class="cg-card-meta">' + (r ? r(item) : '') + '</div>');
+                var meta = document.createElement('div');
+                meta.className = 'cg-card-meta';
+                if (r) {
+                    var result = r(item);
+                    if (result instanceof Node) meta.appendChild(result);
+                    else meta.innerHTML = result || '';
+                }
+                card.appendChild(meta);
             }
 
             // Bọc trong thẻ <a> (điều hướng nếu có urlTemplate)
             var cardWrap = document.createElement('a');
             cardWrap.className = 'cg-card' + (hasFilters ? ' cg-no-lift' : '');
-            if (opts.urlTemplate) cardWrap.href = opts.urlTemplate + item.userId;
+            if (opts.urlTemplate) cardWrap.href = opts.urlTemplate + (item.userId || item.id);
             cardWrap.appendChild(card);
 
             // ── Menu ngữ cảnh (3 chấm) ──

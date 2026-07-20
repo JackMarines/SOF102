@@ -30,34 +30,54 @@ public class UserWarningController extends HttpServlet {
             return;
         }
 
-        // Check personal warning
-        Warning warning = warningDao.findActiveByUserId(sessionUser.getUserId());
+        // Re-fetch user from DB to get fresh team ban notification fields
+        User user = userDao.findById(sessionUser.getUserId());
 
-        // If no personal warning and user owns a team, check team warning
-        if (warning == null && sessionUser.getTeam() != null) {
+        Map<String, Object> result = new HashMap<>();
+
+        // Check both personal and team warnings
+        Warning personal = warningDao.findActiveByUserId(user.getUserId());
+        Warning team = null;
+        if (user.getTeam() != null) {
             dao.TeamDao teamDao = new dao.TeamDao();
-            if (teamDao.isOwner(sessionUser.getTeam().getTeamId(), sessionUser.getUserId())) {
-                warning = warningDao.findActiveByTeamId(sessionUser.getTeam().getTeamId());
+            if (teamDao.isOwner(user.getTeam().getTeamId(), user.getUserId())) {
+                team = warningDao.findActiveByTeamId(user.getTeam().getTeamId());
             }
         }
 
-        if (warning == null) {
-            ResponseUtil.success(resp, Map.of("warning", null));
-            return;
+        // Return the most recent active warning (highest warnId)
+        Warning warning = null;
+        if (personal != null && team != null) {
+            warning = personal.getWarnId() > team.getWarnId() ? personal : team;
+        } else {
+            warning = personal != null ? personal : team;
         }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("warnId", warning.getWarnId());
-        data.put("reason", warning.getWarnReason());
-        data.put("startDate", warning.getWarnStartdate());
-        data.put("endDate", warning.getWarnEnddate());
-        data.put("userId", warning.getUserId());
-        data.put("teamId", warning.getTeamId());
+        if (warning != null) {
+            Map<String, Object> warnData = new HashMap<>();
+            warnData.put("warnId", warning.getWarnId());
+            warnData.put("reason", warning.getWarnReason());
+            warnData.put("startDate", warning.getWarnStartdate());
+            warnData.put("endDate", warning.getWarnEnddate());
+            warnData.put("userId", warning.getUserId());
+            warnData.put("teamId", warning.getTeamId());
 
-        // Resolve author name
-        User author = userDao.findById(warning.getWarnAuthorid());
-        data.put("authorName", author != null ? author.getUserName() : "Unknown");
+            User author = userDao.findById(warning.getWarnAuthorid());
+            warnData.put("authorName", author != null ? author.getUserName() : "Unknown");
 
-        ResponseUtil.success(resp, Map.of("warning", data));
+            result.put("warning", warnData);
+        } else {
+            result.put("warning", null);
+        }
+
+        // Team ban notification — user was removed from a banned team
+        if ("TEAM_BANNED".equals(user.getUserLastleaveReason()) && user.getUserLastteamname() != null) {
+            Map<String, Object> banMap = new HashMap<>();
+            banMap.put("lastTeamName", user.getUserLastteamname());
+            banMap.put("reason", user.getUserLastleaveReason());
+            result.put("teamBanNotification", banMap);
+        }
+
+        ResponseUtil.success(resp, result);
     }
 }
