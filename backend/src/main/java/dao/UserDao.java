@@ -97,6 +97,21 @@ public class UserDao {
         }
     }
 
+    public void updateEmail(int userId, String email) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                user.setUserEmail(email);
+                em.merge(user);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
     // Thay đổi team của user (null = rời team)
     public void setTeam(int userId, Team team) {
         EntityManager em = JpaUtils.getEntityManager();

@@ -30,9 +30,10 @@
 
         // Helper: kiểm tra trang nào đang active dựa trên URL
         function isActive(p) {
-            if (p === 'home') return !path.includes('/puzzle') && !path.includes('/guest/') && !path.includes('/user/solve') && !path.includes('/user/team/');
+            if (p === 'home') return !path.includes('/puzzle') && !path.includes('/guest/') && !path.includes('/user/solve') && !path.includes('/user/team/') && !path.includes('/user/announcement');
             if (p === 'team') return path.includes('/user/team/');
             if (p === 'puzzles') return path.includes('/puzzle');
+            if (p === 'announcements') return path.includes('/user/announcement');
             return false;
         }
 
@@ -65,6 +66,9 @@
                         '</li>' +
                         '<li class="nav-item">' +
                             '<a class="nav-link' + (isActive('puzzles') ? ' active' : '') + '" href="/frontend/pages/user/puzzle/index.html">Puzzles</a>' +
+                        '</li>' +
+                        '<li class="nav-item">' +
+                            '<a class="nav-link' + (isActive('announcements') ? ' active' : '') + '" href="/frontend/pages/user/announcement/index.html">Announcements</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
                             '<a class="nav-link' + (isActive('home') ? ' active' : '') + '" href="/frontend/pages/user/home/index.html">Home</a>' +
@@ -153,8 +157,9 @@
                 var data = res && res.data;
                 if (!data) return;
 
-                var banner = document.createElement('div');
+                var banner = document.createElement('a');
                 banner.className = 'announcement-banner';
+                banner.href = '/frontend/pages/user/announcement/index.html?open=' + data.id;
 
                 var date = new Date(data.createdAt);
                 var dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });

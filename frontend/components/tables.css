@@ -75,12 +75,15 @@
 }
 /* Vùng danh sách hàng */
 .pt-list { margin-top: 10px; }
+/* When urlTemplate is set, rows are clickable links */
+.pt-list a { text-decoration: none; color: inherit; display: block; }
 /* Mỗi hàng — dùng CSS grid đồng bộ với header */
 .pt-row {
     display: grid; grid-template-columns: var(--pt-grid);
     padding: 14px 20px; border-bottom: 1px solid var(--row-border);
     transition: 0.2s; text-decoration: none; color: var(--text-primary);
     animation: ptFadeIn 0.4s ease backwards;
+    position: relative;
 }
 /* Hiệu ứng fade-in tuần tự cho 6 hàng đầu */
 .pt-row:nth-child(1) { animation-delay: 0s; }
@@ -91,7 +94,9 @@
 .pt-row:nth-child(6) { animation-delay: 0.2s; }
 .pt-row:hover { background: var(--row-hover); }
 /* Cột tiêu đề: căn trái */
-.pt-row-title { text-align: left; font-weight: 400; }
+.pt-row-title { text-align: left; font-weight: 400;     overflow: hidden;
+white-space: nowrap;
+    text-overflow: ellipsis;}
 /* Màu sắc theo mức độ khó */
 .pt-row-easy { color: #22c55e; }
 .pt-row-medium { color: #fbbf24; }
@@ -409,6 +414,94 @@
 @media (max-width: 991px) { .cg-grid { grid-template-columns: repeat(2, 1fr); } }
 /* Responsive: mobile nhỏ (1 cột) */
 @media (max-width: 576px) { .cg-grid { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════════
+   ANNOUNCEMENT TABLE (at-) — puzzle-table variant with author avatar + pinned section
+   ═══════════════════════════════════════════════ */
+
+/* Author cell: avatar + name in flex row */
+.at-author-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.at-author-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    overflow: hidden;
+white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Pin corner icon — absolutely positioned at top-left of the row */
+.at-pin-corner {
+    position: absolute;
+    top: -4px;
+    left: 6px;
+    color: var(--accent);
+    font-size: 13px;
+    z-index: 2;
+    line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   ANNOUNCEMENT DETAIL POPUP
+   ═══════════════════════════════════════════════ */
+
+.at-detail-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    line-height: 1.3;
+}
+.at-detail-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.at-detail-author {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+.at-detail-date {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+.at-detail-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+}
+.at-detail-footer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-subtle);
+}
+.at-detail-updated {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+.at-detail-pinned-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+}
 
 /* ── Menu ngữ cảnh 3 chấm (dùng chung cho CardTable & UserTable) ── */
 

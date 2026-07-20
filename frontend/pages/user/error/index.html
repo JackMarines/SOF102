@@ -26,131 +26,12 @@
 
     <link rel="icon" href="/frontend/assets/images/icon.png">
 
-    <script>
-        try {
-            if (localStorage.getItem("theme") === "light")
-                document.documentElement.classList.add("light-mode");
-        } catch (e) { }
-    </script>
 
 </head>
 
-<body data-auth="user">
+<body >
 
-    <!-- NAVBAR -->
-
-    <nav class="navbar navbar-expand-lg fixed-top">
-
-        <div class="container">
-
-            <!-- LOGO -->
-
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="/frontend/index.html">
-
-                <img src="/frontend/assets/images/logo.png" alt="Logo" style="height:42px" class="me-2">
-
-                Puzzle Solve
-
-            </a>
-
-            <!-- MOBILE -->
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUser">
-
-                <span class="navbar-toggler-icon"></span>
-
-            </button>
-
-            <!-- MENU -->
-
-            <div class="collapse navbar-collapse" id="navbarUser">
-
-                <ul class="navbar-nav mx-auto">
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/index.html">
-
-                            Home
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/user/puzzle/index.html">
-
-                            Puzzles
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/user/team/index.html">
-
-                            Teams
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/user/search-user/index.html">
-
-                            Search
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/user/profile/index.html">
-
-                            Profile
-
-                        </a>
-
-                    </li>
-
-                </ul>
-
-                <!-- RIGHT -->
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <button class="btn btn-link text-white p-0">
-
-                        <i class="bi bi-bell fs-5"></i>
-
-                    </button>
-
-                    <button class="btn btn-link text-white p-0">
-
-                        <i class="bi bi-gear fs-5"></i>
-
-                    </button>
-
-                    <div class="rounded-circle d-flex justify-content-center align-items-center" style="width:42px;
-                               height:42px;
-                               background:#241243;
-                               border:2px solid #b388ff;">
-
-                        <i class="bi bi-person-fill text-white"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </nav>
+  
 
     <!-- ERROR PAGE -->
 
@@ -201,96 +82,10 @@
                         may have been moved,
                         or the link is incorrect.
 
-                        <br><br>
-
-                        Please return to the homepage
-                        or go back to the previous page.
-
                     </p>
 
-                    <!-- BUTTON -->
+                   
 
-                    <div class="d-flex justify-content-center flex-wrap gap-3 mb-5">
-
-                        <a href="/frontend/index.html" class="custom-btn text-decoration-none border-0">
-
-                            <i class="bi bi-house-fill me-2"></i>
-
-                            Home
-
-                        </a>
-
-                        <button class="custom-btn border-0" onclick="history.back()">
-
-                            <i class="bi bi-arrow-left me-2"></i>
-
-                            Go Back
-
-                        </button>
-
-                    </div>
-
-                    <hr class="my-4">
-
-                    <!-- HELP -->
-
-                    <div class="row text-center">
-
-                        <div class="col-md-4 mb-4 mb-md-0">
-
-                            <i class="bi bi-search fs-2" style="color:#b388ff;"></i>
-
-                            <h6 class="fw-bold mt-3">
-
-                                Check URL
-
-                            </h6>
-
-                            <small class="text-secondary">
-
-                                Make sure the URL is typed correctly.
-
-                            </small>
-
-                        </div>
-
-                        <div class="col-md-4 mb-4 mb-md-0">
-
-                            <i class="bi bi-house-door fs-2" style="color:#b388ff;"></i>
-
-                            <h6 class="fw-bold mt-3">
-
-                                Return Home
-
-                            </h6>
-
-                            <small class="text-secondary">
-
-                                Continue exploring Puzzle Solve.
-
-                            </small>
-
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <i class="bi bi-life-preserver fs-2" style="color:#b388ff;"></i>
-
-                            <h6 class="fw-bold mt-3">
-
-                                Need Help?
-
-                            </h6>
-
-                            <small class="text-secondary">
-
-                                Contact the administrator if the problem persists.
-
-                            </small>
-
-                        </div>
-
-                    </div>
 
                 </div>
 
@@ -302,16 +97,11 @@
 
     <!-- FOOTER -->
 
-    <div id="footer"></div>
 
     <!-- COMPONENTS -->
 
-    <script src="/frontend/utils/core.js"></script>
 
-    <script src="/frontend/components/footer.js"></script>
 
-    <script>
-    </script>
 
     <!-- Bootstrap -->
 

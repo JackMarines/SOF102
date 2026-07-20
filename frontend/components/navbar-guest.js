@@ -4,10 +4,6 @@
     link.href = '/frontend/assets/css/navbar-guest.css';
     document.head.appendChild(link);
 
-    var theme = document.createElement('script');
-    theme.src = '/frontend/components/theme-toggle.js';
-    document.head.appendChild(theme);
-
     document.addEventListener('DOMContentLoaded', function(){
         var placeholder = document.getElementById('navbar');
         if (!placeholder) return;
@@ -34,15 +30,44 @@
                             '<a class="nav-link' + (path.includes('/puzzle') ? ' current-link' : '') + '" href="/frontend/pages/guest/puzzle/index.html">Puzzles</a>' +
                         '</li>' +
                         '<li class="nav-item">' +
-                            '<a class="nav-link' + (path.includes('/guest/auth/') ? ' current-link' : '') + '" href="/frontend/pages/guest/auth/login.html">Log in</a>' +
+                            '<a class="nav-link' + (path.includes('/announcement') ? ' current-link' : '') + '" href="/frontend/pages/guest/announcement/index.html">Announcements</a>' +
                         '</li>' +
-                        '<li class="nav-item ms-lg-2">' +
-                            '<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>' +
+                        '<li class="nav-item">' +
+                            '<a class="nav-link' + (path.includes('/guest/auth/') ? ' current-link' : '') + '" href="/frontend/pages/guest/auth/login.html">Log in</a>' +
                         '</li>' +
                     '</ul>' +
                 '</div>' +
             '</div>';
 
         placeholder.replaceWith(nav);
+
+        // ── Fetch và render banner thông báo mới nhất ──
+        apiGet('/announcements/latest')
+            .then(function(res) {
+                var data = res && res.data;
+                if (!data) return;
+
+                var banner = document.createElement('a');
+                banner.className = 'announcement-banner';
+                banner.href = '/frontend/pages/guest/announcement/index.html?open=' + data.id;
+
+                var date = new Date(data.createdAt);
+                var dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                var typeKey = (data.type || 'GENERAL').toLowerCase().replace(/_/g, '-');
+                var typeLabel = (data.type || 'GENERAL').replace(/_/g, ' ');
+
+                banner.innerHTML =
+                    '<span class="ann-date">' + dateStr + '</span>' +
+                    '<span class="ann-separator">--</span>' +
+                    '<span class="ann-title">' + data.title + '</span>' +
+                    '<span class="ann-separator">--</span>' +
+                    '<span class="badges"><span class="ann-' + typeKey + '">' + typeLabel + '</span></span>';
+
+                // Chèn banner vào đầu body
+                document.body.insertBefore(banner, document.body.firstChild);
+                document.body.classList.add('ann-banner-active');
+            })
+            .catch(function() {});
     });
 })();

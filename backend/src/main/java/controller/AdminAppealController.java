@@ -3,6 +3,7 @@ package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.AppealDao;
+import dao.WarningDao;
 import entity.Appeal;
 import entity.User;
 import jakarta.servlet.ServletException;
@@ -19,6 +20,7 @@ import java.util.*;
 public class AdminAppealController extends HttpServlet {
 
     private AppealDao appealDao = new AppealDao();
+    private WarningDao warningDao = new WarningDao();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -168,6 +170,11 @@ public class AdminAppealController extends HttpServlet {
 
             if ("APPROVED".equals(status)) {
                 appealDao.approve(appealId, sessionUser.getUserId());
+                // Deactivate the related warning
+                entity.Warning w = warningDao.findActiveByUserId(appeal.getAppByid());
+                if (w != null) {
+                    warningDao.deactivate(w.getWarnId());
+                }
             } else {
                 appealDao.reject(appealId, sessionUser.getUserId());
             }

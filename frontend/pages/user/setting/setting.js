@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (last && last.status === 'PENDING') {
                 statusArea.innerHTML = '<span class="badge bg-warning text-dark">You have a pending appeal</span>';
-            } else if (last && last.status === 'APPROVED') {
-                statusArea.innerHTML = '<span class="badge bg-success">✓ Approved by ' + (last.reviewedBy || 'Unknown') + ' on ' + formatDate(last.reviewedAt) + '</span>';
             } else if (last && last.status === 'REJECTED') {
                 statusArea.innerHTML = '<span class="badge bg-danger">✗ Rejected by ' + (last.reviewedBy || 'Unknown') + ' on ' + formatDate(last.reviewedAt) + '</span>';
                 addAppealButton(section);
@@ -104,7 +102,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ── 2. Theme selection visual ──
+    // ── 2. Theme selection ──
+    function applyTheme(theme) {
+        var el = document.documentElement;
+        if (theme === 'light') {
+            el.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+        } else if (theme === 'system') {
+            el.classList.remove('light-mode');
+            localStorage.removeItem('theme');
+        } else {
+            el.classList.remove('light-mode');
+            localStorage.setItem('theme', 'dark');
+        }
+        var icon = document.querySelector('.theme-toggle');
+        if (icon) icon.textContent = el.classList.contains('light-mode') ? '\u263E' : '\u2600';
+    }
+
     document.querySelectorAll('.glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill')
         .forEach(function(icon) {
             icon.parentElement.style.cursor = 'pointer';
@@ -112,21 +126,130 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill')
                     .forEach(function(item) { item.parentElement.style.border = ''; });
                 this.style.border = '2px solid #b388ff';
+
+                var cls = icon.classList;
+                if (cls.contains('bi-sun-fill')) {
+                    applyTheme('light');
+                } else if (cls.contains('bi-moon-stars-fill')) {
+                    applyTheme('dark');
+                } else {
+                    applyTheme('system');
+                }
             });
         });
 
-    // ── 3. Save / Cancel / Delete Account ──
-    document.querySelector('.custom-btn')?.addEventListener('click', function() {
-        alert('Settings saved successfully.');
-    });
+    // Highlight current theme on load
+    (function() {
+        var theme = localStorage.getItem('theme');
+        var selector = theme === 'light' ? '.bi-sun-fill' : theme === 'dark' ? '.bi-moon-stars-fill' : '.bi-display';
+        var icon = document.querySelector(selector);
+        if (icon) icon.style.border = '2px solid #b388ff';
+    })();
 
-    document.querySelector('.btn-outline-light')?.addEventListener('click', function() {
-        location.reload();
-    });
+    // ── 3. Account actions ──
 
-    document.querySelector('.btn-danger')?.addEventListener('click', function() {
-        if (confirm('Are you sure you want to delete your account?')) {
-            alert('Your account has been deleted.');
+    document.getElementById('changePasswordBtn')?.addEventListener('click', function() {
+        var user = firebase.auth().currentUser;
+        if (!user || !user.email) {
+            Popup.open({
+                id: 'pwd-popup',
+                size: 'sm',
+                title: 'Change Password',
+                render: function(ctx) {
+                    ctx.body.innerHTML = '<p class="text-secondary mb-0">Please login again to change your password.</p>';
+                }
+            });
+            return;
         }
+        firebase.auth().sendPasswordResetEmail(user.email).then(function() {
+            Popup.open({
+                id: 'pwd-popup',
+                size: 'sm',
+                render: function(ctx) {
+                    var icon = document.createElement('div');
+                    icon.className = 'popup-icon';
+                    icon.innerHTML = '<i class="bi bi-check-circle-fill" style="color:#22c55e;"></i>';
+                    ctx.body.appendChild(icon);
+                    var msg = document.createElement('p');
+                    msg.className = 'text-secondary mb-0';
+                    msg.textContent = 'Password reset email sent to ' + user.email;
+                    ctx.body.appendChild(msg);
+                }
+            });
+        }).catch(function(err) {
+            Popup.open({
+                id: 'pwd-popup',
+                size: 'sm',
+                title: 'Error',
+                render: function(ctx) {
+                    ctx.body.innerHTML = '<p class="text-secondary mb-0">' + (err.message || 'Failed to send reset email') + '</p>';
+                }
+            });
+        });
+    });
+
+    document.getElementById('changeEmailBtn')?.addEventListener('click', function() {
+        Popup.open({
+            id: 'email-popup',
+            size: 'sm',
+            title: 'Change Email',
+            render: function(ctx) {
+                var input = document.createElement('input');
+                input.type = 'email';
+                input.className = 'form-control';
+                input.id = 'popup-email';
+                input.placeholder = 'Enter new email';
+                ctx.body.appendChild(input);
+
+                var status = document.createElement('div');
+                status.id = 'popup-email-status';
+                status.className = 'mt-2 small';
+                ctx.body.appendChild(status);
+
+                var submit = document.createElement('button');
+                submit.className = 'custom-btn border-0';
+                submit.textContent = 'Update';
+                submit.addEventListener('click', async function() {
+                    var email = input.value.trim();
+                    if (!email || !email.includes('@')) {
+                        status.textContent = 'Please enter a valid email';
+                        status.style.color = '#ef4444';
+                        return;
+                    }
+                    try {
+                        var user = firebase.auth().currentUser;
+                        if (!user) {
+                            status.textContent = 'Please login again';
+                            status.style.color = '#ef4444';
+                            return;
+                        }
+                        await user.updateEmail(email);
+                        var res = await apiPut('/profile', { email: email });
+                        if (res && !res.error) {
+                            Popup.close('email-popup');
+                        } else {
+                            status.textContent = res.error || 'Failed to update email';
+                            status.style.color = '#ef4444';
+                        }
+                    } catch (err) {
+                        if (err.code === 'auth/requires-recent-login') {
+                            status.textContent = 'Please login again before changing email';
+                        } else if (err.code === 'auth/email-already-in-use') {
+                            status.textContent = 'Email already in use';
+                        } else {
+                            status.textContent = err.message || 'Failed to change email';
+                        }
+                        status.style.color = '#ef4444';
+                    }
+                });
+                ctx.footer.appendChild(submit);
+            }
+        });
+    });
+
+    document.getElementById('logoutBtn')?.addEventListener('click', function() {
+        logout().then(function() {
+            window.location.href = '/frontend/pages/guest/auth/login.html';
+        });
     });
 });
