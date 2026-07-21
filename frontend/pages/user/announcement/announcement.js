@@ -24,7 +24,7 @@ function renderTitle(val) {
 function renderType(val) {
     var key = (val || 'GENERAL').toLowerCase().replace(/_/g, '-');
     var label = (val || 'GENERAL').replace(/_/g, ' ');
-    return '<div style="display:flex;justify-content:center;align-items:center;height:100%"><span class="badges"><span class="ann-' + key + '">' + label + '</span></span></div>';
+    return '<div style="display:flex; justify-content:center; align-items:center; height:100%; position:relative; right:40px;"><span class="badges"><span class="ann-' + key + '">' + label + '</span></span></div>';
 }
 
 function renderDate(val) {
@@ -384,14 +384,18 @@ function autoOpenFromUrl() {
 
 // Init
 if (typeof getMe === 'function') {
-    getMe().then(function(session) {
-        if (session && session.userIsadmin) {
-            _isAdmin = true;
-            showCreateButton();
-        }
-        loadAnnouncements(1);
-        autoOpenFromUrl();
-    });
+    getMe()
+        .then(function(session) {
+            if (session && session.userIsadmin) {
+                _isAdmin = true;
+                showCreateButton();
+            }
+        })
+        .catch(function() {})
+        .then(function() {
+            loadAnnouncements(1);
+            autoOpenFromUrl();
+        });
 } else {
     loadAnnouncements(1);
     autoOpenFromUrl();
