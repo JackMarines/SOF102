@@ -26,12 +26,13 @@ public class CorsFilter implements Filter {
 
     // Các đường dẫn luôn được phép truy cập dù đang bảo trì
     private static final List<String> EXEMPT_PATHS = Arrays.asList(
-        "/api/v1/auth/",
         "/api/v1/announcements",
         "/api/v1/maintenance",
         "/api/v1/admin/",
         "/frontend/assets/",
-        "/frontend/pages/common/maintenance/"
+        "/frontend/pages/common/maintenance/",
+        "/frontend/pages/common/login/",
+        "/frontend/pages/common/announcement/"
     );
 
     private MaintenanceDao maintenanceDao = new MaintenanceDao();

@@ -71,7 +71,7 @@ function openMaintenancePopup() {
             // Countdown
             var countdownEl = document.createElement('p');
             countdownEl.className = 'mb-3';
-            countdownEl.style.cssText = 'font-size:28px;font-weight:700;color:var(--accent);';
+            countdownEl.style.cssText = 'font-size:28px;font-weight:700;color:var(--accent);text-align:center;';
             countdownEl.textContent = '5';
             ctx.body.appendChild(countdownEl);
 

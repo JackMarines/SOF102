@@ -1,7 +1,13 @@
-// Guest profile orchestrator — read-only profile with clickable group card, no edit modal
+// Guest profile orchestrator — read-only profile view matching user page layout
 (async function () {
+    if (typeof getMe === 'function') {
+        try { await getMe(); } catch (e) {}
+    }
+
     var params = new URLSearchParams(window.location.search);
     var targetId = params.get('id');
+
+    document.getElementById('group-heading').textContent = 'Group';
 
     var p = await fetchProfile(targetId);
     if (!p || p.error) return;
@@ -29,8 +35,6 @@
         groupBox.href = '/frontend/pages/guest/team/index.html?id=' + p.teamId;
         groupBox.style.cursor = 'pointer';
     }
-
-    document.getElementById('group-heading').textContent = 'Group';
 
     // --- Solved Puzzles (PuzzleTable) ---
     var effectiveId = targetId;

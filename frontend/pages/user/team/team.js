@@ -103,13 +103,13 @@ getMe().then(async function (session) {
                         '<div class="col-md-6">' +
                             '<div class="visibility-card" data-type="public">' +
                                 '<div class="fw-bold"><i class="bi bi-globe me-2"></i>Public</div>' +
-                                '<small class="text-secondary">Anyone can discover and request to join.</small>' +
+                                '<small class="text-secondary">Anyone can discover and join.</small>' +
                             '</div>' +
                         '</div>' +
                         '<div class="col-md-6">' +
                             '<div class="visibility-card" data-type="private">' +
                                 '<div class="fw-bold"><i class="bi bi-lock-fill me-2"></i>Private</div>' +
-                                '<small class="text-secondary">Only invited members can join.</small>' +
+                                '<small class="text-secondary">No one can join.</small>' +
                             '</div>' +
                         '</div>' +
                     '</div>';

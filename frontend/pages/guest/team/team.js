@@ -101,6 +101,7 @@
             info.className = 'flex-grow-1 ms-3';
             var nameDiv = document.createElement('div');
             nameDiv.className = 'fw-bold';
+            nameDiv.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;';
             nameDiv.textContent = m.displayName || '';
             var scoreSmall = document.createElement('small');
             scoreSmall.className = 'text-secondary';
