@@ -8,47 +8,28 @@ document.write('<script src="/frontend/services/api.js"><\/script>');
 document.write('<script src="/frontend/services/authService.js"><\/script>');
 
 // ── Kiểm tra Maintenance Mode ──
-// Bỏ qua trên trang maintenance và login
-// Nếu user là admin → không redirect
-// Nếu maintenance đang bật → redirect sang trang maintenance
+// Admin users bypass the check entirely.
+// Browser checks are silent: if maintenance mode is on the user gets redirected at any point.
+// Guest/user body visibility is controlled by the auth redirect block below, not here.
 document.addEventListener('DOMContentLoaded', function () {
     var path = window.location.pathname;
-    // Bỏ qua nếu đang ở trang maintenance hoặc login
-    if (path.indexOf('/common/maintenance/') !== -1 || path.indexOf('login.html') !== -1) return;
+    if (path.indexOf('/common/maintenance/') !== -1 || path.indexOf('login.html') !== -1 ||path.indexOf('common/announcement') !== -1 ||path.indexOf('common/auth') !== -1) return;
 
-    // Ẩn body trước khi kiểm tra (tránh flash nội dung)
-    document.body.style.display = 'none';
     getMe()
         .then(function (session) {
-            // Nếu là admin → hiện body ngay, không cần kiểm tra maintenance
-            if (session && !session.error && session.userIsadmin) {
-                document.body.style.display = '';
-                return;
-            }
-            // Nếu không phải admin → kiểm tra maintenance status
+            if (session && !session.error && session.userIsadmin) return;
             return apiGet('/maintenance').then(function (res) {
-                if (res && res.enabled) {
-                    // Maintenance đang bật → chuyển trang
+                if (res && res.enabled)
                     window.location.href = '/frontend/pages/common/maintenance/index.html';
-                } else {
-                    document.body.style.display = '';
-                }
             });
         })
         .catch(function () {
-            // Lỗi xác thực → vẫn kiểm tra maintenance
             apiGet('/maintenance')
                 .then(function (res) {
-                    if (res && res.enabled) {
+                    if (res && res.enabled)
                         window.location.href = '/frontend/pages/common/maintenance/index.html';
-                    } else {
-                        document.body.style.display = '';
-                    }
                 })
-                .catch(function () {
-                    // Lỗi cả 2 API → hiện body (không chặn trang)
-                    document.body.style.display = '';
-                });
+                .catch(function () {});
         });
 });
 
