@@ -139,6 +139,11 @@ public class AdminAppealController extends HttpServlet {
     }
 
     // PUT /admin/appeal?id=X { "status": "APPROVED" or "REJECTED" }
+    // Admin xét duyệt appeal của user. Có 2 hướng:
+    //   - APPROVED: chấp nhận appeal → deactivate (xoá) warning của user đó
+    //   - REJECTED: từ chối appeal, giữ nguyên warning
+    // Khi APPROVED, phải chủ động tìm warning đang active của user (findActiveByUserId)
+    // và deactivate warning đó, vì warning có thể là warning cá nhân hoặc cảnh báo từ team
     private void handleReviewAppeal(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         User sessionUser = (User) req.getSession().getAttribute("user");
@@ -170,7 +175,9 @@ public class AdminAppealController extends HttpServlet {
 
             if ("APPROVED".equals(status)) {
                 appealDao.approve(appealId, sessionUser.getUserId());
-                // Deactivate the related warning
+                // Khi chấp nhận appeal, phải deactivate warning của user luôn
+                // Tìm warning đang active của user này bằng findActiveByUserId
+                // Nếu không deactivate, user vẫn bị cảnh báo dù appeal đã được duyệt
                 entity.Warning w = warningDao.findActiveByUserId(appeal.getAppByid());
                 if (w != null) {
                     warningDao.deactivate(w.getWarnId());

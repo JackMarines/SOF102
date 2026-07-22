@@ -168,6 +168,9 @@ public class AdminUserController extends HttpServlet {
     }
 
     // PUT /admin/user/ban?id=X
+    // Soft delete user: set user_isactive = false
+    // Không xoá user khỏi database, chỉ vô hiệu hoá tài khoản
+    // User bị ban sẽ không thể đăng nhập (AuthController kiểm tra isactive)
     private void handleBan(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         String idParam = req.getParameter("id");
@@ -187,6 +190,8 @@ public class AdminUserController extends HttpServlet {
     }
 
     // PUT /admin/user/reactivate?id=X
+    // Ngược lại với ban: set user_isactive = true
+    // User có thể đăng nhập lại bình thường
     private void handleReactivate(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         String idParam = req.getParameter("id");

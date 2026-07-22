@@ -153,6 +153,11 @@ public class AdminWarningController extends HttpServlet {
     }
 
     // POST /admin/warning (+?instant=true) — create warning or instant ban
+    // Có 2 chế độ: warning thường (có ngày bắt đầu/kết thúc) và instant ban (khoá ngay lập tức)
+    // Nếu là instant=true:
+    //   - Với user: set user_isactive=false
+    //   - Với team: lưu TEAM_BANNED vào mọi thành viên, set team_isactive=false
+    // Cảnh báo chỉ có thể target userId HOẶC teamId, không cả hai cùng lúc
     private void handleCreateWarning(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         User sessionUser = (User) req.getSession().getAttribute("user");
@@ -188,6 +193,7 @@ public class AdminWarningController extends HttpServlet {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (instant) {
+                // Instant ban: gán ngày hiện tại, user/team sẽ bị khoá ngay khi warning được tạo
                 warning.setWarnStartdate(new java.sql.Timestamp(System.currentTimeMillis()));
                 warning.setWarnEnddate(new java.sql.Timestamp(System.currentTimeMillis()));
             } else {
@@ -203,13 +209,16 @@ public class AdminWarningController extends HttpServlet {
 
         warningDao.create(warning);
 
-        // If instant, also deactivate the user/team immediately
+        // Nếu là instant ban, lập tức deactivate user/team và các thành viên (nếu là team)
         if (instant) {
             UserDao userDao = new UserDao();
             dao.TeamDao teamDao = new dao.TeamDao();
             if (warning.getUserId() != null) {
+                // Ban user: set user_isactive = false
                 userDao.setInactive(warning.getUserId());
             } else if (warning.getTeamId() != null) {
+                // Ban team: lưu thông tin "TEAM_BANNED" vào mọi thành viên,
+                // để sau này user thấy notification khi login
                 entity.Team team = teamDao.findById(warning.getTeamId());
                 if (team != null) {
                     String tn = team.getTeamName();
