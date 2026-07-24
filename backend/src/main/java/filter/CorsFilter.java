@@ -29,6 +29,7 @@ public class CorsFilter implements Filter {
         "/api/v1/announcements",
         "/api/v1/maintenance",
         "/api/v1/admin/",
+        "/api/v1/auth/",
         "/frontend/assets/",
         "/frontend/pages/common/maintenance/",
         "/frontend/pages/common/login/",

@@ -192,7 +192,9 @@ async function handleSubmit() {
         puz_id: parseInt(puzzleIdGlobal),
         lang_id: puzzleLangId,
         user_code: typeof window.getEditorCode === 'function' ? window.getEditorCode() : '',
-        function_name: puzzleFuncName
+        function_name: puzzleFuncName,
+        prog_time: secondsGlobal,
+        prog_code: typeof window.getEditorCode === 'function' ? window.getEditorCode() : ''
     };
 
     var result = await apiPost('/submit', body);

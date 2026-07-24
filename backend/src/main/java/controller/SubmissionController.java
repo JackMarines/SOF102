@@ -85,6 +85,7 @@ public class SubmissionController extends HttpServlet {
         String funcName = (String) body.get("function_name");
         Integer progTime = body.get("prog_time") != null
             ? Integer.parseInt(body.get("prog_time").toString()) : null;
+        String progCode = (String) body.get("prog_code");
 
         int judge0Lang = JUDGE0_LANG_MAP.getOrDefault(langId, 71);
 
@@ -290,7 +291,7 @@ public class SubmissionController extends HttpServlet {
 
         boolean puzzlePass = failed.isEmpty() && !error;
         if (puzzlePass) {
-            progressDao.upsert(user.getUserId(), puzId, progTime);
+            progressDao.upsert(user.getUserId(), puzId, progTime, progCode);
             logger.info("Puzzle passed: userId={}, puzId={}, passed={}/{}",
                 userId, puzId, passed, testcases.size());
         } else {

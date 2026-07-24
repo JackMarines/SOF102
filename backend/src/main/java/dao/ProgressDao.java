@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ProgressDao {
     // Thêm mới hoặc cập nhật progress (upsert) dựa trên userId + puzId
-    public void upsert(int userId, int puzId, Integer progTime) {
+    public void upsert(int userId, int puzId, Integer progTime, String progCode) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             TypedQuery<Progress> q = em.createQuery(
@@ -32,11 +32,13 @@ public class ProgressDao {
                 p.setPuzId(puzId);
                 p.setProgDate(new Timestamp(System.currentTimeMillis()));
                 p.setProgTime(progTime);
+                p.setProgCode(progCode);
                 em.persist(p);
             } else {
                 Progress p = existing.get(0);
                 p.setProgDate(new Timestamp(System.currentTimeMillis()));
                 p.setProgTime(progTime);
+                p.setProgCode(progCode);
                 em.merge(p);
             }
             em.getTransaction().commit();

@@ -2,8 +2,10 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dao.ContestDao;
 import dao.LanguageDao;
 import dao.PuzzleDao;
+import entity.Contest;
 import entity.Language;
 import entity.Puzzle;
 import jakarta.servlet.ServletException;
@@ -21,6 +23,7 @@ public class AdminPuzzleController extends HttpServlet {
 
     private PuzzleDao puzzleDao = new PuzzleDao();
     private LanguageDao languageDao = new LanguageDao();
+    private ContestDao contestDao = new ContestDao();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -101,6 +104,7 @@ public class AdminPuzzleController extends HttpServlet {
             item.put("languageId", p.getLanguage() != null ? p.getLanguage().getLangId() : null);
             item.put("difficulty", p.getPuzDifficulty());
             item.put("score", p.getPuzScore());
+            item.put("contestId", p.getContest() != null ? p.getContest().getConId() : null);
             dataList.add(item);
         }
 
@@ -138,6 +142,7 @@ public class AdminPuzzleController extends HttpServlet {
             data.put("languageId", p.getLanguage() != null ? p.getLanguage().getLangId() : null);
             data.put("difficulty", p.getPuzDifficulty());
             data.put("score", p.getPuzScore());
+            data.put("contestId", p.getContest() != null ? p.getContest().getConId() : null);
             ResponseUtil.success(resp, data);
         } catch (NumberFormatException e) {
             ResponseUtil.error(resp, 400, "Invalid id");
@@ -191,6 +196,12 @@ public class AdminPuzzleController extends HttpServlet {
             if (l != null) puzzle.setLanguage(l);
         }
 
+        Object contestId = body.get("contestId");
+        if (contestId != null) {
+            Contest c = contestDao.findById(((Number) contestId).intValue());
+            if (c != null) puzzle.setContest(c);
+        }
+
         puzzleDao.create(puzzle);
 
         Map<String, Object> data = new HashMap<>();
@@ -223,6 +234,15 @@ public class AdminPuzzleController extends HttpServlet {
             if (body.containsKey("languageId")) {
                 Language l = languageDao.findById(((Number) body.get("languageId")).intValue());
                 if (l != null) puzzle.setLanguage(l);
+            }
+            if (body.containsKey("contestId")) {
+                Object contestId = body.get("contestId");
+                if (contestId != null) {
+                    Contest c = contestDao.findById(((Number) contestId).intValue());
+                    if (c != null) puzzle.setContest(c);
+                } else {
+                    puzzle.setContest(null);
+                }
             }
 
             puzzleDao.update(puzzle);

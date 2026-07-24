@@ -25,6 +25,9 @@ public class Progress {
     @Column(name = "prog_time")
     private Integer progTime;
 
+    @Column(name = "prog_code")
+    private String progCode;
+
     public Progress() {}
 
     public Integer getProgId() { return progId; }
@@ -37,4 +40,6 @@ public class Progress {
     public void setProgDate(Timestamp progDate) { this.progDate = progDate; }
     public Integer getProgTime() { return progTime; }
     public void setProgTime(Integer progTime) { this.progTime = progTime; }
+    public String getProgCode() { return progCode; }
+    public void setProgCode(String progCode) { this.progCode = progCode; }
 }
