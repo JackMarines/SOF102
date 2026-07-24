@@ -1,216 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Settings</title>
 
-    <!-- META -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-    <title>Settings</title>
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- FONT -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/frontend/assets/css/style.css">
-
-    <link rel="icon" href="/frontend/assets/images/icon.png">
-
-    <script>
-        try {
-            if (localStorage.getItem("theme") === "light") {
-                document.documentElement.classList.add("light-mode");
-            }
-        } catch (e) { }
-    </script>
-
+  <script>
+    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+  </script>
 </head>
-
 <body data-auth="user">
 
-    <div id="navbar"></div>
+<div class="scanline"></div>
+<div id="navbar"></div>
 
-    <section class="container" style="margin-top:120px;margin-bottom:80px;">
+<main style="padding-top: var(--nav-height);">
+  <section class="section-page">
+    <div class="container-page">
 
-        <!-- PAGE HEADER -->
-
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-5">
-
-            <div>
-
-                <h2 class="fw-bold mb-1">
-
-                    <i class="bi bi-gear-fill me-2"></i>
-
-                    Settings
-
-                </h2>
-
-                <p class="text-secondary mb-0">
-
-                    Manage your Puzzle Solve account preferences.
-
-                </p>
-
-            </div>
-
-            <div class="mt-3 mt-lg-0">
-
-                <button class="btn btn-outline-light me-2">
-
-                    Cancel
-
-                </button>
-
-                <button class="custom-btn border-0">
-
-                    Save Changes
-
-                </button>
-
-            </div>
-
+      <div class="scroll-reveal" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-16px);margin-bottom:var(--space-32px);">
+        <div>
+          <h2 class="content-section-heading" style="margin-bottom:var(--space-4px);">Settings</h2>
+          <p class="content-meta">Manage your account preferences.</p>
         </div>
-
-        <!-- APPEARANCE -->
-
-        <div class="glass-box p-4 mb-4">
-
-            <h5 class="fw-bold mb-3">
-
-                <i class="bi bi-palette-fill me-2"></i>
-
-                Appearance
-
-            </h5>
-
-            <p class="text-secondary">
-
-                Choose how Puzzle Solve looks on your device.
-
-            </p>
-
-            <div class="row g-3 mt-2">
-
-                <div class="col-md-4">
-
-                    <div class="glass-box text-center p-4">
-
-                        <i class="bi bi-display fs-2"></i>
-
-                        <h6 class="mt-3">
-
-                            System
-
-                        </h6>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <div class="glass-box text-center p-4">
-
-                        <i class="bi bi-sun-fill fs-2"></i>
-
-                        <h6 class="mt-3">
-
-                            Light
-
-                        </h6>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <div class="glass-box text-center p-4">
-
-                        <i class="bi bi-moon-stars-fill fs-2"></i>
-
-                        <h6 class="mt-3">
-
-                            Dark
-
-                        </h6>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+        <div style="display:flex;gap:var(--space-12px);">
+          <button class="btn-devclimb secondary sm">Cancel</button>
+          <button class="btn-devclimb primary sm">Save Changes</button>
         </div>
+      </div>
 
-        <!-- ACCOUNT -->
+      <div class="content-panel pad-lg scroll-reveal" data-delay="100" style="margin-bottom:var(--space-24px);">
+        <h4 class="content-section-heading">Appearance</h4>
+        <p class="content-meta" style="margin-bottom:var(--space-24px);">Choose how DevClimb looks on your device.</p>
 
-        <div class="glass-box p-4 mb-4">
-
-            <h5 class="fw-bold mb-4">
-
-                <i class="bi bi-person-circle me-2"></i>
-
-                Account
-
-            </h5>
-
-            <div class="d-grid gap-3">
-
-                <button class="btn btn-outline-light" id="changeEmailBtn">
-                    <i class="bi bi-envelope-fill me-2"></i>
-                    Change Email
-                </button>
-
-                <button class="btn btn-outline-light" id="changePasswordBtn">
-                    <i class="bi bi-key-fill me-2"></i>
-                    Change Password
-                </button>
-
-                <button class="btn btn-outline-light" id="logoutBtn">
-                    <i class="bi bi-box-arrow-right me-2"></i>
-                    Logout
-                </button>
-
+        <div class="settings-theme-grid">
+          <div class="settings-theme-card active" onclick="setThemeMode('system')">
+            <div class="theme-icon">
+              <span class="material-symbols-outlined" style="font-size:2rem;">desktop_windows</span>
             </div>
-
+            <div class="theme-label">System</div>
+          </div>
+          <div class="settings-theme-card" onclick="setThemeMode('light')">
+            <div class="theme-icon">
+              <span class="material-symbols-outlined" style="font-size:2rem;">light_mode</span>
+            </div>
+            <div class="theme-label">Light</div>
+          </div>
+          <div class="settings-theme-card" onclick="setThemeMode('dark')">
+            <div class="theme-icon">
+              <span class="material-symbols-outlined" style="font-size:2rem;">dark_mode</span>
+            </div>
+            <div class="theme-label">Dark</div>
+          </div>
         </div>
+      </div>
 
-    </section>
+      <div class="content-panel pad-lg scroll-reveal" data-delay="200">
+        <h4 class="content-section-heading">Account</h4>
 
-    <!-- FOOTER -->
+        <div class="settings-action-list" style="margin-top:var(--space-24px);">
+          <button class="btn-devclimb secondary" id="changeEmailBtn" style="justify-content:flex-start;">
+            <span class="material-symbols-outlined" style="font-size:1rem;">mail</span>
+            Change Email
+          </button>
+          <button class="btn-devclimb secondary" id="changePasswordBtn" style="justify-content:flex-start;">
+            <span class="material-symbols-outlined" style="font-size:1rem;">key</span>
+            Change Password
+          </button>
+          <button class="btn-devclimb secondary" id="logoutBtn" style="justify-content:flex-start;color:var(--error);border-color:var(--error);">
+            <span class="material-symbols-outlined" style="font-size:1rem;">logout</span>
+            Logout
+          </button>
+        </div>
+      </div>
 
-    <div id="footer"></div>
+    </div>
+  </section>
+</main>
 
-    <!-- COMPONENTS -->
+<div id="footer"></div>
 
-    <script src="/frontend/utils/core.js"></script>
-
-    <script src="/frontend/components/navbar-user.js"></script>
-
-    <script src="/frontend/components/footer.js"></script>
-
-    <script src="/frontend/components/spinner.js"></script>
-
-    <script src="/frontend/services/warningService.js"></script>
-
-    <script src="setting.js"></script>
-
-    <!-- Bootstrap -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/frontend/utils/core.js"></script>
+<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/scroll-reveal.js"></script>
+<script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/services/warningService.js"></script>
+<script src="setting.js"></script>
 
 </body>
-
 </html>

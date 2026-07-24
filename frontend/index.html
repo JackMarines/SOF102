@@ -1,204 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- META TAGS -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Coding Practice Platform</title>
 
-    <title>Devclimb</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-    <!-- BOOTSTRAP -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
 
-    <!-- GOOGLE FONT -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- EXTERNAL CSS -->
-    <link rel="stylesheet" href="/frontend/assets/css/style.css">
-    <link rel="icon" href="/frontend/assets/images/icon.png">
-
-<script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light-mode')}catch(e){}</script>
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    } catch (e) {}
+  </script>
 </head>
-
 <body>
+
+<div class="scanline"></div>
 
 <div id="navbar"></div>
 
+<main style="padding-top: var(--nav-height);">
 
-<!-- HERO SECTION -->
+  <section class="hero-devclimb">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="hero-dot"></span>
+        SYSTEM READY
+      </div>
 
-<section class="hero">
+      <h1>
+        > TRAIN YOUR <br>
+        <span class="hero-highlight">CODING SKILLS</span><br>
+        LIKE A GAME<span class="hero-cursor">_</span>
+      </h1>
 
-    <div class="container">
+      <p class="hero-sub">
+        Improve algorithms, logic thinking and programming skills through interactive coding challenges and competitive gameplay. Experience the flow state in a high-performance terminal environment.
+      </p>
 
-        <div class="row align-items-center">
+      <div class="hero-actions">
+        <a href="/frontend/pages/guest/auth/register.html" class="btn-devclimb primary">START_NOW</a>
+        <a href="/frontend/pages/guest/puzzle/index.html" class="btn-devclimb secondary">EXPLORE_PUZZLES</a>
+      </div>
 
-            <div class="col-lg-6">
-
-                <h1 class="hero-title">
-                    Train Your Coding Skills Like A Game
-                </h1>
-
-                <p class="hero-text">
-                    Improve algorithms, logic thinking and programming skills
-                    through interactive coding challenges and competitive gameplay.
-                </p>
-
-                <div class="mt-4">
-
-                    <a href="pages/guest/auth/login.html" class="btn custom-btn me-3">
-                        Start Now
-                    </a>
-
-                    <a href="pages/guest/puzzle/index.html" class="btn btn-outline-light px-4 py-3 rounded-4">
-                        Explore Puzzles
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-6">
-
-                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200"
-                     class="hero-image"
-                     alt="coding">
-
-            </div>
-
+      <div class="code-window">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="code-filename">main.py — devclimb-workspace</span>
         </div>
+        <div class="code-body">
+          <div class="code-lines">
+            <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span>
+            <span>06</span><span>07</span><span>08</span><span>09</span><span>10</span>
+            <span>11</span><span>12</span>
+          </div>
+          <code><span class="kw">import</span> os
+<span class="fn">def</span> <span class="kw">init_challenge</span>(uid):
+    session = os.getenv(<span class="str">'DEVCLIMB_TOKEN'</span>)
+    <span class="kw">if</span> not session:
+        <span class="err">raise</span> ConnectionError(<span class="str">"Access Denied"</span>)
 
+    <span class="cm"># Fetching puzzle payload</span>
+    payload = api.get_puzzle(uid)
+    <span class="kw">return</span> payload.execute()
+
+<span class="cm"># Initializing root instance</span>
+<span class="kw">print</span>(<span class="str">"System operational."</span>)</code>
+        </div>
+      </div>
     </div>
+  </section>
 
-</section>
-
-<!-- STATISTICS SECTION -->
-
-<section class="py-5">
-
-    <div class="container">
-
-        <div class="row g-4">
-
-            <div class="col-md-6 col-lg-3">
-                <div class="glass-box stat-card">
-                    <div class="stat-number">150+</div>
-                    <div class="stat-text">PUZZLES</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="glass-box stat-card">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-text">PLAYERS</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="glass-box stat-card">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-text">PRACTICE</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="glass-box stat-card">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-text">FUN</div>
-                </div>
-            </div>
-
+  <section class="section-devclimb" style="padding: clamp(2rem, 4vw, 3rem) 0;">
+    <div class="section-inner">
+      <div class="stats-table">
+        <div class="panel-header">system.status</div>
+        <div class="stat-row">
+          <span class="stat-id">[0x01]</span>
+          <span class="stat-name">PUZZLES</span>
+          <span class="stat-value">150+</span>
+          <span class="stat-meter-wrap">
+            <span class="stat-meter" style="width: 120px;"></span>
+            <span class="stat-meter-track"></span>
+          </span>
         </div>
-
+        <div class="stat-row">
+          <span class="stat-id">[0x02]</span>
+          <span class="stat-name">ACTIVE USERS</span>
+          <span class="stat-value">500+</span>
+          <span class="stat-meter-wrap">
+            <span class="stat-meter" style="width: 200px;"></span>
+            <span class="stat-meter-track"></span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-id">[0x03]</span>
+          <span class="stat-name">UPTIME</span>
+          <span class="stat-value">24/7</span>
+          <span class="stat-meter-wrap">
+            <span class="stat-meter" style="width: 260px;"></span>
+            <span class="stat-meter-track"></span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-id">[0x04]</span>
+          <span class="stat-name">LANGUAGES</span>
+          <span class="stat-value">3</span>
+          <span class="stat-meter-wrap">
+            <span class="stat-meter" style="width: 70px;"></span>
+            <span class="stat-meter-track"></span>
+          </span>
+        </div>
+      </div>
     </div>
+  </section>
 
-</section>
-
-<!-- FEATURES SECTION -->
-
-<section class="py-5">
-
-    <div class="container">
-
-        <div class="text-center mb-5">
-
-            <h2 class="fw-bold">
-                Why Choose Our Platform?
-            </h2>
-
-            <p class="text-secondary">
-                Learn coding in a fun and competitive way
-            </p>
-
+  <section class="section-devclimb">
+    <div class="section-inner">
+      <div class="feature-block scroll-reveal" data-delay="0">
+        <div>
+          <span class="feature-label">MODULE_A</span>
+          <h2>Coding Challenges</h2>
+          <p>Solve real programming problems from easy to hard. Each challenge tests your algorithmic thinking and rewards precision over speed.</p>
         </div>
-
-        <div class="row g-4">
-
-            <div class="col-md-6 col-lg-4">
-
-                <div class="glass-box feature-card">
-
-                    <h3 class="feature-title">
-                        Coding Challenges
-                    </h3>
-
-                    <p class="feature-text">
-                        Solve real programming problems from easy to hard.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-
-                <div class="glass-box feature-card">
-
-                    <h3 class="feature-title">
-                        Ranking System
-                    </h3>
-
-                    <p class="feature-text">
-                        Compete with friends and climb the leaderboard.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-
-                <div class="glass-box feature-card">
-
-                    <h3 class="feature-title">
-                        Daily Practice
-                    </h3>
-
-                    <p class="feature-text">
-                        Keep your coding streak alive every day.
-                    </p>
-
-                </div>
-
-            </div>
-
+        <div class="feature-visual">
+          <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--accent);">terminal</span>
         </div>
-
+      </div>
     </div>
+  </section>
 
-</section>
+  <section class="section-devclimb">
+    <div class="section-inner">
+      <div class="feature-block reverse scroll-reveal" data-delay="100">
+        <div>
+          <span class="feature-label">MODULE_B</span>
+          <h2>Ranking System</h2>
+          <p>Compete with peers and track your progress on the leaderboard. Every solved problem earns points. Every optimization matters.</p>
+        </div>
+        <div class="feature-visual">
+          <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--accent);">leaderboard</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div id="footer"></div>
+  <section class="section-devclimb">
+    <div class="section-inner">
+      <div class="feature-block scroll-reveal" data-delay="200">
+        <div>
+          <span class="feature-label">MODULE_C</span>
+          <h2>Daily Practice</h2>
+          <p>Keep your coding streak alive with daily challenges. Consistent practice builds muscle memory and sharpens problem-solving skills.</p>
+        </div>
+        <div class="feature-visual">
+          <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--accent);">update</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-devclimb cta-devclimb">
+    <div class="section-inner scroll-reveal" data-delay="0">
+      <h2>Ready to climb?</h2>
+      <p>One account. Hundreds of challenges. A leaderboard waiting for your name.</p>
+      <a href="/frontend/pages/guest/auth/register.html" class="btn-devclimb primary">CREATE_ACCOUNT</a>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+</main>
 
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-guest.js"></script>
 <script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/components/spinner.js"></script>
 <script>redirectIfAuthenticated()</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.btn-devclimb').forEach(function(btn) {
+    btn.addEventListener('mousedown', function() {
+      btn.style.transform = 'translateY(1px)';
+    });
+    btn.addEventListener('mouseup', function() {
+      btn.style.transform = 'translateY(0)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      btn.style.transform = 'translateY(0)';
+    });
+  });
+</script>
 
 </body>
 </html>
