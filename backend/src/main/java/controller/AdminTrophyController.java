@@ -68,7 +68,7 @@ public class AdminTrophyController extends HttpServlet {
         for (Trophy t : trophies) {
             Map<String, Object> item = new HashMap<>();
             item.put("id", t.getTropId());
-            item.put("image", t.getTropImage());
+            item.put("avatar", t.getTropAvatar());
             item.put("name", t.getTropName());
             item.put("content", t.getTropContent());
             dataList.add(item);
@@ -93,7 +93,7 @@ public class AdminTrophyController extends HttpServlet {
             }
             Map<String, Object> data = new HashMap<>();
             data.put("id", t.getTropId());
-            data.put("image", t.getTropImage());
+            data.put("avatar", t.getTropAvatar());
             data.put("name", t.getTropName());
             data.put("content", t.getTropContent());
             ResponseUtil.success(resp, data);
@@ -113,7 +113,7 @@ public class AdminTrophyController extends HttpServlet {
 
         Trophy trophy = new Trophy();
         trophy.setTropName(name.trim());
-        trophy.setTropImage((String) body.get("image"));
+        trophy.setTropAvatar((String) body.get("avatar"));
         trophy.setTropContent((String) body.get("content"));
 
         trophyDao.create(trophy);
@@ -141,7 +141,7 @@ public class AdminTrophyController extends HttpServlet {
 
             Map<String, Object> body = readJsonBody(req);
             if (body.containsKey("name")) trophy.setTropName(((String) body.get("name")).trim());
-            if (body.containsKey("image")) trophy.setTropImage((String) body.get("image"));
+            if (body.containsKey("avatar")) trophy.setTropAvatar((String) body.get("avatar"));
             if (body.containsKey("content")) trophy.setTropContent((String) body.get("content"));
 
             trophyDao.update(trophy);

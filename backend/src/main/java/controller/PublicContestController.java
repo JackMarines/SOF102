@@ -6,6 +6,7 @@ import dao.ContestDao;
 import dao.ProgressDao;
 import dao.PuzzleDao;
 import dao.UserDao;
+import dao.UserTrophyDao;
 import entity.Contest;
 import entity.Puzzle;
 import entity.Trophy;
@@ -25,6 +26,7 @@ public class PublicContestController extends HttpServlet {
     private PuzzleDao puzzleDao = new PuzzleDao();
     private ProgressDao progressDao = new ProgressDao();
     private UserDao userDao = new UserDao();
+    private UserTrophyDao userTrophyDao = new UserTrophyDao();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -84,13 +86,11 @@ public class PublicContestController extends HttpServlet {
             if (t != null) {
                 item.put("trophyId", t.getTropId());
                 item.put("trophyName", t.getTropName());
-                item.put("trophyImage", t.getTropImage());
+                item.put("trophyAvatar", t.getTropAvatar());
             }
 
             String status = "ended";
-            if (c.getConStart() != null && now < c.getConStart().getTime()) {
-                status = "upcoming";
-            } else if (c.getConEnd() == null || now <= c.getConEnd().getTime()) {
+            if (c.getConEnd() == null || now <= c.getConEnd().getTime()) {
                 status = "active";
             }
             item.put("status", status);
@@ -144,14 +144,23 @@ public class PublicContestController extends HttpServlet {
             if (t != null) {
                 data.put("trophyId", t.getTropId());
                 data.put("trophyName", t.getTropName());
-                data.put("trophyImage", t.getTropImage());
+                data.put("trophyAvatar", t.getTropAvatar());
                 data.put("trophyContent", t.getTropContent());
             }
 
+            jakarta.servlet.http.HttpSession session = req.getSession(false);
+            Integer currentUserId = null;
+            if (session != null) {
+                entity.User currentUser = (entity.User) session.getAttribute("user");
+                if (currentUser != null) currentUserId = currentUser.getUserId();
+            }
+
+            if (t != null && currentUserId != null) {
+                data.put("userHasTrophy", userTrophyDao.hasTrophy(currentUserId, t.getTropId()));
+            }
+
             String status = "ended";
-            if (c.getConStart() != null && now < c.getConStart().getTime()) {
-                status = "upcoming";
-            } else if (c.getConEnd() == null || now <= c.getConEnd().getTime()) {
+            if (c.getConEnd() == null || now <= c.getConEnd().getTime()) {
                 status = "active";
             }
             data.put("status", status);
@@ -171,6 +180,11 @@ public class PublicContestController extends HttpServlet {
                     pItem.put("score", p.getPuzScore());
                     if (p.getLanguage() != null) {
                         pItem.put("language", p.getLanguage().getLangName());
+                    }
+                    if (currentUserId != null) {
+                        pItem.put("solved", progressDao.hasUserSolvedPuzzle(currentUserId, p.getPuzId()));
+                    } else {
+                        pItem.put("solved", false);
                     }
                     puzzleList.add(pItem);
                 }

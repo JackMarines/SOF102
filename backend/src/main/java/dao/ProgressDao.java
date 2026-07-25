@@ -545,4 +545,44 @@ public class ProgressDao {
             em.close();
         }
     }
+
+    public long countContestPuzzles(int contestId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(*) FROM puzzle WHERE con_id = ?");
+            q.setParameter(1, contestId);
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
+
+    public long countUserContestSolves(int userId, int contestId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(DISTINCT pr.puz_id) FROM progress pr " +
+                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "WHERE pr.user_id = ? AND p.con_id = ?");
+            q.setParameter(1, userId);
+            q.setParameter(2, contestId);
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean hasUserSolvedPuzzle(int userId, int puzId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(*) FROM progress WHERE user_id = ? AND puz_id = ?");
+            q.setParameter(1, userId);
+            q.setParameter(2, puzId);
+            return ((Number) q.getSingleResult()).longValue() > 0;
+        } finally {
+            em.close();
+        }
+    }
 }

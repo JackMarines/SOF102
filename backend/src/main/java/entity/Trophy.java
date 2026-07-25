@@ -12,8 +12,8 @@ public class Trophy {
     @Column(name = "trop_id")
     private Integer tropId;
 
-    @Column(name = "trop_image")
-    private String tropImage;
+    @Column(name = "trop_avatar")
+    private String tropAvatar;
 
     @Column(name = "trop_name")
     private String tropName;
@@ -28,8 +28,8 @@ public class Trophy {
 
     public Integer getTropId() { return tropId; }
     public void setTropId(Integer tropId) { this.tropId = tropId; }
-    public String getTropImage() { return tropImage; }
-    public void setTropImage(String tropImage) { this.tropImage = tropImage; }
+    public String getTropAvatar() { return tropAvatar; }
+    public void setTropAvatar(String tropAvatar) { this.tropAvatar = tropAvatar; }
     public String getTropName() { return tropName; }
     public void setTropName(String tropName) { this.tropName = tropName; }
     public String getTropContent() { return tropContent; }

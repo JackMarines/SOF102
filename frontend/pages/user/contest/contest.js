@@ -8,6 +8,7 @@
     var currentPage = 1;
     var currentSearch = '';
     var totalPages = 1;
+    var _isAdmin = false;
 
     // ── Contest Cards ──
 
@@ -32,9 +33,9 @@
             var box = document.createElement('div');
             box.className = 'glass-box p-3';
 
-            if (c.trophyImage) {
+            if (c.trophyAvatar) {
                 var img = document.createElement('img');
-                img.src = c.trophyImage;
+                img.src = c.trophyAvatar;
                 img.alt = c.trophyName || '';
                 img.className = 'tt-card-avatar';
                 box.appendChild(img);
@@ -78,7 +79,7 @@
 
             var problemRow = document.createElement('p');
             problemRow.className = 'tt-card-meta mb-2';
-            problemRow.innerHTML = '<i class="bi bi-code-slash"></i> ' + (c.problemCount || 0) + ' problems';
+            problemRow.innerHTML = '<i class="bi bi-code-slash"></i> ' + (c.problemCount || 0) + ' puzzles';
             box.appendChild(problemRow);
 
             card.appendChild(box);
@@ -165,6 +166,130 @@
         }
     }
 
+    // ── Admin: Create Contest ──
+
+    function showCreateButton() {
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:var(--space-16px);';
+        var btn = document.createElement('button');
+        btn.className = 'btn-devclimb primary';
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">add</span> Create Contest';
+        btn.addEventListener('click', showCreatePopup);
+        wrap.appendChild(btn);
+        gridEl.parentElement.insertBefore(wrap, gridEl);
+    }
+
+    async function showCreatePopup() {
+        var trophies = [];
+        try {
+            var tRes = await apiGet('/admin/trophies?limit=100');
+            if (tRes && tRes.data) trophies = tRes.data;
+        } catch (e) {}
+
+        Popup.open({
+            id: 'create-contest-popup',
+            size: 'md',
+            title: 'Create Contest',
+            render: function (ctx) {
+                ctx.body.style.display = 'flex';
+                ctx.body.style.flexDirection = 'column';
+                ctx.body.style.gap = 'var(--space-12px)';
+
+                var titleInput = buildInput('Title', 'text', true);
+                var contentInput = buildTextarea('Description');
+                var avatarInput = buildInput('Avatar URL', 'text', false);
+                var endDateInput = buildInput('End Date', 'datetime-local', false);
+
+                var trophyLabel = document.createElement('label');
+                trophyLabel.style.cssText = 'font-size:0.6875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);';
+                trophyLabel.textContent = 'Trophy';
+                var trophySelect = document.createElement('select');
+                trophySelect.style.cssText = 'background:var(--bg-base);border:1px solid var(--border-default);color:var(--text-primary);padding:var(--space-8px);font-family:var(--font-mono);font-size:0.8125rem;width:100%;';
+                var defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = '— None —';
+                trophySelect.appendChild(defaultOpt);
+                for (var i = 0; i < trophies.length; i++) {
+                    var opt = document.createElement('option');
+                    opt.value = trophies[i].id;
+                    opt.textContent = trophies[i].name || ('Trophy #' + trophies[i].id);
+                    trophySelect.appendChild(opt);
+                }
+                trophyLabel.appendChild(trophySelect);
+
+                ctx.body.appendChild(titleInput.el);
+                ctx.body.appendChild(contentInput.el);
+                ctx.body.appendChild(avatarInput.el);
+                ctx.body.appendChild(endDateInput.el);
+                ctx.body.appendChild(trophyLabel);
+
+                ctx.footer.style.display = '';
+                var submitBtn = document.createElement('button');
+                submitBtn.className = 'btn-devclimb primary';
+                submitBtn.textContent = 'CREATE';
+                submitBtn.addEventListener('click', async function () {
+                    var title = titleInput.input.value.trim();
+                    if (!title) { titleInput.input.focus(); return; }
+
+                    var body = { title: title };
+                    if (contentInput.input.value.trim()) body.content = contentInput.input.value.trim();
+                    if (avatarInput.input.value.trim()) body.avatar = avatarInput.input.value.trim();
+                    if (endDateInput.input.value) body.end = endDateInput.input.value.replace('T', ' ') + ':00';
+
+                    var trophyId = trophySelect.value;
+                    if (trophyId) body.trophyId = parseInt(trophyId);
+
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'CREATING...';
+                    var res = await apiPost('/admin/contest', body);
+                    if (res && res.id) {
+                        ctx.close();
+                        loadContests(1);
+                    } else {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'CREATE';
+                    }
+                });
+                ctx.footer.appendChild(submitBtn);
+
+                var cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn-devclimb secondary';
+                cancelBtn.textContent = 'CANCEL';
+                cancelBtn.addEventListener('click', function () { ctx.close(); });
+                ctx.footer.appendChild(cancelBtn);
+            }
+        });
+    }
+
+    function buildInput(label, type, required) {
+        var wrap = document.createElement('label');
+        wrap.style.cssText = 'display:flex;flex-direction:column;gap:var(--space-4px);';
+        var lbl = document.createElement('span');
+        lbl.style.cssText = 'font-size:0.6875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);';
+        lbl.textContent = label;
+        wrap.appendChild(lbl);
+        var input = document.createElement('input');
+        input.type = type;
+        input.required = required;
+        input.style.cssText = 'background:var(--bg-base);border:1px solid var(--border-default);color:var(--text-primary);padding:var(--space-8px);font-family:var(--font-mono);font-size:0.8125rem;width:100%;';
+        wrap.appendChild(input);
+        return { el: wrap, input: input };
+    }
+
+    function buildTextarea(label) {
+        var wrap = document.createElement('label');
+        wrap.style.cssText = 'display:flex;flex-direction:column;gap:var(--space-4px);';
+        var lbl = document.createElement('span');
+        lbl.style.cssText = 'font-size:0.6875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);';
+        lbl.textContent = label;
+        wrap.appendChild(lbl);
+        var textarea = document.createElement('textarea');
+        textarea.rows = 3;
+        textarea.style.cssText = 'background:var(--bg-base);border:1px solid var(--border-default);color:var(--text-primary);padding:var(--space-8px);font-family:var(--font-mono);font-size:0.8125rem;width:100%;resize:vertical;';
+        wrap.appendChild(textarea);
+        return { el: wrap, input: textarea };
+    }
+
     // ── Hall of Fame ──
 
     function renderHallOfFame(data) {
@@ -213,10 +338,8 @@
         html += '<div class="hall-fame-body">';
         for (var j = 0; j < shortest.length; j++) {
             var s = shortest[j];
-            var sRank = j === 0 ? 'gold' : j === 1 ? 'silver' : j === 2 ? 'bronze' : '';
             html += '<div class="solve-entry" data-puzzle="' + (s.puzzle || '').toLowerCase() + '" data-author="' + (s.author || '').toLowerCase() + '">';
             html += '<div class="solve-entry-top">';
-            html += '<span class="rank ' + sRank + '">#' + (j + 1) + '</span>';
             html += '<span class="solve-entry-puzzle">' + (s.puzzle || '') + '</span>';
             html += '<span class="solve-entry-chars">' + (s.chars || 0) + ' chars</span>';
             html += '</div>';
@@ -251,7 +374,22 @@
 
     // ── Init ──
 
-    loadContests(1);
-    loadHallOfFame();
+    if (typeof getMe === 'function') {
+        getMe()
+            .then(function (session) {
+                if (session && session.userIsadmin) {
+                    _isAdmin = true;
+                    showCreateButton();
+                }
+            })
+            .catch(function () {})
+            .then(function () {
+                loadContests(1);
+                loadHallOfFame();
+            });
+    } else {
+        loadContests(1);
+        loadHallOfFame();
+    }
 
 })();

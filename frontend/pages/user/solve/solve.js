@@ -314,6 +314,66 @@ async function handleSubmit() {
 
     if (result.puzzlepass) {
         localStorage.removeItem("puzzle_code_" + puzzleIdGlobal);
+
+        // Trophy award popup
+        if (result.trophyAwarded) {
+            setTimeout(function () {
+                Popup.open({
+                    id: 'trophy-popup',
+                    size: 'sm',
+                    title: null,
+                    render: function (ctx) {
+                        ctx.body.style.textAlign = 'center';
+                        ctx.body.style.padding = 'var(--space-24px)';
+
+                        var icon = document.createElement('div');
+                        icon.style.fontSize = '3rem';
+                        icon.innerHTML = '<span class="material-symbols-outlined" style="font-size:3rem;color:var(--warning);">emoji_events</span>';
+                        ctx.body.appendChild(icon);
+
+                        var heading = document.createElement('div');
+                        heading.style.cssText = 'font-family:var(--font-mono);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--warning);margin:var(--space-12px) 0 var(--space-8px);';
+                        heading.textContent = 'TROPHY EARNED';
+                        ctx.body.appendChild(heading);
+
+                        if (result.trophyAvatar) {
+                            var img = document.createElement('img');
+                            img.src = result.trophyAvatar;
+                            img.alt = result.trophyName || '';
+                            img.style.cssText = 'width:80px;height:80px;object-fit:cover;border:1px solid var(--border-default);margin:0 auto var(--space-12px);display:block;';
+                            ctx.body.appendChild(img);
+                        }
+
+                        var name = document.createElement('div');
+                        name.style.cssText = 'font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-primary);margin-bottom:var(--space-8px);';
+                        name.textContent = result.trophyName || '';
+                        ctx.body.appendChild(name);
+
+                        var msg = document.createElement('p');
+                        msg.style.cssText = 'font-size:0.8125rem;color:var(--text-muted);line-height:1.6;';
+                        msg.textContent = 'You completed all puzzles in this contest!';
+                        ctx.body.appendChild(msg);
+
+                        ctx.footer.style.display = '';
+                        var closeBtn = document.createElement('button');
+                        closeBtn.className = 'btn-devclimb secondary';
+                        closeBtn.textContent = 'CLOSE';
+                        closeBtn.addEventListener('click', function () { ctx.close(); });
+                        ctx.footer.appendChild(closeBtn);
+                    }
+                });
+            }, 300);
+        }
+
+        // Contest progress message
+        if (result.contestProgress) {
+            var cp = result.contestProgress;
+            var progressMsg = document.createElement('div');
+            progressMsg.style.cssText = 'margin-top:var(--space-16px);padding:var(--space-12px);background:var(--bg-elevated);border:1px solid var(--border-default);font-size:0.8125rem;color:var(--text-secondary);';
+            var pct = cp.total > 0 ? Math.round((cp.solved / cp.total) * 100) : 0;
+            progressMsg.innerHTML = '<span style="color:var(--accent);font-weight:600;">Contest progress:</span> ' + cp.solved + '/' + cp.total + ' puzzles completed (' + pct + '%)';
+            testCases.appendChild(progressMsg);
+        }
     }
 
     submitBtn.disabled = false;

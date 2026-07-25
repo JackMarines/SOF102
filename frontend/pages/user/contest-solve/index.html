@@ -123,6 +123,11 @@
       color: var(--success);
     }
 
+    .contest-status-badge.ended {
+      background: rgba(156, 163, 175, 0.15);
+      color: var(--text-muted);
+    }
+
     .contest-header-body {
       padding: var(--space-32px);
     }
@@ -150,6 +155,9 @@
       color: var(--accent);
       text-decoration: none;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-4px);
     }
 
     .contest-header-author:hover {
@@ -275,6 +283,11 @@
       background: var(--bg-elevated);
       color: var(--text-secondary);
       border: 1px solid var(--border-default);
+    }
+
+    .puzzle-badge.solved {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
     }
 
     .puzzle-content {
@@ -410,49 +423,6 @@
       margin-top: 1px;
     }
 
-    /* ── Leaderboard Table ── */
-
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .leaderboard-table th {
-      text-align: left;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: var(--space-12px) var(--space-12px);
-      border-bottom: 1px solid var(--border-default);
-    }
-
-    .leaderboard-table td {
-      font-size: 0.75rem;
-      padding: var(--space-12px) var(--space-12px);
-      border-bottom: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-    }
-
-    .leaderboard-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .leaderboard-table tr:hover td {
-      background: var(--bg-hover);
-    }
-
-    .leaderboard-table .rank {
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .leaderboard-table .status-ok {
-      color: var(--success);
-      font-weight: 700;
-    }
-
     .reward-card {
       background: var(--bg-elevated);
       border: 1px solid var(--border-default);
@@ -485,6 +455,18 @@
       line-height: 1.6;
     }
 
+    .reward-earned {
+      margin-top: var(--space-12px);
+      padding: 4px 12px;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      display: inline-block;
+    }
+
     /* ── Solve Button ── */
 
     .solve-btn {
@@ -492,6 +474,10 @@
       align-items: center;
       gap: var(--space-8px);
       margin-top: var(--space-24px);
+    }
+
+    .solve-btn .btn-devclimb.secondary {
+      opacity: 0.8;
     }
 
     /* ── Responsive ── */
@@ -514,202 +500,14 @@
 
       <a class="back-link" href="/frontend/pages/user/contest/index.html">
         <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
-        ← Back to Contests
+        Back to Contests
       </a>
 
       <div class="contest-detail-grid">
-
-        <!-- ═══════════ LEFT COLUMN ═══════════ -->
-        <div class="contest-detail-left">
-
-          <!-- Contest Header -->
-          <div class="contest-header">
-            <div class="contest-header-banner">
-              <img src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg" alt="Contest banner">
-              <div class="banner-gradient"></div>
-              <span class="contest-status-badge active">ACTIVE</span>
-            </div>
-            <div class="contest-header-body">
-              <h1 class="contest-header-title">KERNEL PANIC 2024</h1>
-              <div class="contest-header-meta">
-                <a class="contest-header-author" href="#">@dev_ops_pete</a>
-                <span class="contest-header-dates">
-                  <span class="material-symbols-outlined" style="font-size:0.875rem;">calendar_today</span>
-                  START: 2024-10-12 | END: 2024-10-19
-                </span>
-              </div>
-              <p class="contest-header-desc">
-                Diagnose and hotfix memory leaks in a simulated Unix environment. Time is of the essence as resources deplete. This challenge tests your knowledge of C memory management, valgrind, and system-level debugging.
-              </p>
-            </div>
-          </div>
-
-          <!-- Puzzle Section -->
-          <div class="puzzle-section">
-            <div class="puzzle-terminal-header">
-              <span>CHALLENGE_SPECIFICATION</span>
-            </div>
-            <div class="puzzle-body">
-              <div class="puzzle-title-row">
-                <h2>The OOM Reaper's Shadow</h2>
-                <span class="puzzle-badge hard">HARD</span>
-                <span class="puzzle-badge lang">C</span>
-              </div>
-
-              <div class="puzzle-content">CRITICAL SYSTEM FAILURE DETECTED.
-The Out-Of-Memory (OOM) Reaper is scanning the process list. Several high-priority daemons are reporting illegal memory access and heap fragmentation.
-
-Your task is to implement a robust memory allocator wrapper that detects and logs double-free errors, identifies memory leaks before process termination, and optimizes buffer alignment for L1 cache efficiency.
-
-1. Intercept all calls to malloc(), free(), and realloc().
-2. Maintain an internal registry of allocated blocks.
-3. Calculate the total 'leakage potential' before the simulated timer hits zero.</div>
-
-              <div class="puzzle-example-label">INPUT_EXAMPLE</div>
-              <div class="puzzle-example-block"><pre><span class="success">0x001A malloc(256)</span>
-<span class="success">0x001B malloc(512)</span>
-<span class="danger">0x001A free()</span>
-<span class="danger">0x001A free() -- TRAP</span></pre></div>
-
-              <div class="puzzle-example-label">OUTPUT_EXAMPLE</div>
-              <div class="puzzle-example-block"><pre><span class="muted">LOG [001A]: Double-free detected at T+45ms.</span>
-<span class="muted">LOG [001B]: Leak detected. 512 bytes unreferenced.</span>
-<span class="err-text">EXIT_CODE: 0xDEADBEEF</span></pre></div>
-
-              <div class="solve-btn">
-                <a class="btn-devclimb primary" href="/frontend/pages/user/solve/?id=1">
-                  <span class="material-symbols-outlined" style="font-size:1rem;">play_arrow</span>
-                  SOLVE PUZZLE
-                </a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ═══════════ RIGHT COLUMN ═══════════ -->
-        <div class="contest-detail-right">
-
-          <!-- System Info -->
-          <div class="sidebar-panel" id="panel-system">
-            <div class="puzzle-terminal-header" onclick="togglePanel('panel-system')">
-              <span>SYSTEM_INFO</span>
-              <span class="collapse-icon material-symbols-outlined">expand_more</span>
-            </div>
-            <div class="sidebar-body">
-              <div class="sidebar-row">
-                <span class="label">Duration</span>
-                <span class="value">7 days</span>
-              </div>
-              <div class="sidebar-row">
-                <span class="label">Participants</span>
-                <span class="value">156</span>
-              </div>
-              <div class="sidebar-row">
-                <span class="label">Solvers</span>
-                <span class="value">42</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Reward -->
-          <div class="sidebar-panel" id="panel-reward">
-            <div class="puzzle-terminal-header" onclick="togglePanel('panel-reward')">
-              <span>REWARD</span>
-              <span class="collapse-icon material-symbols-outlined">expand_more</span>
-            </div>
-            <div class="sidebar-body" style="text-align:center;">
-              <img class="reward-image" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg" alt="Trophy">
-              <div class="reward-name">Kernel Breaker</div>
-              <div class="reward-desc">Awarded to those who tame the OOM Reaper and restore memory integrity to the system.</div>
-            </div>
-          </div>
-
-          <!-- Leaderboard -->
-          <div class="sidebar-panel" id="panel-leaderboard">
-            <div class="puzzle-terminal-header" onclick="togglePanel('panel-leaderboard')">
-              <span>LEADERBOARD_STDOUT</span>
-              <span class="collapse-icon material-symbols-outlined">expand_more</span>
-            </div>
-            <div class="leaderboard-scroll">
-              <table class="leaderboard-table">
-                <thead>
-                  <tr>
-                    <th>RANK</th>
-                    <th>USER</th>
-                    <th>TIME</th>
-                    <th>STATUS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="rank">#01</td>
-                    <td>null_ptr</td>
-                    <td>01:12</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#02</td>
-                    <td>binary_babe</td>
-                    <td>01:45</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#03</td>
-                    <td>stack_ovrflw</td>
-                    <td>02:10</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#04</td>
-                    <td>seg_fault99</td>
-                    <td>02:34</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#05</td>
-                    <td>heap_hunter</td>
-                    <td>03:01</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#06</td>
-                    <td>valgrind_pro</td>
-                    <td>03:22</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#07</td>
-                    <td>malloc_master</td>
-                    <td>04:15</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#08</td>
-                    <td>core_dump01</td>
-                    <td>04:48</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#09</td>
-                    <td>ptr_wrapper</td>
-                    <td>05:30</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                  <tr>
-                    <td class="rank">#10</td>
-                    <td>mem_leak_fan</td>
-                    <td>06:12</td>
-                    <td class="status-ok">OK</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-
+        <div class="contest-detail-left" id="contest-left"></div>
+        <div class="contest-detail-right" id="contest-right"></div>
       </div>
+
     </div>
   </section>
 </main>
@@ -720,12 +518,11 @@ Your task is to implement a robust memory allocator wrapper that detects and log
 <script src="/frontend/components/navbar-user.js"></script>
 <script src="/frontend/components/footer.js"></script>
 <script src="/frontend/components/theme-toggle.js"></script>
-<script src="/frontend/components/scroll-reveal.js"></script>
-<script>
-  function togglePanel(id) {
-    document.getElementById(id).classList.toggle('collapsed');
-  }
-</script>
+<script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/popup.js"></script>
+<script src="/frontend/components/avatar.js"></script>
+<script src="/frontend/services/contestService.js"></script>
+<script src="contest-solve.js"></script>
 
 </body>
 </html>
