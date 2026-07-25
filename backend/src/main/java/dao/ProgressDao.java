@@ -418,4 +418,131 @@ public class ProgressDao {
             em.close();
         }
     }
+
+    // ──────────────────────────────────────────────────
+    // HALL OF FAME
+    // ──────────────────────────────────────────────────
+
+    // Top 10 fastest solvers across all puzzles
+    public List<Map<String, Object>> getFastestSolvers(int limit) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT pr.user_id, u.user_name, pr.prog_time, c.con_title, p.puz_title " +
+                "FROM progress pr " +
+                "JOIN user u ON pr.user_id = u.user_id " +
+                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "JOIN contest c ON p.con_id = c.con_id " +
+                "WHERE pr.prog_time IS NOT NULL AND u.user_isactive = true AND p.con_id IS NOT NULL " +
+                "ORDER BY pr.prog_time ASC " +
+                "LIMIT ?");
+            q.setParameter(1, limit);
+            List<Object[]> rows = q.getResultList();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (Object[] row : rows) {
+                Map<String, Object> item = new LinkedHashMap<>();
+                item.put("userId", ((Number) row[0]).intValue());
+                item.put("name", row[1]);
+                item.put("value", ((Number) row[2]).intValue() + "s");
+                item.put("contest", row[3]);
+                item.put("puzzle", row[4]);
+                result.add(item);
+            }
+            return result;
+        } finally {
+            em.close();
+        }
+    }
+
+    // Top 10 users with most contests participated
+    public List<Map<String, Object>> getMostActiveParticipants(int limit) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT pr.user_id, u.user_name, COUNT(DISTINCT p.con_id) AS contest_count " +
+                "FROM progress pr " +
+                "JOIN user u ON pr.user_id = u.user_id " +
+                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "WHERE p.con_id IS NOT NULL AND u.user_isactive = true " +
+                "GROUP BY pr.user_id, u.user_name " +
+                "ORDER BY contest_count DESC " +
+                "LIMIT ?");
+            q.setParameter(1, limit);
+            List<Object[]> rows = q.getResultList();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (Object[] row : rows) {
+                Map<String, Object> item = new LinkedHashMap<>();
+                item.put("userId", ((Number) row[0]).intValue());
+                item.put("name", row[1]);
+                item.put("value", ((Number) row[2]).intValue() + " contests");
+                result.add(item);
+            }
+            return result;
+        } finally {
+            em.close();
+        }
+    }
+
+    // Top 10 shortest solutions (by code length)
+    public List<Map<String, Object>> getShortestSolutions(int limit) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT pr.prog_id, pr.user_id, u.user_name, c.con_title, p.puz_title, " +
+                "pr.prog_code, CHAR_LENGTH(pr.prog_code) AS code_length " +
+                "FROM progress pr " +
+                "JOIN user u ON pr.user_id = u.user_id " +
+                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "JOIN contest c ON p.con_id = c.con_id " +
+                "WHERE pr.prog_code IS NOT NULL AND u.user_isactive = true AND p.con_id IS NOT NULL " +
+                "ORDER BY code_length ASC " +
+                "LIMIT ?");
+            q.setParameter(1, limit);
+            List<Object[]> rows = q.getResultList();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (Object[] row : rows) {
+                Map<String, Object> item = new LinkedHashMap<>();
+                item.put("userId", ((Number) row[1]).intValue());
+                item.put("author", row[2]);
+                item.put("contest", row[3]);
+                item.put("puzzle", row[4]);
+                item.put("code", row[5]);
+                item.put("chars", ((Number) row[6]).intValue());
+                result.add(item);
+            }
+            return result;
+        } finally {
+            em.close();
+        }
+    }
+
+    // Count distinct participants for a contest's puzzle
+    public long countContestParticipants(int contestId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(DISTINCT pr.user_id) FROM progress pr " +
+                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "WHERE p.con_id = ?");
+            q.setParameter(1, contestId);
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Count distinct solvers (passed) for a contest's puzzle
+    public long countContestSolvers(int contestId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT COUNT(DISTINCT pr.user_id) FROM progress pr " +
+                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "WHERE p.con_id = ? AND pr.prog_time IS NOT NULL");
+            q.setParameter(1, contestId);
+            return ((Number) q.getSingleResult()).longValue();
+        } finally {
+            em.close();
+        }
+    }
 }

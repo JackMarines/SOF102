@@ -26,7 +26,7 @@
             <property name="jakarta.persistence.jdbc.user"
                 value="avnadmin" />
             <property name="jakarta.persistence.jdbc.password"
-                value="DB_PASSWOR" />
+                value="DB_PASSWORD" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
