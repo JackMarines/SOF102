@@ -77,6 +77,8 @@ public class PublicContestController extends HttpServlet {
 
             entity.User author = c.getConAuthorId() != null ? userDao.findById(c.getConAuthorId()) : null;
             item.put("authorName", author != null ? author.getUserName() : "Unknown");
+            item.put("authorAvatar", author != null ? author.getUserAvatar() : null);
+            item.put("authorIsAdmin", author != null && Boolean.TRUE.equals(author.getUserIsadmin()));
 
             Trophy t = c.getTrophy();
             if (t != null) {

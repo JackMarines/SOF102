@@ -1,0 +1,262 @@
+/* ═══════════════════════════════════════════════
+   CONTEST PAGE — Hall of Fame + Solve Entries
+   ═══════════════════════════════════════════════ */
+
+.hall-fame-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-24px);
+}
+
+.hall-fame-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hall-fame-card.shortest-card {
+  max-height: 690px;
+}
+
+.hall-fame-card.shortest-card .hall-fame-body {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hover) transparent;
+}
+
+.hall-fame-card.shortest-card .hall-fame-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.hall-fame-card.shortest-card .hall-fame-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hall-fame-card.shortest-card .hall-fame-body::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+}
+
+.solve-search {
+  padding: var(--space-12px) var(--space-24px);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.solve-search input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 6px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 150ms ease-out;
+}
+
+.solve-search input::placeholder {
+  color: var(--text-faint);
+}
+
+.solve-search input:focus {
+  border-color: var(--border-hover);
+}
+
+.hall-fame-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12px);
+  padding: var(--space-24px);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.hall-fame-header .trophy-icon {
+  font-size: 1.5rem;
+  color: var(--warning);
+}
+
+.hall-fame-header h3 {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.hall-fame-entry {
+  display: flex;
+  align-items: center;
+  padding: var(--space-12px) var(--space-24px);
+  border-bottom: 1px solid var(--border-subtle);
+  gap: var(--space-12px);
+  transition: background 150ms ease-out;
+  flex: none;
+}
+
+.hall-fame-entry:hover {
+  background: var(--bg-hover);
+}
+
+.hall-fame-entry:last-child {
+  border-bottom: none;
+}
+
+.hall-fame-entry .rank {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 24px;
+}
+
+.hall-fame-entry .rank.gold { color: #fbbf24; }
+.hall-fame-entry .rank.silver { color: #94a3b8; }
+.hall-fame-entry .rank.bronze { color: #d97706; }
+
+.hall-fame-entry .avatar-sm {
+  width: 28px;
+  height: 28px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.hall-fame-entry .entry-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.hall-fame-entry .entry-value {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border-default);
+  margin: var(--space-64px) 0;
+}
+
+/* ── Solve Entries (Shortest Solves board) ── */
+
+.solve-entry {
+  padding: var(--space-12px) var(--space-24px);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 150ms ease-out;
+}
+
+.solve-entry:hover {
+  background: var(--bg-hover);
+}
+
+.solve-entry:last-child {
+  border-bottom: none;
+}
+
+.solve-entry-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12px);
+  margin-bottom: var(--space-4px);
+}
+
+.solve-entry-top .rank {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 24px;
+}
+
+.solve-entry-top .rank.gold { color: #fbbf24; }
+.solve-entry-top .rank.silver { color: #94a3b8; }
+.solve-entry-top .rank.bronze { color: #d97706; }
+
+.solve-entry-puzzle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.solve-entry-chars {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.solve-entry-author {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-8px);
+}
+
+.solve-entry-code {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-8px) var(--space-12px);
+  white-space: pre;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hover) transparent;
+}
+
+.solve-entry-code::-webkit-scrollbar {
+  width: 4px;
+}
+
+.solve-entry-code::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.solve-entry-code::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+}
+
+.solve-entry-locked {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--text-faint);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-8px) var(--space-12px);
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 1024px) {
+  .hall-fame-grid {
+    grid-template-columns: 1fr;
+  }
+}

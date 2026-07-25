@@ -16,7 +16,7 @@ public class ContestDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             StringBuilder jpql = new StringBuilder(
-                "SELECT c FROM Contest c JOIN FETCH c.trophy WHERE 1=1");
+                "SELECT DISTINCT c FROM Contest c JOIN FETCH c.trophy LEFT JOIN FETCH c.puzzles WHERE 1=1");
             if (search != null && !search.trim().isEmpty()) {
                 jpql.append(" AND LOWER(c.conTitle) LIKE LOWER(:search)");
             }
@@ -58,7 +58,7 @@ public class ContestDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             TypedQuery<Contest> query = em.createQuery(
-                "SELECT c FROM Contest c JOIN FETCH c.trophy WHERE c.conId = :id",
+                "SELECT DISTINCT c FROM Contest c JOIN FETCH c.trophy LEFT JOIN FETCH c.puzzles WHERE c.conId = :id",
                 Contest.class);
             query.setParameter("id", id);
             List<Contest> result = query.getResultList();
