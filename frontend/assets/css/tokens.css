@@ -1,0 +1,102 @@
+:root {
+  --bg-base: #0a0a0a;
+  --bg-surface: #131313;
+  --bg-elevated: #1c1b1b;
+  --bg-deep: #0a0a0a;
+  --bg-hover: #1c1b1b;
+  --bg-active: #2a2a2a;
+
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-focus: #a4c9ff;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  --text-primary: #e5e2e1;
+  --text-secondary: #c1c7d3;
+  --text-muted: #888888;
+  --text-faint: rgba(255, 255, 255, 0.3);
+  --text-on-accent: #001c39;
+  --text-on-accent-dark: #0a0a0a;
+
+  --accent: #a4c9ff;
+  --accent-solid: #60a5fa;
+  --accent-hover: #d4e3ff;
+  --accent-dim: rgba(164, 201, 255, 0.1);
+  --accent-glow: rgba(164, 201, 255, 0.12);
+
+  --success: #28c244;
+  --error: #ffb4ab;
+  --warning: #fabd34;
+
+  --radius-default: 0px;
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --space-4px: 0.25rem;
+  --space-8px: 0.5rem;
+  --space-12px: 0.75rem;
+  --space-16px: 1rem;
+  --space-24px: 1.5rem;
+  --space-32px: 2rem;
+  --space-48px: 3rem;
+  --space-64px: 4rem;
+  --space-96px: 6rem;
+
+  --nav-height: 64px;
+
+  --border-input: var(--border-default);
+  --bg-input: var(--bg-surface);
+  --text-table-header: var(--accent);
+  --header-border: var(--border-default);
+  --row-border: var(--border-subtle);
+  --row-hover: var(--bg-hover);
+  --bg-secondary: var(--bg-elevated);
+}
+
+html.light-mode {
+  --bg-base: #f5f5f5;
+  --bg-surface: #ffffff;
+  --bg-elevated: #eeeeee;
+  --bg-deep: #f0f0f0;
+  --bg-hover: #e5e5e5;
+  --bg-active: #d4d4d4;
+
+  --border-default: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.2);
+  --border-focus: #2563eb;
+  --border-subtle: rgba(0, 0, 0, 0.05);
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #525252;
+  --text-muted: #888888;
+  --text-faint: rgba(0, 0, 0, 0.3);
+  --text-on-accent: #ffffff;  
+  --text-on-accent-dark: #ffffff;
+
+  --accent: #2563eb;
+  --accent-solid: #3b82f6;
+  --accent-hover: #1d4ed8;
+  --accent-dim: rgba(37, 99, 235, 0.08);
+  --accent-glow: rgba(37, 99, 235, 0.1);
+
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #ca8a04;
+}
+
+/* ── Scanline overlay (CRT effect) ── */
+
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 4px, 3px 100%;
+  opacity: 0.12;
+}

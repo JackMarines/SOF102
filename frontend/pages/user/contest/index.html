@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Contests</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
+
+  <script>
+    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+  </script>
+
+  <style>
+    .contest-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-24px);
+      margin-bottom: var(--space-32px);
+    }
+
+    .contest-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      overflow: hidden;
+      transition: border-color 150ms ease-out, transform 150ms ease-out;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contest-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .contest-card-header {
+      height: 160px;
+      background: var(--bg-elevated);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border-default);
+      overflow: hidden;
+    }
+
+    .contest-card-header img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .contest-card-header .trophy-icon {
+      font-size: 3rem;
+      color: var(--warning);
+    }
+
+    .contest-status-badge {
+      position: absolute;
+      top: var(--space-12px);
+      left: var(--space-12px);
+      padding: 3px 10px;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: var(--radius-sm);
+    }
+
+    .contest-status-badge.upcoming {
+      background: rgba(164, 201, 255, 0.15);
+      color: var(--accent);
+    }
+
+    .contest-status-badge.active {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+    }
+
+    .contest-status-badge.ended {
+      background: rgba(156, 163, 175, 0.15);
+      color: var(--text-muted);
+    }
+
+    .contest-card-body {
+      padding: var(--space-24px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contest-card-title {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      margin-bottom: var(--space-8px);
+    }
+
+    .contest-card-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-8px);
+      display: flex;
+      align-items: center;
+      gap: var(--space-4px);
+    }
+
+    .contest-card-author {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-12px);
+      display: flex;
+      align-items: center;
+      gap: var(--space-4px);
+    }
+
+    .contest-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: var(--space-12px);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .contest-card-meta .countdown {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .contest-card-meta .problem-count {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-4px);
+    }
+
+    .contest-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-8px);
+      margin-top: var(--space-16px);
+    }
+
+    .contest-pagination button {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border: 1px solid var(--border-default);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: border-color 150ms ease-out, color 150ms ease-out;
+    }
+
+    .contest-pagination button:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .contest-pagination button.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .contest-pagination button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .hall-fame-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-24px);
+    }
+
+    .hall-fame-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hall-fame-card.shortest-card {
+      max-height: 690px;
+    }
+
+    .hall-fame-card.shortest-card .hall-fame-body {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-hover) transparent;
+    }
+
+    .hall-fame-card.shortest-card .hall-fame-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .hall-fame-card.shortest-card .hall-fame-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .hall-fame-card.shortest-card .hall-fame-body::-webkit-scrollbar-thumb {
+      background: var(--border-hover);
+    }
+
+    .solve-search {
+      padding: var(--space-12px) var(--space-24px);
+      border-bottom: 1px solid var(--border-default);
+      flex-shrink: 0;
+    }
+
+    .solve-search input {
+      width: 100%;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      padding: 6px 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 150ms ease-out;
+    }
+
+    .solve-search input::placeholder {
+      color: var(--text-faint);
+    }
+
+    .solve-search input:focus {
+      border-color: var(--border-hover);
+    }
+
+    .hall-fame-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-12px);
+      padding: var(--space-24px);
+      border-bottom: 1px solid var(--border-default);
+      flex-shrink: 0;
+    }
+
+    .hall-fame-header .trophy-icon {
+      font-size: 1.5rem;
+      color: var(--warning);
+    }
+
+    .hall-fame-header h3 {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+    }
+
+    .hall-fame-entry {
+      display: flex;
+      align-items: center;
+      padding: var(--space-12px) var(--space-24px);
+      border-bottom: 1px solid var(--border-subtle);
+      gap: var(--space-12px);
+      transition: background 150ms ease-out;
+      flex: 1;
+    }
+
+    .hall-fame-entry:hover {
+      background: var(--bg-hover);
+    }
+
+    .hall-fame-entry:last-child {
+      border-bottom: none;
+    }
+
+    .hall-fame-entry .rank {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 24px;
+    }
+
+    .hall-fame-entry .rank.gold { color: #fbbf24; }
+    .hall-fame-entry .rank.silver { color: #94a3b8; }
+    .hall-fame-entry .rank.bronze { color: #d97706; }
+
+    .hall-fame-entry .avatar-sm {
+      width: 28px;
+      height: 28px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .hall-fame-entry .entry-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .hall-fame-entry .entry-value {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border-default);
+      margin: var(--space-64px) 0;
+    }
+
+    .solve-entry {
+      padding: var(--space-12px) var(--space-24px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background 150ms ease-out;
+    }
+
+    .solve-entry:hover {
+      background: var(--bg-hover);
+    }
+
+    .solve-entry:last-child {
+      border-bottom: none;
+    }
+
+    .solve-entry-top {
+      display: flex;
+      align-items: center;
+      gap: var(--space-12px);
+      margin-bottom: var(--space-4px);
+    }
+
+    .solve-entry-top .rank {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 24px;
+    }
+
+    .solve-entry-top .rank.gold { color: #fbbf24; }
+    .solve-entry-top .rank.silver { color: #94a3b8; }
+    .solve-entry-top .rank.bronze { color: #d97706; }
+
+    .solve-entry-puzzle {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .solve-entry-chars {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .solve-entry-author {
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-8px);
+    }
+
+    .solve-entry-code {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: var(--space-8px) var(--space-12px);
+      white-space: pre;
+      max-height: 120px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-hover) transparent;
+    }
+
+    .solve-entry-code::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .solve-entry-code::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .solve-entry-code::-webkit-scrollbar-thumb {
+      background: var(--border-hover);
+    }
+
+    .solve-entry-locked {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--text-faint);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: var(--space-8px) var(--space-12px);
+      font-style: italic;
+    }
+
+    @media (max-width: 1024px) {
+      .contest-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hall-fame-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .contest-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body data-auth="user">
+
+<div class="scanline"></div>
+<div id="navbar"></div>
+
+<main style="padding-top: var(--nav-height);">
+  <section class="section-page">
+    <div class="container-page">
+
+      <h1 class="page-title">Contests</h1>
+
+      <div class="contest-grid" id="contest-grid"></div>
+
+      <div class="contest-pagination" id="contest-pagination"></div>
+
+      <hr class="section-divider">
+
+      <div id="hall-of-fame-section">
+        <h2 class="content-section-heading">Hall of Fame</h2>
+        <div class="hall-fame-grid" id="hall-of-fame"></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer"></div>
+
+<script src="/frontend/utils/core.js"></script>
+<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/scroll-reveal.js"></script>
+<script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/avatar.js"></script>
+<script>
+  const contests = [
+    { id: 1, title: "Speed Sprint #1", status: "upcoming", author: "admin", time: "Mar 15, 2026 14:00", countdown: "Starts in 2 days", problems: 5, trophy: "Speed" },
+    { id: 2, title: "Algorithm Arena", status: "active", author: "alice", time: "Mar 10, 2026 10:00", countdown: "Ends in 4h 23m", problems: 8, trophy: "Logic" },
+    { id: 3, title: "Code Marathon", status: "ended", author: "bob", time: "Mar 1, 2026 09:00", countdown: "Completed", problems: 12, trophy: "Endurance" },
+    { id: 4, title: "Debug Duel", status: "active", author: "charlie", time: "Mar 12, 2026 16:00", countdown: "Ends in 1d 8h", problems: 4, trophy: "Debug" },
+    { id: 5, title: "Swift Solutions", status: "upcoming", author: "diana", time: "Mar 20, 2026 12:00", countdown: "Starts in 7 days", problems: 6, trophy: "Swift" },
+    { id: 6, title: "Night Owl Challenge", status: "ended", author: "eve", time: "Feb 28, 2026 22:00", countdown: "Completed", problems: 10, trophy: "Night" }
+  ];
+
+  const hallOfFame = {
+    speedChampions: [
+      { name: "alice", value: "12.4s", contest: "Speed Sprint #1" },
+      { name: "bob", value: "14.2s", contest: "Algorithm Arena" },
+      { name: "charlie", value: "15.8s", contest: "Debug Duel" },
+      { name: "diana", value: "16.1s", contest: "Speed Sprint #1" },
+      { name: "eve", value: "17.5s", contest: "Code Marathon" },
+      { name: "frank", value: "18.9s", contest: "Night Owl Challenge" },
+      { name: "grace", value: "19.3s", contest: "Algorithm Arena" },
+      { name: "hank", value: "20.1s", contest: "Swift Solutions" },
+      { name: "iris", value: "21.4s", contest: "Debug Duel" },
+      { name: "jack", value: "22.7s", contest: "Speed Sprint #1" }
+    ],
+    contestVeterans: [
+      { name: "alice", value: "24 contests" },
+      { name: "bob", value: "21 contests" },
+      { name: "charlie", value: "19 contests" },
+      { name: "diana", value: "17 contests" },
+      { name: "eve", value: "15 contests" },
+      { name: "frank", value: "12 contests" },
+      { name: "grace", value: "10 contests" },
+      { name: "hank", value: "9 contests" },
+      { name: "iris", value: "8 contests" },
+      { name: "jack", value: "7 contests" }
+    ],
+    shortestSolves: [
+      { puzzle: "FizzBuzz", author: "alice", code: "def f(n):\n if n%15==0: return 'FizzBuzz'\n if n%3==0: return 'Fizz'\n if n%5==0: return 'Buzz'\n return str(n)", chars: 87, solved: true },
+      { puzzle: "Two Sum", author: "bob", code: "def t(a,t):\n for i in range(len(a)):\n  for j in range(i+1,len(a)):\n   if a[i]+a[j]==t: return [i,j]", chars: 94, solved: true },
+      { puzzle: "Palindrome", author: "charlie", code: null, chars: 29, solved: false },
+      { puzzle: "Fibonacci", author: "diana", code: "def f(n):\n if n<=1: return n\n return f(n-1)+f(n-2)", chars: 52, solved: true },
+      { puzzle: "Factorial", author: "eve", code: null, chars: 49, solved: false },
+      { puzzle: "GCD", author: "frank", code: "def g(a,b):\n while b: a,b=b,a%b\n return a", chars: 41, solved: true },
+      { puzzle: "Reverse", author: "grace", code: null, chars: 35, solved: false },
+      { puzzle: "Max Subarray", author: "hank", code: "def ms(a):\n m=c=a[0]\n for x in a[1:]:\n  c=max(x,c+x); m=max(m,c)\n return m", chars: 62, solved: true },
+      { puzzle: "Anagram", author: "iris", code: null, chars: 44, solved: false },
+      { puzzle: "Queue Stack", author: "jack", code: "def q():\n self.a,self.b=[],[]", chars: 28, solved: true }
+    ]
+  };
+
+  function renderContests() {
+    const grid = document.getElementById('contest-grid');
+    grid.innerHTML = contests.map(c => `
+      <div class="contest-card" onclick="window.location.href='/frontend/pages/user/contest-solve/?id=${c.id}'">
+        <div class="contest-card-header">
+          <span class="material-symbols-outlined trophy-icon">emoji_events</span>
+          <span class="contest-status-badge ${c.status}">${c.status}</span>
+        </div>
+        <div class="contest-card-body">
+          <div class="contest-card-title">${c.title}</div>
+          <div class="contest-card-time">
+            <span class="material-symbols-outlined" style="font-size:0.875rem;">schedule</span>
+            ${c.time}
+          </div>
+          <div class="contest-card-author">
+            <span class="material-symbols-outlined" style="font-size:0.875rem;">person</span>
+            ${c.author}
+          </div>
+          <div class="contest-card-meta">
+            <span class="countdown">${c.countdown}</span>
+            <span class="problem-count">
+              <span class="material-symbols-outlined" style="font-size:0.875rem;">code</span>
+              ${c.problems} problems
+            </span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderPagination() {
+    const container = document.getElementById('contest-pagination');
+    container.innerHTML = `
+      <button disabled>&laquo;</button>
+      <button class="active">1</button>
+      <button>&raquo;</button>
+    `;
+  }
+
+  function renderHallOfFame() {
+    const container = document.getElementById('hall-of-fame');
+
+    const standardBoards = [
+      { title: "Speed Champions", icon: "speed", data: hallOfFame.speedChampions },
+      { title: "Contest Veterans", icon: "flag", data: hallOfFame.contestVeterans }
+    ];
+
+    let html = standardBoards.map(board => `
+      <div class="hall-fame-card">
+        <div class="hall-fame-header">
+          <span class="material-symbols-outlined trophy-icon">${board.icon}</span>
+          <h3>${board.title}</h3>
+        </div>
+        ${board.data.map((entry, i) => `
+          <div class="hall-fame-entry">
+            <span class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">#${i + 1}</span>
+            <div class="avatar-sm"><span class="material-symbols-outlined" style="font-size:0.875rem;">person</span></div>
+            <div style="flex:1;min-width:0;">
+              <span class="entry-name">${entry.name}</span>
+              ${entry.contest ? '<div style="font-size:0.625rem;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + entry.contest + '</div>' : ''}
+            </div>
+            <span class="entry-value">${entry.value}</span>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+
+    html += `
+      <div class="hall-fame-card shortest-card">
+        <div class="hall-fame-header">
+          <span class="material-symbols-outlined trophy-icon">code</span>
+          <h3>Shortest Solves</h3>
+        </div>
+        <div class="solve-search">
+          <input type="text" id="solve-search-input" placeholder="Search puzzles...">
+        </div>
+        <div class="hall-fame-body">
+          ${hallOfFame.shortestSolves.map((entry, i) => `
+            <div class="solve-entry" data-puzzle="${entry.puzzle.toLowerCase()}" data-author="${entry.author.toLowerCase()}">
+              <div class="solve-entry-top">
+                <span class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">#${i + 1}</span>
+                <span class="solve-entry-puzzle">${entry.puzzle}</span>
+                <span class="solve-entry-chars">${entry.chars} chars</span>
+              </div>
+              <div class="solve-entry-author">${entry.author}</div>
+              ${entry.solved
+                ? '<pre class="solve-entry-code">' + entry.code + '</pre>'
+                : '<div class="solve-entry-locked">Solve to see the full solution</div>'
+              }
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  renderContests();
+  renderPagination();
+  renderHallOfFame();
+
+  document.getElementById('solve-search-input').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('.solve-entry').forEach(el => {
+      const match = !q || el.dataset.puzzle.includes(q) || el.dataset.author.includes(q);
+      el.style.display = match ? '' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>
