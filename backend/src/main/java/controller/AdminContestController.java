@@ -3,8 +3,10 @@ package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.ContestDao;
+import dao.PuzzleDao;
 import dao.TrophyDao;
 import entity.Contest;
+import entity.Puzzle;
 import entity.Trophy;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,6 +22,7 @@ import java.util.*;
 public class AdminContestController extends HttpServlet {
 
     private ContestDao contestDao = new ContestDao();
+    private PuzzleDao puzzleDao = new PuzzleDao();
     private TrophyDao trophyDao = new TrophyDao();
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -135,7 +138,26 @@ public class AdminContestController extends HttpServlet {
             data.put("avatar", c.getConAvatar());
             data.put("trophyId", c.getTrophy() != null ? c.getTrophy().getTropId() : null);
             data.put("trophyName", c.getTrophy() != null ? c.getTrophy().getTropName() : null);
+            data.put("trophyAvatar", c.getTrophy() != null ? c.getTrophy().getTropAvatar() : null);
+            data.put("trophyContent", c.getTrophy() != null ? c.getTrophy().getTropContent() : null);
             data.put("authorId", c.getConAuthorId());
+
+            List<Puzzle> puzzles = c.getPuzzles();
+            List<Map<String, Object>> puzzleList = new ArrayList<>();
+            if (puzzles != null) {
+                for (Puzzle p : puzzles) {
+                    Map<String, Object> pItem = new HashMap<>();
+                    pItem.put("id", p.getPuzId());
+                    pItem.put("title", p.getPuzTitle());
+                    pItem.put("content", p.getPuzContent());
+                    pItem.put("difficulty", p.getPuzDifficulty());
+                    pItem.put("score", p.getPuzScore());
+                    if (p.getLanguage() != null) pItem.put("language", p.getLanguage().getLangName());
+                    puzzleList.add(pItem);
+                }
+            }
+            data.put("puzzles", puzzleList);
+
             ResponseUtil.success(resp, data);
         } catch (NumberFormatException e) {
             ResponseUtil.error(resp, 400, "Invalid id");
@@ -155,9 +177,11 @@ public class AdminContestController extends HttpServlet {
         contest.setConTitle(title.trim());
         contest.setConContent((String) body.get("content"));
         contest.setConAvatar((String) body.get("avatar"));
-        contest.setConStart(parseTimestamp(body.get("start")));
+        java.sql.Timestamp startTs = parseTimestamp(body.get("start"));
+        contest.setConStart(startTs != null ? startTs : new java.sql.Timestamp(System.currentTimeMillis()));
         contest.setConEnd(parseTimestamp(body.get("end")));
-        if (body.get("authorId") != null) contest.setConAuthorId(((Number) body.get("authorId")).intValue());
+        entity.User sessionUser = (entity.User) req.getSession().getAttribute("user");
+        if (sessionUser != null) contest.setConAuthorId(sessionUser.getUserId());
 
         Object trophyId = body.get("trophyId");
         if (trophyId != null) {
@@ -166,6 +190,7 @@ public class AdminContestController extends HttpServlet {
         }
 
         contestDao.create(contest);
+        syncPuzzles(contest.getConId(), body.get("puzzleIds"));
 
         Map<String, Object> data = new HashMap<>();
         data.put("id", contest.getConId());
@@ -206,6 +231,9 @@ public class AdminContestController extends HttpServlet {
             }
 
             contestDao.update(contest);
+            if (body.containsKey("puzzleIds")) {
+                syncPuzzles(cid, body.get("puzzleIds"));
+            }
 
             Map<String, Object> data = new HashMap<>();
             data.put("message", "Contest updated");
@@ -224,6 +252,21 @@ public class AdminContestController extends HttpServlet {
             return new Timestamp(((Number) value).longValue());
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void syncPuzzles(int contestId, Object puzzleIdsObj) {
+        puzzleDao.unlinkAllFromContest(contestId);
+        if (puzzleIdsObj instanceof List) {
+            Contest contest = contestDao.findById(contestId);
+            for (Object pid : (List<?>) puzzleIdsObj) {
+                Puzzle p = puzzleDao.findById(((Number) pid).intValue());
+                if (p != null) {
+                    p.setContest(contest);
+                    puzzleDao.update(p);
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

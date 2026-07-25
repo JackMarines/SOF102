@@ -296,6 +296,30 @@
         renderHeader(data);
         renderPuzzles(data.puzzles);
         renderSidebar(data);
+
+        if (typeof getMe === 'function') {
+            try {
+                var session = await getMe();
+                if (session && session.userIsadmin) {
+                    renderAdminBar(id);
+                }
+            } catch (e) {}
+        }
+    }
+
+    function renderAdminBar(contestId) {
+        var bar = document.createElement('div');
+        bar.style.cssText = 'display:flex;gap:var(--space-8px);margin-bottom:var(--space-16px);';
+        var btn = document.createElement('a');
+        btn.className = 'btn-devclimb secondary';
+        btn.href = '/frontend/pages/admin/contest-create/index.html?id=' + contestId;
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">edit</span> EDIT CONTEST';
+        btn.style.textDecoration = 'none';
+        btn.style.display = 'inline-flex';
+        btn.style.alignItems = 'center';
+        bar.appendChild(btn);
+        var grid = leftEl.parentElement;
+        grid.parentElement.insertBefore(bar, grid);
     }
 
     init();

@@ -97,4 +97,26 @@ public class R2Util {
 
         return publicUrlBase + "/" + key;
     }
+
+    // Upload ảnh contest avatar lên R2, trả về URL public
+    public static String uploadContestAvatar(InputStream file, long size, String contentType) {
+        if (client == null) return null;
+
+        String ext;
+        if ("image/png".equals(contentType)) ext = ".png";
+        else if ("image/gif".equals(contentType)) ext = ".gif";
+        else ext = ".jpg";
+
+        String key = "contest-avatar/" + System.currentTimeMillis() + ext;
+
+        client.putObject(
+            PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentType(contentType)
+                .build(),
+            RequestBody.fromInputStream(file, size));
+
+        return publicUrlBase + "/" + key;
+    }
 }

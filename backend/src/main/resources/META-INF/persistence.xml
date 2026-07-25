@@ -17,6 +17,7 @@
         <class>entity.Appeal</class>
         <class>entity.Trophy</class>
         <class>entity.Contest</class>
+    <class>entity.UserTrophy</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"

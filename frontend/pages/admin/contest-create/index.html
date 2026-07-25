@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DEVCLIMB | Contest</title>
+  <title>DEVCLIMB | Create Contest</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="stylesheet" href="/frontend/components/tables.css">
   <link rel="stylesheet" href="/frontend/assets/css/contestMERGELATER.css">
   <link rel="icon" href="/frontend/assets/images/icon.png">
 
@@ -30,8 +31,21 @@
 
       <a class="back-link" href="/frontend/pages/user/contest/index.html">
         <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
-        Back to Contests
+        ← Back to Contests
       </a>
+
+      <div class="save-bar">
+        <button class="btn-devclimb danger" id="delete-btn" style="display:none;">
+          <span class="material-symbols-outlined" style="font-size:1rem;">delete</span>
+          DELETE CONTEST
+        </button>
+        <div class="save-bar-spacer"></div>
+        <button class="btn-devclimb secondary" id="cancel-btn">CANCEL</button>
+        <button class="btn-devclimb primary" id="save-btn">
+          <span class="material-symbols-outlined" style="font-size:1rem;">add</span>
+          CREATE CONTEST
+        </button>
+      </div>
 
       <div class="contest-detail-grid">
         <div class="contest-detail-left" id="contest-left"></div>
@@ -44,6 +58,9 @@
 
 <div id="footer"></div>
 
+<input type="file" id="banner-file-input" accept="image/*" style="display:none;">
+<input type="file" id="trophy-avatar-input" accept="image/*" style="display:none;">
+
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-user.js"></script>
 <script src="/frontend/components/footer.js"></script>
@@ -51,8 +68,8 @@
 <script src="/frontend/components/spinner.js"></script>
 <script src="/frontend/components/popup.js"></script>
 <script src="/frontend/components/avatar.js"></script>
-<script src="/frontend/services/contestService.js"></script>
-<script src="contest-solve.js"></script>
+<script src="/frontend/components/puzzle-table.js"></script>
+<script src="contest-create.js"></script>
 
 </body>
 </html>

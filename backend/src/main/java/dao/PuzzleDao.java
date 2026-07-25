@@ -133,4 +133,18 @@ public class PuzzleDao {
             em.close();
         }
     }
+
+    // Unlink all puzzles from a contest
+    public void unlinkAllFromContest(int contestId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createQuery("UPDATE Puzzle p SET p.contest = null WHERE p.contest.conId = :cid")
+              .setParameter("cid", contestId)
+              .executeUpdate();
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 }
