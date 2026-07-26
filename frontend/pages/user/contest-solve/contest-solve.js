@@ -211,6 +211,11 @@
                 earned.className = 'reward-earned';
                 earned.textContent = 'TROPHY EARNED';
                 rewardBody.appendChild(earned);
+            } else if (c.status === 'ended') {
+                var ended = document.createElement('div');
+                ended.className = 'reward-ended';
+                ended.textContent = 'CONTEST ENDED';
+                rewardBody.appendChild(ended);
             }
 
             rightEl.appendChild(rewardPanel);

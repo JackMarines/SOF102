@@ -303,26 +303,30 @@ public class SubmissionController extends HttpServlet {
             logger.info("Puzzle passed: userId={}, puzId={}, passed={}/{}",
                 userId, puzId, passed, testcases.size());
 
-            // Trophy award logic
+            // Trophy award logic — only if contest hasn't ended
             Puzzle puzzle = puzzleDao.findById(puzId);
             entity.Contest contest = (puzzle != null) ? puzzle.getContest() : null;
             if (contest != null && contest.getTrophy() != null) {
-                int trophyId = contest.getTrophy().getTropId();
-                if (!userTrophyDao.hasTrophy(userId, trophyId)) {
-                    long total = progressDao.countContestPuzzles(contest.getConId());
-                    long solved = progressDao.countUserContestSolves(userId, contest.getConId());
-                    if (total > 0 && total == solved) {
-                        userTrophyDao.award(userId, trophyId);
-                        response.put("trophyAwarded", true);
-                        response.put("trophyName", contest.getTrophy().getTropName());
-                        response.put("trophyAvatar", contest.getTrophy().getTropAvatar());
-                        logger.info("Trophy awarded: userId={}, trophyId={}", userId, trophyId);
-                    } else {
-                        Map<String, Object> progress = new HashMap<>();
-                        progress.put("solved", solved);
-                        progress.put("total", total);
-                        progress.put("contestId", contest.getConId());
-                        response.put("contestProgress", progress);
+                boolean contestEnded = contest.getConEnd() != null
+                    && System.currentTimeMillis() > contest.getConEnd().getTime();
+                if (!contestEnded) {
+                    int trophyId = contest.getTrophy().getTropId();
+                    if (!userTrophyDao.hasTrophy(userId, trophyId)) {
+                        long total = progressDao.countContestPuzzles(contest.getConId());
+                        long solved = progressDao.countUserContestSolves(userId, contest.getConId());
+                        if (total > 0 && total == solved) {
+                            userTrophyDao.award(userId, trophyId);
+                            response.put("trophyAwarded", true);
+                            response.put("trophyName", contest.getTrophy().getTropName());
+                            response.put("trophyAvatar", contest.getTrophy().getTropAvatar());
+                            logger.info("Trophy awarded: userId={}, trophyId={}", userId, trophyId);
+                        } else {
+                            Map<String, Object> progress = new HashMap<>();
+                            progress.put("solved", solved);
+                            progress.put("total", total);
+                            progress.put("contestId", contest.getConId());
+                            response.put("contestProgress", progress);
+                        }
                     }
                 }
             }

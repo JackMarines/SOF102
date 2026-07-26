@@ -189,7 +189,7 @@
         var html = '';
 
         var standardBoards = [
-            { title: 'Speed Champions', icon: 'speed', entries: data.speedChampions || [], valueKey: 'value', extraKey: 'contest' },
+            { title: 'Speed Champions', icon: 'speed', entries: data.speedChampions || [], valueKey: 'value', extraKey: 'puzzle' },
             { title: 'Contest Veterans', icon: 'flag', entries: data.contestVeterans || [], valueKey: 'value', extraKey: null }
         ];
 
@@ -205,11 +205,11 @@
                 var rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
                 html += '<div class="hall-fame-entry">';
                 html += '<span class="rank ' + rankClass + '">#' + (i + 1) + '</span>';
-                html += '<div class="avatar-sm"><span class="material-symbols-outlined" style="font-size:0.875rem;">person</span></div>';
+                html += '<div class="avatar-sm" data-idx="' + i + '" data-board="' + b + '"></div>';
                 html += '<div style="flex:1;min-width:0;">';
                 html += '<span class="entry-name">' + (e.name || '') + '</span>';
-                if (board.extraKey && e[board.extraKey]) {
-                    html += '<div style="font-size:0.625rem;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + e[board.extraKey] + '</div>';
+                if (board.extraKey) {
+                    html += '<div style="font-size:0.625rem;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (e[board.extraKey] || '\u00A0') + '</div>';
                 }
                 html += '</div>';
                 html += '<span class="entry-value">' + (e.value || '') + '</span>';
@@ -235,9 +235,12 @@
             html += '<span class="solve-entry-puzzle">' + (s.puzzle || '') + '</span>';
             html += '<span class="solve-entry-chars">' + (s.chars || 0) + ' chars</span>';
             html += '</div>';
-            html += '<div class="solve-entry-author">' + (s.author || '') + '</div>';
+            html += '<div class="solve-entry-author" data-idx="' + j + '">';
+            html += '<span class="solve-author-avatar" data-idx="' + j + '"></span>';
+            html += '<span>' + (s.author || '') + '</span>';
+            html += '</div>';
             if (s.code) {
-                html += '<pre class="solve-entry-code">' + s.code + '</pre>';
+                html += '<pre class="solve-entry-code">' + s.code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>';
             } else {
                 html += '<div class="solve-entry-locked">Solve to see the full solution</div>';
             }
@@ -246,6 +249,27 @@
         html += '</div></div>';
 
         hallEl.innerHTML = html;
+
+        // Post-process: render avatars via Avatar.render()
+        var avatarSlots = hallEl.querySelectorAll('.avatar-sm');
+        avatarSlots.forEach(function (slot) {
+            var idx = parseInt(slot.dataset.idx);
+            var bIdx = parseInt(slot.dataset.board);
+            var entry = standardBoards[bIdx].entries[idx];
+            if (entry) {
+                slot.innerHTML = '';
+                slot.appendChild(Avatar.render({ size: 28, avatar: entry.avatar || null, isAdmin: !!entry.isAdmin }));
+            }
+        });
+
+        var solveAvatars = hallEl.querySelectorAll('.solve-author-avatar');
+        solveAvatars.forEach(function (slot) {
+            var idx = parseInt(slot.dataset.idx);
+            var s = shortest[idx];
+            if (s) {
+                slot.appendChild(Avatar.render({ size: 18, avatar: s.avatar || null, isAdmin: !!s.isAdmin }));
+            }
+        });
 
         var solveSearch = document.getElementById('solve-search-input');
         if (solveSearch) {

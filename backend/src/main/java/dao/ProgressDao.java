@@ -428,7 +428,7 @@ public class ProgressDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             jakarta.persistence.Query q = em.createNativeQuery(
-                "SELECT pr.user_id, u.user_name, pr.prog_time, c.con_title, p.puz_title " +
+                "SELECT pr.user_id, u.user_name, pr.prog_time, c.con_title, p.puz_title, u.user_avatar, u.user_isadmin " +
                 "FROM progress pr " +
                 "JOIN user u ON pr.user_id = u.user_id " +
                 "JOIN puzzle p ON pr.puz_id = p.puz_id " +
@@ -446,6 +446,8 @@ public class ProgressDao {
                 item.put("value", ((Number) row[2]).intValue() + "s");
                 item.put("contest", row[3]);
                 item.put("puzzle", row[4]);
+                item.put("avatar", row[5]);
+                item.put("isAdmin", row[6] != null && (Boolean) row[6]);
                 result.add(item);
             }
             return result;
@@ -454,17 +456,29 @@ public class ProgressDao {
         }
     }
 
-    // Top 10 users with most contests participated
+    // Top 10 users who fully completed most contests (trophy OR all puzzles solved)
     public List<Map<String, Object>> getMostActiveParticipants(int limit) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             jakarta.persistence.Query q = em.createNativeQuery(
-                "SELECT pr.user_id, u.user_name, COUNT(DISTINCT p.con_id) AS contest_count " +
-                "FROM progress pr " +
-                "JOIN user u ON pr.user_id = u.user_id " +
-                "JOIN puzzle p ON pr.puz_id = p.puz_id " +
-                "WHERE p.con_id IS NOT NULL AND u.user_isactive = true " +
-                "GROUP BY pr.user_id, u.user_name " +
+                "SELECT u.user_id, u.user_name, u.user_avatar, u.user_isadmin, COUNT(DISTINCT cq.con_id) AS contest_count " +
+                "FROM user u " +
+                "JOIN ( " +
+                "  SELECT ut.user_id, c.con_id " +
+                "  FROM user_trophy ut " +
+                "  JOIN contest c ON c.trop_id = ut.trop_id " +
+                "  UNION ALL " +
+                "  SELECT pr.user_id, p.con_id " +
+                "  FROM progress pr " +
+                "  JOIN puzzle p ON pr.puz_id = p.puz_id " +
+                "  WHERE p.con_id IS NOT NULL " +
+                "  GROUP BY pr.user_id, p.con_id " +
+                "  HAVING COUNT(DISTINCT pr.puz_id) >= ( " +
+                "    SELECT COUNT(*) FROM puzzle p2 WHERE p2.con_id = p.con_id " +
+                "  ) " +
+                ") cq ON u.user_id = cq.user_id " +
+                "WHERE u.user_isactive = true " +
+                "GROUP BY u.user_id, u.user_name, u.user_avatar, u.user_isadmin " +
                 "ORDER BY contest_count DESC " +
                 "LIMIT ?");
             q.setParameter(1, limit);
@@ -474,7 +488,9 @@ public class ProgressDao {
                 Map<String, Object> item = new LinkedHashMap<>();
                 item.put("userId", ((Number) row[0]).intValue());
                 item.put("name", row[1]);
-                item.put("value", ((Number) row[2]).intValue() + " contests");
+                item.put("avatar", row[2]);
+                item.put("isAdmin", row[3] != null && (Boolean) row[3]);
+                item.put("value", ((Number) row[4]).intValue() + " contests");
                 result.add(item);
             }
             return result;
@@ -484,20 +500,26 @@ public class ProgressDao {
     }
 
     // Top 10 shortest solutions (by code length)
-    public List<Map<String, Object>> getShortestSolutions(int limit) {
+    // If userId is provided, only reveal code for puzzles the user has solved
+    public List<Map<String, Object>> getShortestSolutions(int limit, Integer userId) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
-            jakarta.persistence.Query q = em.createNativeQuery(
+            StringBuilder sql = new StringBuilder(
                 "SELECT pr.prog_id, pr.user_id, u.user_name, c.con_title, p.puz_title, " +
-                "pr.prog_code, CHAR_LENGTH(pr.prog_code) AS code_length " +
+                "u.user_avatar, u.user_isadmin, " +
+                "CASE WHEN EXISTS (SELECT 1 FROM progress pr2 WHERE pr2.user_id = :uid AND pr2.puz_id = pr.puz_id) " +
+                "THEN pr.prog_code ELSE NULL END AS prog_code, " +
+                "CHAR_LENGTH(pr.prog_code) AS code_length " +
                 "FROM progress pr " +
                 "JOIN user u ON pr.user_id = u.user_id " +
                 "JOIN puzzle p ON pr.puz_id = p.puz_id " +
                 "JOIN contest c ON p.con_id = c.con_id " +
                 "WHERE pr.prog_code IS NOT NULL AND u.user_isactive = true AND p.con_id IS NOT NULL " +
-                "ORDER BY code_length ASC " +
-                "LIMIT ?");
-            q.setParameter(1, limit);
+                "ORDER BY code_length ASC LIMIT :limit");
+
+            jakarta.persistence.Query q = em.createNativeQuery(sql.toString());
+            q.setParameter("uid", userId != null ? userId : -1);
+            q.setParameter("limit", limit);
             List<Object[]> rows = q.getResultList();
             List<Map<String, Object>> result = new ArrayList<>();
             for (Object[] row : rows) {
@@ -506,8 +528,10 @@ public class ProgressDao {
                 item.put("author", row[2]);
                 item.put("contest", row[3]);
                 item.put("puzzle", row[4]);
-                item.put("code", row[5]);
-                item.put("chars", ((Number) row[6]).intValue());
+                item.put("avatar", row[5]);
+                item.put("isAdmin", row[6] != null && (Boolean) row[6]);
+                item.put("code", row[7]);
+                item.put("chars", ((Number) row[8]).intValue());
                 result.add(item);
             }
             return result;

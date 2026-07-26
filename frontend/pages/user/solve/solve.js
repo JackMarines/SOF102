@@ -322,44 +322,83 @@ async function handleSubmit() {
                     id: 'trophy-popup',
                     size: 'sm',
                     title: null,
+                    className: 'trophy-popup',
                     render: function (ctx) {
-                        ctx.body.style.textAlign = 'center';
-                        ctx.body.style.padding = 'var(--space-24px)';
+                        ctx.footer.style.display = 'none';
 
-                        var icon = document.createElement('div');
-                        icon.style.fontSize = '3rem';
-                        icon.innerHTML = '<span class="material-symbols-outlined" style="font-size:3rem;color:var(--warning);">emoji_events</span>';
-                        ctx.body.appendChild(icon);
+                        var header = document.createElement('div');
+                        header.className = 'trophy-popup-header';
+                        var label = document.createElement('span');
+                        label.textContent = 'REWARD_STDOUT';
+                        header.appendChild(label);
+                        var closeSquare = document.createElement('button');
+                        closeSquare.className = 'trophy-popup-close';
+                        closeSquare.addEventListener('click', function () { ctx.close(); });
+                        header.appendChild(closeSquare);
+                        ctx.body.parentElement.insertBefore(header, ctx.body);
 
-                        var heading = document.createElement('div');
-                        heading.style.cssText = 'font-family:var(--font-mono);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--warning);margin:var(--space-12px) 0 var(--space-8px);';
-                        heading.textContent = 'TROPHY EARNED';
-                        ctx.body.appendChild(heading);
+                        ctx.body.style.padding = '0';
+                        ctx.body.style.margin = '0';
+
+                        var inner = document.createElement('div');
+                        inner.className = 'trophy-popup-body';
+
+                        var iconWrap = document.createElement('div');
+                        iconWrap.className = 'trophy-popup-icon';
+                        var icon = document.createElement('span');
+                        icon.className = 'material-symbols-outlined';
+                        icon.textContent = 'emoji_events';
+                        iconWrap.appendChild(icon);
+                        inner.appendChild(iconWrap);
+
+                        var title = document.createElement('div');
+                        title.className = 'trophy-popup-title';
+                        title.textContent = 'REWARD UNLOCKED';
+                        inner.appendChild(title);
+
+                        var line = document.createElement('div');
+                        line.className = 'trophy-popup-gradient-line';
+                        inner.appendChild(line);
 
                         if (result.trophyAvatar) {
+                            var imgContainer = document.createElement('div');
+                            imgContainer.className = 'trophy-popup-image';
                             var img = document.createElement('img');
                             img.src = result.trophyAvatar;
                             img.alt = result.trophyName || '';
-                            img.style.cssText = 'width:80px;height:80px;object-fit:cover;border:1px solid var(--border-default);margin:0 auto var(--space-12px);display:block;';
-                            ctx.body.appendChild(img);
+                            imgContainer.appendChild(img);
+                            inner.appendChild(imgContainer);
                         }
 
                         var name = document.createElement('div');
-                        name.style.cssText = 'font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-primary);margin-bottom:var(--space-8px);';
+                        name.className = 'trophy-popup-name';
                         name.textContent = result.trophyName || '';
-                        ctx.body.appendChild(name);
+                        inner.appendChild(name);
 
-                        var msg = document.createElement('p');
-                        msg.style.cssText = 'font-size:0.8125rem;color:var(--text-muted);line-height:1.6;';
-                        msg.textContent = 'You completed all puzzles in this contest!';
-                        ctx.body.appendChild(msg);
+                        var desc = document.createElement('p');
+                        desc.className = 'trophy-popup-desc';
+                        desc.textContent = 'You completed all puzzles in this contest!';
+                        inner.appendChild(desc);
 
-                        ctx.footer.style.display = '';
-                        var closeBtn = document.createElement('button');
-                        closeBtn.className = 'btn-devclimb secondary';
-                        closeBtn.textContent = 'CLOSE';
-                        closeBtn.addEventListener('click', function () { ctx.close(); });
-                        ctx.footer.appendChild(closeBtn);
+                        var closeFull = document.createElement('button');
+                        closeFull.style.cssText = 'width:100%;margin-top:var(--space-8px);padding:var(--space-12px);border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:var(--font-mono);font-size:0.8125rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 150ms;';
+                        closeFull.textContent = 'CLOSE';
+                        closeFull.addEventListener('mouseenter', function () {
+                            this.style.background = 'var(--accent)';
+                            this.style.color = 'var(--bg-base)';
+                        });
+                        closeFull.addEventListener('mouseleave', function () {
+                            this.style.background = 'transparent';
+                            this.style.color = 'var(--accent)';
+                        });
+                        closeFull.addEventListener('click', function () { ctx.close(); });
+                        inner.appendChild(closeFull);
+
+                        ctx.body.appendChild(inner);
+
+                        var footerBar = document.createElement('div');
+                        footerBar.className = 'trophy-popup-footer-bar';
+                        ctx.body.parentElement.appendChild(footerBar);
                     }
                 });
             }, 300);

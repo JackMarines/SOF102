@@ -139,6 +139,8 @@ public class PublicContestController extends HttpServlet {
 
             entity.User author = c.getConAuthorId() != null ? userDao.findById(c.getConAuthorId()) : null;
             data.put("authorName", author != null ? author.getUserName() : "Unknown");
+            data.put("authorAvatar", author != null ? author.getUserAvatar() : null);
+            data.put("authorIsAdmin", author != null && Boolean.TRUE.equals(author.getUserIsadmin()));
 
             Trophy t = c.getTrophy();
             if (t != null) {
@@ -215,10 +217,17 @@ public class PublicContestController extends HttpServlet {
             } catch (NumberFormatException e) {}
         }
 
+        Integer currentUserId = null;
+        jakarta.servlet.http.HttpSession session = req.getSession(false);
+        if (session != null) {
+            entity.User u = (entity.User) session.getAttribute("user");
+            if (u != null) currentUserId = u.getUserId();
+        }
+
         Map<String, Object> result = new HashMap<>();
         result.put("speedChampions", progressDao.getFastestSolvers(limit));
         result.put("contestVeterans", progressDao.getMostActiveParticipants(limit));
-        result.put("shortestSolves", progressDao.getShortestSolutions(limit));
+        result.put("shortestSolves", progressDao.getShortestSolutions(limit, currentUserId));
         ResponseUtil.success(resp, result);
     }
 }
