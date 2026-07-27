@@ -4,7 +4,7 @@
 async function fetchUsers(page) {
     var tbl = window.userTable;
     var search = tbl ? tbl.getSearchTerm() : '';
-    var response = await searchUsers(search, page, 10);
+    var response = await searchUsers(search, page, 9);
     if (tbl && response) tbl.setData(response);
 }
 

@@ -14,34 +14,35 @@
       return false;
     }
 
-    var isLight = document.documentElement.classList.contains('light-mode');
-    var themeIcon = isLight ? '\u263E' : '\u2600';
-
     var nav = document.createElement('nav');
     nav.className = 'navbar-devclimb';
+    nav.setAttribute('role', 'navigation');
+    nav.setAttribute('aria-label', 'Main navigation');
     nav.innerHTML =
       '<div class="nav-inner">' +
-        '<a class="nav-logo-link" href="/frontend/index.html">' +
+        '<a class="nav-logo-link" href="/frontend/index.html" aria-label="DevClimb home">' +
           '<span class="nav-logo-dev">DEV</span>' +
           '<span class="nav-logo-climb">CLIMB</span>' +
           '<span class="nav-logo-cursor"></span>' +
         '</a>' +
-        '<div class="nav-links" id="nav-links">' +
-          '<a href="/frontend/pages/guest/team-search/index.html"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
-          '<a href="/frontend/pages/guest/puzzle/index.html"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
-          '<a href="/frontend/pages/guest/announcement/index.html"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
-          '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOG IN</a>' +
+        '<div class="nav-links" id="nav-links" role="list">' +
+          '<a href="/frontend/pages/guest/team-search/index.html" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
+          '<a href="/frontend/pages/guest/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
+          '<a href="/frontend/pages/guest/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
+          '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOG IN</a>' +
         '</div>' +
         '<div class="nav-actions">' +
-          '<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">' + themeIcon + '</button>' +
-          '<button class="nav-toggle" id="nav-toggle" aria-label="Menu">\u2630</button>' +
+          '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
         '</div>' +
       '</div>';
 
     placeholder.replaceWith(nav);
 
-    document.getElementById('nav-toggle').addEventListener('click', function () {
-      document.getElementById('nav-links').classList.toggle('open');
+    var toggleBtn = document.getElementById('nav-toggle');
+    var navLinks = document.getElementById('nav-links');
+    toggleBtn.addEventListener('click', function () {
+      navLinks.classList.toggle('open');
+      toggleBtn.setAttribute('aria-expanded', navLinks.classList.contains('open'));
     });
 
     apiGet('/announcements/latest')

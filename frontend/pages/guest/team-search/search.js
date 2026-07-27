@@ -17,4 +17,5 @@ window.teamTable = TeamTable.init('team-table', {
     onPageChange: function (page) { loadTeams(page); }
 });
 
+showSkeleton('team-table', 'search-rows');
 loadTeams();

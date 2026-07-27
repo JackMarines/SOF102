@@ -23,7 +23,7 @@
 <div class="scanline"></div>
 <div id="navbar"></div>
 
-<main style="padding-top: var(--nav-height);">
+<main id="main-content" role="main" style="padding-top: var(--nav-height);">
   <section class="section-page">
     <div class="container-page">
 
@@ -32,7 +32,7 @@
       <div class="content-panel pad-lg scroll-reveal" data-delay="100" style="max-width:720px;margin:0 auto;">
 
         <div style="margin-bottom:var(--space-24px);">
-          <label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Team Name</label>
+          <label for="create-team-name" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Team Name</label>
           <input type="text" id="create-team-name" placeholder="Enter your team name" maxlength="100">
           <div id="create-team-name-error" class="d-none" style="font-size:0.75rem;color:var(--error);margin-top:var(--space-4px);"></div>
         </div>
@@ -53,7 +53,7 @@
         </div>
 
         <div style="margin-bottom:var(--space-24px);">
-          <label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Shoutout (Optional)</label>
+          <label for="create-team-shoutout" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Shoutout (Optional)</label>
           <textarea id="create-team-shoutout" rows="4" maxlength="500" placeholder="Give your team a short description..." style="resize:none;"></textarea>
         </div>
 

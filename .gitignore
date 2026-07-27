@@ -33,3 +33,6 @@ ca-truststore.jks
 .codegraph/
 
 constants.js
+
+# opencode config
+opencode.json

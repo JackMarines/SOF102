@@ -18,7 +18,7 @@ import util.ResponseUtil;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet("/api/v1/teams")
+@WebServlet({"/api/v1/teams", "/api/v1/teams/stats"})
 public class TeamBrowseController extends HttpServlet {
 
     private TeamDao teamDao = new TeamDao();
@@ -29,6 +29,14 @@ public class TeamBrowseController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        String uri = req.getRequestURI();
+
+        // GET /api/v1/teams/stats?id=X — thống kê biểu đồ team
+        if (uri.endsWith("/stats")) {
+            handleStats(req, resp);
+            return;
+        }
+
         // GET /api/v1/teams?id=X — chi tiết team
         String idParam = req.getParameter("id");
         if (idParam != null && !idParam.trim().isEmpty()) {
@@ -174,5 +182,34 @@ public class TeamBrowseController extends HttpServlet {
 
         logger.info("Team detail: id={}, members={}", teamId, memberCount);
         ResponseUtil.success(resp, data);
+    }
+
+    // GET /api/v1/teams/stats?id=X — thống kê số puzzle giải theo ngày
+    private void handleStats(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String idParam = req.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            ResponseUtil.error(resp, 400, "Missing team id");
+            return;
+        }
+
+        int teamId;
+        try {
+            teamId = Integer.parseInt(idParam.trim());
+        } catch (NumberFormatException e) {
+            ResponseUtil.error(resp, 400, "Invalid team id");
+            return;
+        }
+
+        List<Object[]> rows = teamDao.getSolvedByDay(teamId, 90);
+        List<Map<String, Object>> data = new ArrayList<>();
+        for (Object[] row : rows) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("date", row[0] != null ? row[0].toString() : null);
+            item.put("solves", ((Number) row[1]).intValue());
+            data.add(item);
+        }
+
+        ResponseUtil.success(resp, Map.of("period", "daily", "data", data));
     }
 }

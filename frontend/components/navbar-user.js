@@ -6,67 +6,61 @@
     var path = window.location.pathname;
 
     function isActive(p) {
-      if (p === 'home') return !path.includes('/puzzle') && !path.includes('/guest/') && !path.includes('/user/solve') && !path.includes('/user/team/') && !path.includes('/user/announcement');
       if (p === 'team') return path.includes('/user/team/');
       if (p === 'puzzles') return path.includes('/puzzle');
+      if (p === 'users') return path.includes('/user-search');
       if (p === 'announcements') return path.includes('/user/announcement');
       return false;
     }
 
-    var isLight = document.documentElement.classList.contains('light-mode');
-    var themeIcon = isLight ? '\u263E' : '\u2600';
-
     var nav = document.createElement('nav');
     nav.className = 'navbar-devclimb';
+    nav.setAttribute('role', 'navigation');
+    nav.setAttribute('aria-label', 'Main navigation');
     nav.innerHTML =
       '<div class="nav-inner">' +
-        '<a class="nav-logo-link" href="/frontend/pages/user/home/index.html">' +
+        '<a class="nav-logo-link" href="/frontend/pages/user/home/index.html" aria-label="DevClimb home">' +
           '<span class="nav-logo-dev">DEV</span>' +
           '<span class="nav-logo-climb">CLIMB</span>' +
           '<span class="nav-logo-cursor"></span>' +
-          '<a id="admin-badge" class="admin-badge d-none" href="/frontend/pages/admin/dashboard/index.html">ADMIN</a>' +
         '</a>' +
-        '<div class="d-flex align-items-center d-lg-none ms-auto">' +
-          '<a href="/frontend/pages/user/profile/index.html" class="nav-avatar-link">' +
-            '<span class="nav-avatar" id="nav-avatar-mobile"></span>' +
-          '</a>' +
-          '<button class="nav-toggle" id="nav-toggle" aria-label="Menu">\u2630</button>' +
-        '</div>' +
-        '<div class="nav-links" id="nav-links">' +
-          '<a href="/frontend/pages/user/team-search/index.html" id="nav-team-link"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
-          '<a href="/frontend/pages/user/puzzle/index.html"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
-          '<a href="/frontend/pages/user/announcement/index.html"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
-          '<a href="/frontend/pages/user/home/index.html"' + (isActive('home') ? ' class="active"' : '') + '>HOME</a>' +
+        '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
+        '<div class="nav-links" id="nav-links" role="list">' +
+          '<a href="/frontend/pages/user/team-search/index.html" id="nav-team-link" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
+          '<a href="/frontend/pages/user/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
+          '<a href="/frontend/pages/user/user-search/index.html" role="listitem"' + (isActive('users') ? ' class="active"' : '') + '>USERS</a>' +
+          '<a href="/frontend/pages/user/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
           '<div class="nav-profile-dropdown">' +
-            '<a class="nav-avatar-link" href="/frontend/pages/user/profile/index.html">' +
+            '<a class="nav-avatar-link" href="/frontend/pages/user/profile/index.html" aria-label="Your profile">' +
               '<span class="nav-avatar" id="nav-avatar-desktop"></span>' +
             '</a>' +
-            '<div class="nav-profile-menu">' +
-              '<a href="/frontend/pages/user/profile/index.html">PROFILE</a>' +
+            '<div class="nav-profile-menu" role="menu">' +
+              '<a href="/frontend/pages/user/profile/index.html" role="menuitem">PROFILE</a>' +
               '<hr>' +
-              '<a href="/frontend/pages/user/setting/index.html">SETTINGS</a>' +
+              '<a href="/frontend/pages/user/setting/index.html" role="menuitem">SETTINGS</a>' +
               '<hr>' +
-              '<a href="#" id="logout-btn">LOG OUT</a>' +
+              '<a href="#" id="logout-btn" role="menuitem">LOG OUT</a>' +
             '</div>' +
           '</div>' +
         '</div>' +
         '<div class="nav-actions">' +
-          '<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">' + themeIcon + '</button>' +
+          '<a id="admin-badge" class="admin-badge d-none" href="/frontend/pages/admin/dashboard/index.html" aria-label="Admin dashboard">ADMIN</a>' +
         '</div>' +
       '</div>';
 
     placeholder.replaceWith(nav);
 
-    document.getElementById('nav-toggle').addEventListener('click', function () {
-      document.getElementById('nav-links').classList.toggle('open');
+    var toggleBtn = document.getElementById('nav-toggle');
+    var navLinks = document.getElementById('nav-links');
+    toggleBtn.addEventListener('click', function () {
+      navLinks.classList.toggle('open');
+      toggleBtn.setAttribute('aria-expanded', navLinks.classList.contains('open'));
     });
 
     function renderNavAvatar(avatarUrl) {
       var opts = { size: 36 };
       if (avatarUrl) opts.avatar = avatarUrl;
-      var mobile = document.getElementById('nav-avatar-mobile');
       var desktop = document.getElementById('nav-avatar-desktop');
-      if (mobile) { mobile.innerHTML = ''; mobile.appendChild(Avatar.render(opts)); }
       if (desktop) { desktop.innerHTML = ''; desktop.appendChild(Avatar.render(opts)); }
     }
 
@@ -119,6 +113,8 @@
 
         var banner = document.createElement('a');
         banner.className = 'announcement-banner';
+        banner.setAttribute('role', 'alert');
+        banner.setAttribute('aria-label', 'Latest announcement: ' + data.title);
         banner.href = '/frontend/pages/user/announcement/index.html?open=' + data.id;
 
         var date = new Date(data.createdAt);

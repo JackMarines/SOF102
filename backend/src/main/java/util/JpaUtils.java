@@ -6,21 +6,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class JpaUtils {
-    private static EntityManagerFactory factory;
+    private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory("DevClimb");
 
-    // Lấy EntityManager để thao tác với CSDL
     public static EntityManager getEntityManager() {
-        if (factory == null || !factory.isOpen()) {
-            factory = Persistence.createEntityManagerFactory("DevClimb");
-        }
         return factory.createEntityManager();
     }
 
-    // Đóng EntityManagerFactory (gọi khi tắt ứng dụng)
     public static void shutdown() {
-        if (factory != null && factory.isOpen()) {
-            factory.close();
-        }
-        factory = null;
+        if (factory.isOpen()) factory.close();
     }
 }

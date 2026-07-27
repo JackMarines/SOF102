@@ -52,7 +52,7 @@
         var btn = document.createElement('button');
         btn.className = 'btn';
         btn.type = 'button';
-        btn.innerHTML = '<i class="bi bi-search"></i>';
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">search</span>';
         btn.addEventListener('click', function () { self._doSearch(); });
 
         searchBox.appendChild(input);
@@ -207,7 +207,7 @@
             } else {
                 var fallback = document.createElement('div');
                 fallback.className = 'tt-card-avatar-fallback';
-                fallback.innerHTML = '<i class="bi bi-people-fill"></i>';
+                fallback.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">group</span>';
                 card.appendChild(fallback);
             }
 
@@ -230,13 +230,13 @@
             // Thông tin số thành viên
             var members = document.createElement('p');
             members.className = 'tt-card-meta mb-1';
-            members.innerHTML = '<i class="bi bi-people-fill"></i> ' + (item.memberCount != null ? item.memberCount : '0') + ' Members';
+            members.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">group</span> ' + (item.memberCount != null ? item.memberCount : '0') + ' Members';
             card.appendChild(members);
 
             // Thông tin số câu đã giải
             var solved = document.createElement('p');
             solved.className = 'tt-card-meta mb-2';
-            solved.innerHTML = '<i class="bi bi-puzzle-fill"></i> ' + (item.totalSolved != null ? item.totalSolved.toLocaleString() : '0') + ' Solved';
+            solved.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">extension</span> ' + (item.totalSolved != null ? item.totalSolved.toLocaleString() : '0') + ' Solved';
             card.appendChild(solved);
 
             cardWrap.appendChild(card);

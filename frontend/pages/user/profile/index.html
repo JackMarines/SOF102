@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DEVCLIMB | Profile</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -24,7 +26,7 @@
 <div class="scanline"></div>
 <div id="navbar"></div>
 
-<main style="padding-top: var(--nav-height);">
+<main id="main-content" role="main" style="padding-top: var(--nav-height);">
   <section class="section-page">
     <div class="container-page">
 
@@ -34,7 +36,7 @@
         </a>
       </div>
 
-      <div class="content-panel pad-lg scroll-reveal">
+      <div class="content-panel pad-lg scroll-reveal" style="margin-bottom:var(--space-32px);">
         <div style="display:flex;align-items:center;gap:var(--space-32px);flex-wrap:wrap;">
           <div id="profile-avatar" style="flex-shrink:0;"></div>
           <div style="flex:1;min-width:0;">
@@ -50,22 +52,36 @@
         </div>
       </div>
 
-      <h3 class="content-section-heading" id="group-heading">My Group</h3>
+      <div class="content-grid-2col-equal scroll-reveal" data-delay="50" style="margin-bottom:var(--space-32px);">
+        <div class="content-panel pad-lg">
+          <h4 class="content-section-heading">Solve Distribution</h4>
+          <canvas id="langChart" height="200"></canvas>
+        </div>
+        <div class="content-panel pad-lg">
+          <div class="content-section-heading" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-16px);">
+            <span>Activity</span>
+            <div style="display:flex;gap:0;">
+              <button class="chart-filter-btn active" data-filter="today">Today</button>
+              <button class="chart-filter-btn" data-filter="week">Week</button>
+              <button class="chart-filter-btn" data-filter="month">Month</button>
+              <button class="chart-filter-btn" data-filter="total">Total</button>
+            </div>
+          </div>
+          <canvas id="profile-activity-chart" height="200"></canvas>
+        </div>
+      </div>
 
-      <a class="content-panel" id="group-box" href="#" style="display:block;text-decoration:none;color:inherit;cursor:default;">
-        <div style="display:flex;align-items:center;gap:var(--space-24px);">
-          <div style="width:90px;height:90px;background:var(--bg-hover);display:flex;align-items:center;justify-content:center;border:1px solid var(--border-default);">
-            <span class="material-symbols-outlined" style="font-size:42px;color:var(--text-muted);">group</span>
-          </div>
-          <div>
-            <h4 style="font-family:var(--font-mono);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:var(--space-4px);" id="group-name">-</h4>
-            <p class="content-meta" id="group-members"></p>
-          </div>
+      <a id="group-banner" class="tt-banner scroll-reveal" data-delay="100" style="margin-bottom:var(--space-24px);display:none;text-decoration:none;color:inherit;" href="#">
+        <div id="group-banner-bg" class="tt-banner-img" style="height:200px;background:linear-gradient(135deg,#0d0d0d,#1c1b1b,#0d0d0d);"></div>
+        <div class="tt-banner-overlay"></div>
+        <div class="tt-banner-info" style="padding-left:var(--space-32px);">
+          <h3 id="group-heading" style="font-family:var(--font-mono);font-size:clamp(1.25rem,2.5vw,1.5rem);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#e5e2e1;margin-bottom:var(--space-4px);">My Group</h3>
+          <p class="content-meta" id="group-members"></p>
         </div>
       </a>
 
-      <h3 class="content-section-heading" style="margin-top:var(--space-32px);">Solved Puzzles</h3>
-      <div class="content-panel" id="solved-box">
+      <h3 class="content-section-heading" style="margin-top:var(--space-16px);">Solved Puzzles</h3>
+      <div class="content-panel scroll-reveal" data-delay="150" id="solved-box">
         <div id="solved-table"></div>
       </div>
 
@@ -79,16 +95,15 @@
       Edit Profile
       <button data-bs-dismiss="modal">&times;</button>
     </div>
-
-    <label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Avatar</label>
-    <input type="file" id="edit-avatar-input" accept="image/*" style="margin-bottom:var(--space-16px);">
-
-    <label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Username</label>
+    <label for="edit-avatar-input" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Avatar</label>
+    <input type="file" id="edit-avatar-input" accept="image/*" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">
+    <label for="edit-avatar-input" class="btn-devclimb secondary sm" style="display:inline-flex;margin-bottom:var(--space-8px);">Choose File</label>
+    <span id="edit-avatar-filename" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);margin-left:var(--space-8px);">No file chosen</span>
+    <input type="text" id="edit-avatar-url" placeholder="Or paste image URL..." style="margin-bottom:var(--space-16px);">
+    <label for="edit-username-input" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Username</label>
     <input type="text" id="edit-username-input" maxlength="30" style="margin-bottom:var(--space-16px);">
-
-    <label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Bio</label>
+    <label for="edit-bio-input" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Bio</label>
     <textarea id="edit-bio-input" rows="4" maxlength="100" style="resize:none;"></textarea>
-
     <div class="modal-actions">
       <button class="btn-devclimb secondary sm" data-bs-dismiss="modal">Cancel</button>
       <button class="btn-devclimb primary sm" id="save-profile-btn">Save Changes</button>
@@ -101,10 +116,10 @@
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-user.js"></script>
 <script src="/frontend/components/footer.js"></script>
-<script src="/frontend/components/theme-toggle.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/utils/modal-polyfill.js"></script>
 <script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/skeleton.js"></script>
 <script src="/frontend/components/avatar.js"></script>
 <script src="/frontend/components/puzzle-table.js"></script>
 <script src="/frontend/services/profileService.js"></script>

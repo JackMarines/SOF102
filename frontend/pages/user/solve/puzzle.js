@@ -6,7 +6,6 @@ const codeEditor = document.getElementById("codeEditor");
 
 
 loadPuzzle(setLanguage, setCode);
-console.log(getCode());
 
 const puzzleId = new URLSearchParams(window.location.search).get("id");
 

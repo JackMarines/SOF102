@@ -23,7 +23,7 @@
 <div class="scanline"></div>
 <div id="navbar"></div>
 
-<main style="padding-top: var(--nav-height);">
+<main id="main-content" role="main" style="padding-top: var(--nav-height);">
   <section class="section-page">
     <div class="container-page">
 
@@ -42,24 +42,39 @@
         <h4 class="content-section-heading">Appearance</h4>
         <p class="content-meta" style="margin-bottom:var(--space-24px);">Choose how DevClimb looks on your device.</p>
 
-        <div class="settings-theme-grid">
-          <div class="settings-theme-card active" onclick="setThemeMode('system')">
-            <div class="theme-icon">
-              <span class="material-symbols-outlined" style="font-size:2rem;">desktop_windows</span>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-16px);">
+          <div class="settings-theme-card-v2 active" onclick="setThemeMode('system');document.querySelectorAll('.settings-theme-card-v2').forEach(c=>c.classList.remove('active'));this.classList.add('active')">
+            <div class="theme-check">
+              <span class="material-symbols-outlined">check_circle</span>
             </div>
-            <div class="theme-label">System</div>
+            <div class="theme-label" style="color:var(--accent)">System</div>
+            <div class="theme-mockup system">
+              <div class="mockup-bar"></div>
+              <div class="mockup-line sm"></div>
+              <div class="mockup-line"></div>
+            </div>
           </div>
-          <div class="settings-theme-card" onclick="setThemeMode('light')">
-            <div class="theme-icon">
-              <span class="material-symbols-outlined" style="font-size:2rem;">light_mode</span>
+          <div class="settings-theme-card-v2" onclick="setThemeMode('light');document.querySelectorAll('.settings-theme-card-v2').forEach(c=>c.classList.remove('active'));this.classList.add('active')">
+            <div class="theme-check">
+              <span class="material-symbols-outlined">check_circle</span>
             </div>
             <div class="theme-label">Light</div>
+            <div class="theme-mockup light">
+              <div class="mockup-bar"></div>
+              <div class="mockup-line sm"></div>
+              <div class="mockup-line"></div>
+            </div>
           </div>
-          <div class="settings-theme-card" onclick="setThemeMode('dark')">
-            <div class="theme-icon">
-              <span class="material-symbols-outlined" style="font-size:2rem;">dark_mode</span>
+          <div class="settings-theme-card-v2" onclick="setThemeMode('dark');document.querySelectorAll('.settings-theme-card-v2').forEach(c=>c.classList.remove('active'));this.classList.add('active')">
+            <div class="theme-check">
+              <span class="material-symbols-outlined">check_circle</span>
             </div>
             <div class="theme-label">Dark</div>
+            <div class="theme-mockup dark">
+              <div class="mockup-bar"></div>
+              <div class="mockup-line sm"></div>
+              <div class="mockup-line"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -88,6 +103,21 @@
 </main>
 
 <div id="footer"></div>
+
+<script>
+  function setThemeMode(mode) {
+    if (mode === 'light') {
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('theme', 'light');
+    } else if (mode === 'dark') {
+      document.documentElement.classList.remove('light-mode');
+      localStorage.setItem('theme', 'dark');
+    }
+    if (typeof toggleTheme === 'function' && mode === 'dark') {
+      if (document.documentElement.classList.contains('light-mode')) toggleTheme();
+    }
+  }
+</script>
 
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-user.js"></script>

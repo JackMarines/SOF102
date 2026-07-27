@@ -5,6 +5,10 @@ async function fetchTeamDetail(teamId) {
     return apiGet('/teams?id=' + teamId);
 }
 
+async function fetchTeamStats(teamId) {
+    return apiGet('/teams/stats?id=' + teamId);
+}
+
 async function joinTeam(teamId) {
     return apiPost('/teams/join', { teamId: parseInt(teamId) });
 }

@@ -24,58 +24,84 @@
 <div class="scanline"></div>
 <div id="navbar"></div>
 
-<div class="workspace">
-  <div class="top-panel">
+<div class="solve-workspace" style="padding-top:var(--nav-height);">
+  <!-- LEFT: Problem Description -->
+  <div class="solve-pane-left">
+    <div class="solve-pane-header">
+      <span class="pane-label">Problem</span>
+      <div class="pane-dots">
+        <span class="pane-dot"></span><span class="pane-dot"></span><span class="pane-dot"></span>
+      </div>
+    </div>
+    <div class="solve-pane-body" id="puzzlePanel"></div>
+  </div>
 
-    <section class="panel puzzle-panel" id="puzzlePanel"></section>
-
-    <div id="verticalResizer" class="vertical-resizer"></div>
-
-    <div class="right-tabbed">
-      <div class="solve-tabs panel-header">
-        <div class="solve-tabs-nav">
-          <button class="solve-tab active" data-tab="editor">Code Editor</button>
-          <button class="solve-tab" data-tab="results">Test Results</button>
-        </div>
-        <div class="solve-tabs-actions">
-          <div class="timer">
-            Time:
-            <span id="timer">00:00</span>
-          </div>
-          <button id="submitBtn" class="btn-submit">
-            <span class="material-symbols-outlined" style="font-size:1rem;">play_arrow</span>
-          </button>
+  <!-- MIDDLE: Code Editor -->
+  <div class="solve-pane-mid">
+    <div class="solve-editor-tabs">
+      <div class="tabs-left">
+        <span class="material-symbols-outlined" style="font-size:0.875rem;color:var(--accent);margin-right:var(--space-8px);">code</span>
+        <span style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-primary);">solution.js</span>
+      </div>
+      <div class="tabs-right">
+        <div style="display:flex;align-items:center;gap:var(--space-4px);font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">
+          <span class="material-symbols-outlined" style="font-size:0.875rem;">schedule</span>
+          <span id="timer">00:00</span>
         </div>
       </div>
-
-      <section class="panel editor-panel solve-tab-content active" data-tab-content="editor">
-        <div class="editor-body panel-content">
-          <div id="codeEditor"></div>
-        </div>
-      </section>
-
-      <section class="panel result-panel solve-tab-content" data-tab-content="results">
-        <div class="panel-content">
-          <div class="status-row">
-            <span>Status</span>
-            <span id="statusText" class="pending">Waiting...</span>
-          </div>
-          <div class="status-row">
-            <span>Pass</span>
-            <span id="passResult">false</span>
-          </div>
-          <hr>
-          <div id="testCases"></div>
-        </div>
-      </section>
     </div>
 
+    <div class="solve-editor-body">
+      <div id="codeEditor" style="height:100%;"></div>
+    </div>
+
+    <div class="solve-actions-bar">
+      <span style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.625rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:auto;">
+        <span style="width:6px;height:6px;background:var(--accent);display:inline-block;"></span>
+        JavaScript (Node.js)
+      </span>
+      <button id="resetBtn" class="btn-devclimb secondary sm">Reset</button>
+      <button id="submitBtn" class="btn-devclimb primary sm">Submit</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: Test Console -->
+  <div class="solve-pane-right">
+    <div class="solve-pane-header">
+      <span class="pane-label">Test Console</span>
+      <div style="display:flex;align-items:center;gap:var(--space-8px);">
+        <span style="width:6px;height:6px;background:var(--success);display:inline-block;"></span>
+        <span class="pane-label" style="color:var(--text-muted);">Live Status</span>
+      </div>
+    </div>
+    <div class="solve-console-inner">
+      <div class="solve-console-metrics">
+        <p class="content-meta" style="font-size:0.625rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:var(--space-8px);">Performance</p>
+        <div class="metric-row">
+          <span class="metric-label">Status</span>
+          <span id="statusText" class="metric-value pending">Waiting...</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Pass</span>
+          <span id="passResult" class="metric-value">-</span>
+        </div>
+      </div>
+      <div class="solve-console-feed" id="testCases">
+        <div style="padding:var(--space-16px);text-align:center;"><p class="content-meta">Run your code to see results</p></div>
+      </div>
+    </div>
+    <div class="console-status-bar">
+      <span class="console-timer-label">TIMER:</span>
+      <span id="timerFooter" class="console-timer-value">00:00</span>
+    </div>
   </div>
 </div>
 
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/avatar.js"></script>
 <script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/skeleton.js"></script>
 <script src="/frontend/services/puzzleService.js"></script>
 <script src="/frontend/services/puzzleSolveService.js"></script>
 <script src="/frontend/services/submissionService.js"></script>

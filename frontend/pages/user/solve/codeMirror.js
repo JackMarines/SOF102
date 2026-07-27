@@ -90,6 +90,4 @@ export const setSubmitCallback = (fn) => {
         )
     });
 };
-
-console.log("codemirror imported");
 export { editor };

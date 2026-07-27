@@ -15,7 +15,7 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            outline: 2px solid var(--border-panel);
+            outline: 2px solid var(--border-default);
         }
         .av-fallback {
             width: 100%;
@@ -23,20 +23,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-input);
+            background: var(--bg-surface);
             border-radius: 50%;
-            outline: 2px solid var(--border-panel);
+            outline: 2px solid var(--border-default);
             color: var(--text-secondary);
         }
         .av-admin-badge {
             position: absolute;
-            border-radius: 50%;
+            border-radius: 0;
             overflow: hidden;
-            background: var(--bg-panel);
+            background: var(--bg-elevated);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #2196F3;
+            color: var(--accent);
         }
     `;
     document.head.appendChild(style);
@@ -57,12 +57,13 @@
                 img.className = 'av-img';
                 img.src = avatar;
                 img.alt = '';
+                img.loading = 'lazy';
                 wrapper.appendChild(img);
             } else {
                 var fallback = document.createElement('div');
                 fallback.className = 'av-fallback';
                 fallback.style.fontSize = Math.round(size * 0.45) + 'px';
-                fallback.innerHTML = '<i class="bi bi-person-fill"></i>';
+                fallback.innerHTML = '<span class="material-symbols-outlined" style="font-size:inherit;">person</span>';
                 wrapper.appendChild(fallback);
             }
 
@@ -76,7 +77,7 @@
                 badgeWrap.style.bottom = -Math.round(badgeSize * 0.15) + 'px';
                 badgeWrap.style.right = -Math.round(badgeSize * 0.15) + 'px';
                 badgeWrap.style.fontSize = Math.round(badgeSize * 0.6) + 'px';
-                badgeWrap.innerHTML = '<i class="bi bi-patch-check-fill"></i>';
+                badgeWrap.innerHTML = '<span class="material-symbols-outlined" style="font-size:inherit;font-variation-settings:\'FILL\' 1">verified</span>';
 
                 wrapper.appendChild(badgeWrap);
             }

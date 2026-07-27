@@ -1,11 +1,24 @@
 // Core loader — inject Firebase SDK, constants, API layer, và auth service vào trang
-// Cũng xử lý maintenance redirect và auth redirect cho tất cả các trang
-document.write('<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"><\/script>');
-document.write('<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"><\/script>');
-document.write('<script src="/frontend/utils/constants.js"><\/script>');
-document.write('<script src="/frontend/components/popup.js"><\/script>');
-document.write('<script src="/frontend/services/api.js"><\/script>');
-document.write('<script src="/frontend/services/authService.js"><\/script>');
+// Dùng dynamic script injection thay vì document.write (Chrome sắp chặn document.write trên network chậm)
+(function() {
+  var scriptSrcs = [
+    'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js',
+    'https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js',
+    '/frontend/utils/constants.js',
+    '/frontend/components/popup.js',
+    '/frontend/services/api.js',
+    '/frontend/services/authService.js'
+  ];
+  function loadNext() {
+    if (scriptSrcs.length === 0) return;
+    var src = scriptSrcs.shift();
+    var s = document.createElement('script');
+    s.src = src;
+    s.onload = s.onerror = loadNext;
+    document.head.appendChild(s);
+  }
+  loadNext();
+})();
 
 // ── Kiểm tra Maintenance Mode ──
 // Admin users bypass the check entirely.
@@ -43,3 +56,22 @@ if (document.body.dataset.auth === 'user') {
         });
     });
 }
+
+// ── Scroll Reveal ──
+document.addEventListener('DOMContentLoaded', function () {
+    var els = document.querySelectorAll('.scroll-reveal');
+    if (!els.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(function (el) { el.classList.add('revealed'); });
+        return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var el = entry.target;
+            var delay = parseInt(el.dataset.delay, 10) || 0;
+            setTimeout(function () { el.classList.add('revealed'); }, delay);
+            obs.unobserve(el);
+        });
+    }, { threshold: 0.1 });
+    els.forEach(function (el) { obs.observe(el); });
+});

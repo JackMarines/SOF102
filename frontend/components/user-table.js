@@ -7,15 +7,15 @@
 
     // Ánh xạ key cột → hàm render HTML mặc định
     var DEFAULT_RENDERERS = {
-        group: function (item) { return '<i class="bi bi-people-fill"></i> ' + (item.groupName || '-'); },
-        score: function (item) { return '<i class="bi bi-star-fill"></i> ' + (item.totalScore != null ? item.totalScore.toLocaleString() : '0') + ' pts'; },
-        puzzles: function (item) { return '<i class="bi bi-puzzle-fill"></i> ' + (item.totalPuzzles != null ? item.totalPuzzles.toLocaleString() : '0') + ' solved'; },
+        group: function (item) { return '<span class="material-symbols-outlined">group</span> ' + (item.groupName || '-'); },
+        score: function (item) { return '<span class="material-symbols-outlined">star</span> ' + (item.totalScore != null ? item.totalScore.toLocaleString() : '0') + ' pts'; },
+        puzzles: function (item) { return '<span class="material-symbols-outlined">extension</span> ' + (item.totalPuzzles != null ? item.totalPuzzles.toLocaleString() : '0') + ' solved'; },
         // Kiểm tra cả 2 field do backend dùng tên khác nhau giữa các controller
         admin: function (item) {
             if (item.isAdmin || item.userIsadmin) {
-                return '<i class="bi bi-patch-check-fill" style="color:#2196F3"></i> Admin';
+                return '<span class="material-symbols-outlined" style="color:var(--accent);font-size:1rem;">verified</span> Admin';
             }
-            return '<i class="bi bi-person"></i> Member';
+            return '<span class="material-symbols-outlined" style="font-size:1rem;">person</span> Member';
         }
     };
 
@@ -81,7 +81,7 @@
         var btn = document.createElement('button');
         btn.className = 'btn';
         btn.type = 'button';
-        btn.innerHTML = '<i class="bi bi-search"></i>';
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">search</span>';
         btn.addEventListener('click', function () { self._doSearch(); });
 
         searchBox.appendChild(input);
@@ -200,7 +200,7 @@
                 // Nút 3 chấm
                 var menuBtn = document.createElement('button');
                 menuBtn.className = 'cg-card-menu-btn';
-                menuBtn.innerHTML = '<i class="bi bi-three-dots-vertical"></i>';
+                menuBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">more_vert</span>';
                 menuBtn.type = 'button';
 
                 // Dropdown menu

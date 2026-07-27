@@ -9,6 +9,8 @@
 
     document.getElementById('group-heading').textContent = 'Group';
 
+    showSkeleton('profile-avatar', 'profile-info');
+    showSkeleton('solved-table', 'puzzle-rows');
     var p = await fetchProfile(targetId);
     if (!p || p.error) return;
 
@@ -28,6 +30,16 @@
     if (p.groupName) {
         var groupEl = document.getElementById('group-name');
         groupEl.textContent = p.groupName;
+    }
+
+    if (p.groupAvatar) {
+        var gaImg = document.getElementById('group-avatar-img');
+        var gaFallback = document.getElementById('group-avatar-fallback');
+        if (gaImg && gaFallback) {
+            gaImg.src = p.groupAvatar;
+            gaImg.style.display = 'block';
+            gaFallback.style.display = 'none';
+        }
     }
 
     if (p.teamId) {
@@ -59,6 +71,7 @@
             },
             { key: 'score', label: 'Score', width: '80px' }
         ],
+        emptyMessage: 'No puzzles solved yet.',
         searchPlaceholder: 'Search solved puzzles...',
         filterOptions: ['Easy', 'Medium', 'Hard'],
         filterLabel: 'Difficulty',

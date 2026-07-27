@@ -9,3 +9,5 @@ window.userTable = UserTable.init('user-table', {
     onSearch: function () { loadUsers(1); },
     onPageChange: function (page) { loadUsers(page); }
 });
+
+loadUsers(1);

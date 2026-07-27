@@ -4,6 +4,10 @@ getMe().then(async function (session) {
     var teamId = params.get('id');
     if (!teamId) return;
 
+    showSkeleton('team-name', 'team-info');
+    showSkeleton('member-table', 'member-rows');
+    showSkeleton('top-contributors', 'contributor-rows');
+
     var team = await fetchTeamDetail(teamId);
     if (!team || team.error) return;
 
@@ -89,7 +93,7 @@ getMe().then(async function (session) {
                 var nameSection = document.createElement('div');
                 nameSection.className = 'mb-4';
                 nameSection.innerHTML =
-                    '<label class="form-label fw-semibold">Team Name</label>' +
+                    '<label for="edit-team-name" class="form-label fw-semibold">Team Name</label>' +
                     '<input type="text" id="edit-team-name" class="form-control" placeholder="Enter your team name">' +
                     '<div id="edit-team-name-error" class="text-danger small mt-1 d-none"></div>';
                 ctx.body.appendChild(nameSection);
@@ -127,11 +131,15 @@ getMe().then(async function (session) {
                 saveBtn.textContent = 'Save Changes';
                 saveBtn.addEventListener('click', async function () {
                     var btn = this;
+                    if (btn.disabled) return;
+                    btn.disabled = true;
                     var name = document.getElementById('edit-team-name').value.trim();
                     var nameError = document.getElementById('edit-team-name-error');
                     nameError.classList.add('d-none');
 
                     if (!name) {
+                        btn.disabled = false;
+                        btn.textContent = 'Save Changes';
                         nameError.textContent = 'Team name is required';
                         nameError.classList.remove('d-none');
                         return;
@@ -196,13 +204,17 @@ getMe().then(async function (session) {
                         okLabel: 'Disband',
                         okClass: 'btn-danger',
                         onConfirm: async function () {
-                            var res = await disbandTeam();
-                            if (res && !res.error) {
-                                window.location.href = '/frontend/pages/user/home/index.html';
-                            } else {
-                                alert(res ? (res.error || 'Failed to disband') : 'Failed to disband');
+                                var disbandBtn = document.querySelector('.btn-danger');
+                                if (disbandBtn && disbandBtn.disabled) return;
+                                if (disbandBtn) disbandBtn.disabled = true;
+                                var res = await disbandTeam();
+                                if (res && !res.error) {
+                                    window.location.href = '/frontend/pages/user/home/index.html';
+                                } else {
+                                    if (disbandBtn) disbandBtn.disabled = false;
+                                    Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to disband') : 'Failed to disband', okLabel: 'OK' });
+                                }
                             }
-                        }
                     });
                 });
                 ctx.body.appendChild(disbandBtn);
@@ -298,7 +310,7 @@ getMe().then(async function (session) {
                                 if (res && !res.error) {
                                     window.location.reload();
                                 } else {
-                                    alert(res ? (res.error || 'Failed to transfer') : 'Failed to transfer');
+                                    Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to transfer') : 'Failed to transfer', okLabel: 'OK' });
                                 }
                             }
                         });
@@ -364,6 +376,7 @@ getMe().then(async function (session) {
                 okLabel: 'Leave',
                 okClass: 'btn-danger',
                 onConfirm: async function () {
+                    if (leaveBtn.disabled) return;
                     leaveBtn.disabled = true;
                     leaveBtn.textContent = 'Leaving...';
                     var res = await leaveTeam();
@@ -372,7 +385,7 @@ getMe().then(async function (session) {
                     } else {
                         leaveBtn.disabled = false;
                         leaveBtn.textContent = 'Leave Team';
-                        alert(res ? (res.error || 'Failed to leave') : 'Failed to leave');
+                        Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to leave') : 'Failed to leave', okLabel: 'OK' });
                     }
                 }
             });
@@ -389,6 +402,7 @@ getMe().then(async function (session) {
                 message: 'Do you want to join ' + (team.name || 'this team') + '?',
                 okLabel: 'Join',
                 onConfirm: async function () {
+                    if (joinBtn.disabled) return;
                     joinBtn.disabled = true;
                     joinBtn.textContent = 'Joining...';
                     var res = await joinTeam(teamId);
@@ -405,7 +419,7 @@ getMe().then(async function (session) {
                                 message: 'You are already a member of another team. You must leave your current team before joining a new one.'
                             });
                         } else {
-                            alert(err || 'Failed to join');
+                            Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: err || 'Failed to join', okLabel: 'OK' });
                         }
                     }
                 }
@@ -452,7 +466,7 @@ getMe().then(async function (session) {
             document.getElementById('shoutout-edit').classList.add('d-none');
             document.getElementById('team-shoutout').style.display = '';
         } else {
-            alert(res ? (res.error || 'Failed to update') : 'Failed to update');
+            Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to update') : 'Failed to update', okLabel: 'OK' });
         }
     });
 
@@ -469,45 +483,114 @@ getMe().then(async function (session) {
     }
     document.getElementById('perf-total-score').textContent = totalScore.toLocaleString();
 
+    // ── Group Solved Chart ──
+    var teamChart = null;
+    var teamChartData = null;
+
+    function css(key) { return getComputedStyle(document.documentElement).getPropertyValue(key).trim(); }
+    function csstext(key) { return getComputedStyle(document.documentElement).getPropertyValue('--text-' + key).trim(); }
+    function accentRgb(a) {
+        var h = css('--accent');
+        return 'rgba(' + parseInt(h.slice(1,3),16) + ',' + parseInt(h.slice(3,5),16) + ',' + parseInt(h.slice(5,7),16) + ',' + a + ')';
+    }
+
+    function initTeamChart(days) {
+        if (!teamChartData) return;
+        var cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        var filtered = teamChartData.filter(function(d) {
+            var dd = new Date(d.date);
+            return dd >= cutoff;
+        });
+        var labels = filtered.map(function(d) { return d.date.substring(5); });
+        var values = filtered.map(function(d) { return d.solves; });
+        var ctx = document.getElementById('team-solved-chart').getContext('2d');
+        if (teamChart) teamChart.destroy();
+        teamChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Puzzles Solved',
+                    data: values,
+                    borderColor: css('--accent'),
+                    backgroundColor: accentRgb(0.08),
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } }
+                }
+            }
+        });
+    }
+
+    fetchTeamStats(teamId).then(function(stats) {
+        if (stats && stats.data) teamChartData = stats.data;
+        initTeamChart(7);
+    }).catch(function() {});
+
+    var teamChartPanel = document.querySelector('.content-panel .chart-filter-btn');
+    var teamFilterBtns = teamChartPanel ? document.querySelectorAll('.content-panel .chart-filter-btn') : document.querySelectorAll('.chart-filter-btn');
+    teamFilterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            teamFilterBtns.forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            var filter = btn.getAttribute('data-filter');
+            var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 90;
+            initTeamChart(days);
+        });
+    });
+
     // ── Top Contributors ──
     var topEl = document.getElementById('top-contributors');
     topEl.innerHTML = '';
     if (team.topMembers && team.topMembers.length > 0) {
+        var rankColors = {
+            1: { border: '#FFD700', bg: 'rgba(255,215,0,0.06)', text: '#FFD700' },
+            2: { border: '#C0C0C0', bg: 'rgba(192,192,192,0.06)', text: '#C0C0C0' },
+            3: { border: '#CD7F32', bg: 'rgba(205,127,50,0.06)', text: '#CD7F32' }
+        };
         for (var k = 0; k < team.topMembers.length; k++) {
-            var m = team.topMembers[k];
-            var row = document.createElement('a');
-            row.className = 'd-flex align-items-center mb-3 text-decoration-none';
-            row.href = '/frontend/pages/user/profile/index.html?id=' + m.userId;
-            row.style.color = 'inherit';
-
-            var rankBadge = document.createElement('span');
-            rankBadge.className = 'me-3 fw-bold';
-            rankBadge.style.minWidth = '24px';
-            rankBadge.textContent = '#' + m.rank;
-            if (m.rank === 1) {
-                rankBadge.style.color = '#FFD700';
-            } else if (m.rank === 2) {
-                rankBadge.style.color = '#C0C0C0';
-            } else if (m.rank === 3) {
-                rankBadge.style.color = '#CD7F32';
-            } else {
-                rankBadge.className += ' text-secondary';
+            if (k === 3) {
+                var sep = document.createElement('div');
+                sep.style.cssText = 'border-top:1px solid var(--border-default);margin:var(--space-12px) 0;width:100%;';
+                topEl.appendChild(sep);
             }
+            var m = team.topMembers[k];
+            var rc = rankColors[m.rank] || { border: 'var(--border-default)', bg: 'transparent', text: 'var(--text-muted)' };
 
-            row.appendChild(rankBadge);
-            row.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
+            var row = document.createElement('a');
+            row.className = 'd-flex align-items-center text-decoration-none';
+            row.style.cssText = 'color:inherit;border:1px solid ' + rc.border + ';background:' + rc.bg + ';padding:var(--space-12px);margin-bottom:var(--space-8px);transition:opacity 150ms ease-out;';
+            row.href = '/frontend/pages/user/profile/index.html?id=' + m.userId;
+
+            var rankEl = document.createElement('span');
+            rankEl.style.cssText = 'min-width:32px;font-family:var(--font-mono);font-size:1rem;font-weight:700;color:' + rc.text + ';margin-right:var(--space-8px);text-align:center;';
+            rankEl.textContent = '#' + (k + 1);
+            row.appendChild(rankEl);
+
+            var avatarWrap = document.createElement('span');
+            avatarWrap.style.cssText = 'border-radius:50%;border:2px solid ' + rc.border + ';display:inline-flex;margin-right:var(--space-12px);flex-shrink:0;overflow:hidden;';
+            avatarWrap.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
+            row.appendChild(avatarWrap);
 
             var info = document.createElement('div');
-            info.className = 'flex-grow-1 ms-3';
-            info.style.minWidth = '0';
+            info.style.cssText = 'flex:1;min-width:0;';
             var nameDiv = document.createElement('div');
-            nameDiv.className = 'fw-bold';
-            nameDiv.style.overflow = 'hidden';
-            nameDiv.style.textOverflow = 'ellipsis';
-            nameDiv.style.whiteSpace = 'nowrap';
+            nameDiv.style.cssText = 'font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
             nameDiv.textContent = m.displayName || '';
             var scoreSmall = document.createElement('small');
-            scoreSmall.className = 'text-secondary';
+            scoreSmall.style.cssText = 'font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);';
             scoreSmall.textContent = (m.totalScore || 0).toLocaleString() + ' pts';
             info.appendChild(nameDiv);
             info.appendChild(scoreSmall);
@@ -548,7 +631,7 @@ getMe().then(async function (session) {
                             if (res && !res.error) {
                                 window.location.reload();
                             } else {
-                                alert(res ? (res.error || 'Failed to transfer') : 'Failed to transfer');
+                                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to transfer') : 'Failed to transfer', okLabel: 'OK' });
                             }
                         }
                     });
@@ -570,7 +653,7 @@ getMe().then(async function (session) {
                             if (res && !res.error) {
                                 window.location.reload();
                             } else {
-                                alert(res ? (res.error || 'Failed to kick') : 'Failed to kick');
+                                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to kick') : 'Failed to kick', okLabel: 'OK' });
                             }
                         }
                     });
@@ -612,4 +695,16 @@ getMe().then(async function (session) {
     };
 
     loadMembers(1);
+
+    // Style top 3 member cards with rank colors
+    setTimeout(function() {
+        var memberGrid = document.querySelector('#member-table .cg-grid');
+        if (!memberGrid) return;
+        var cards = memberGrid.querySelectorAll('.cg-card-wrap');
+        var rankColors = ['#FFD700', '#C0C0C0', '#CD7F32'];
+        for (var r = 0; r < Math.min(3, cards.length); r++) {
+            cards[r].style.border = '2px solid ' + rankColors[r];
+            cards[r].style.background = r === 0 ? 'rgba(255,215,0,0.06)' : r === 1 ? 'rgba(192,192,192,0.06)' : 'rgba(205,127,50,0.06)';
+        }
+    }, 100);
 });

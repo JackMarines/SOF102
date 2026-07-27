@@ -259,6 +259,22 @@ public class ProgressDao {
         }
     }
 
+    // Lấy số puzzle đã giải theo ngày của một user (cho biểu đồ profile)
+    public List<Object[]> getUserActivityByDay(int userId, int days) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT DATE(prog_date) AS day, COUNT(*) AS solves " +
+                "FROM progress WHERE user_id = ? AND prog_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY) " +
+                "GROUP BY DATE(prog_date) ORDER BY day ASC");
+            q.setParameter(1, userId);
+            q.setParameter(2, days);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     // ── CHART DATA (dashboard) ──
 
     // Today — 4 segments: 00-06, 06-12, 12-18, 18-00

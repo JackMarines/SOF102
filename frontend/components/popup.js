@@ -217,7 +217,7 @@
         // Icon
         var iconEl = document.createElement('div');
         iconEl.className = 'popup-icon';
-        iconEl.innerHTML = opts.icon || '<i class="bi bi-exclamation-triangle-fill"></i>';
+        iconEl.innerHTML = opts.icon || '<span class="material-symbols-outlined" style="font-size:48px;color:var(--accent);">warning</span>';
         popup._body.appendChild(iconEl);
 
         // Title

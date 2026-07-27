@@ -13,7 +13,7 @@
         // Kiểm tra cả 2 field do backend dùng tên khác nhau giữa các controller
         admin:   function (item) {
             return item.isAdmin || item.userIsadmin
-                ? '<i class="bi bi-patch-check-fill" style="color:#2196F3"></i> Admin'
+                ? '<i class="bi bi-patch-check-fill" style="color:var(--accent)"></i> Admin'
                 : '<i class="bi bi-person"></i> Member';
         },
         email:   function (item) { return '<i class="bi bi-envelope-fill"></i> ' + (item.userEmail || '-'); },
@@ -80,7 +80,7 @@
         toolbar.innerHTML =
             '<div class="cg-search-box input-group">' +
                 '<input type="text" class="form-control" placeholder="' + this.opts.searchPlaceholder + '" id="cg-input-' + id + '">' +
-                '<button class="btn" type="button"><i class="bi bi-search"></i></button>' +
+                '<button class="btn" type="button"><span class="material-symbols-outlined" style="font-size:1rem;">search</span></button>' +
             '</div>';
 
         // Thêm dropdown lọc nếu có
@@ -120,8 +120,8 @@
             // Xây dựng HTML: nút funnel + dropdown với các tùy chọn
             wrap.innerHTML =
                 '<button class="cg-filter-btn" type="button">' +
-                    '<i class="bi bi-funnel"></i> ' + filter.options[0].label +
-                    ' <i class="bi bi-chevron-down" style="font-size:11px;"></i>' +
+                    '<span class="material-symbols-outlined" style="font-size:1rem;">filter_list</span> ' + filter.options[0].label +
+                    ' <span class="material-symbols-outlined" style="font-size:0.8125rem;">expand_more</span>' +
                 '</button>' +
                 '<div class="cg-filter-dropdown">' +
                     filter.options.map(function (opt) {
@@ -145,8 +145,8 @@
                     e.stopPropagation();
                     self._filterValue = row.getAttribute('data-value');
                     // Cập nhật nhãn nút trigger
-                    btn.innerHTML = '<i class="bi bi-funnel"></i> ' + row.textContent +
-                        ' <i class="bi bi-chevron-down" style="font-size:11px;"></i>';
+                    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">filter_list</span> ' + row.textContent +
+                        ' <span class="material-symbols-outlined" style="font-size:0.8125rem;">expand_more</span>';
                     // Bỏ active tất cả, active mục được chọn
                     dd.querySelectorAll('.cg-filter-option').forEach(function (el) { el.classList.remove('cg-filter-active'); });
                     row.classList.add('cg-filter-active');
@@ -245,7 +245,7 @@
                     wrap.className = 'cg-card-wrap';
                     // Xây dựng HTML: nút 3 chấm + dropdown với các mục
                     wrap.innerHTML =
-                        '<button class="cg-card-menu-btn" type="button"><i class="bi bi-three-dots-vertical"></i></button>' +
+                        '<button class="cg-card-menu-btn" type="button"><span class="material-symbols-outlined" style="font-size:1rem;">more_vert</span></button>' +
                         '<div class="cg-card-dropdown">' +
                             visibleItems.map(function (mi) {
                                 var cls = 'cg-card-dropdown-item' + (mi.danger ? ' text-danger' : '');

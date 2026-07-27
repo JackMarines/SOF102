@@ -188,6 +188,23 @@ public class TeamDao {
         }
     }
 
+    // Lấy số puzzle giải được theo ngày (cho biểu đồ team)
+    public List<Object[]> getSolvedByDay(int teamId, int days) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT DATE(pr.prog_date) AS day, COUNT(*) AS solves " +
+                "FROM progress pr JOIN user u ON pr.user_id = u.user_id " +
+                "WHERE u.team_id = ? AND pr.prog_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY) " +
+                "GROUP BY DATE(pr.prog_date) ORDER BY day ASC");
+            q.setParameter(1, teamId);
+            q.setParameter(2, days);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     // Số thành viên đã giải ít nhất 1 puzzle (dùng cho throughput)
     public long getParticipatedMemberCount(int teamId) {
         EntityManager em = JpaUtils.getEntityManager();

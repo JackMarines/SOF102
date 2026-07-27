@@ -8,7 +8,7 @@ var ANN_TYPES = ['GENERAL','MAINTENANCE','RELEASE','FEATURE','BUG_FIX','SECURITY
 function renderAuthor(val, row) {
     var wrapper = document.createElement('div');
     wrapper.className = 'at-author-cell';
-    var avatar = Avatar.render({ size: 28, avatar: null, isAdmin: row.authorIsAdmin });
+    var avatar = Avatar.render({ size: 28, avatar: row.authorAvatar || null, isAdmin: row.authorIsAdmin });
     wrapper.appendChild(avatar);
     var nameSpan = document.createElement('span');
     nameSpan.className = 'at-author-name';
@@ -39,6 +39,7 @@ window.announcementTable = PuzzleTable.init('announcement-table', {
         { key: 'type', label: 'Type', width: '120px', render: renderType },
         { key: 'createdAt', label: 'Date', width: '130px', render: renderDate }
     ],
+    emptyMessage: 'No announcements found.',
     urlTemplate: '#ann-',
     onPageChange: function (page) { loadAnnouncements(page); }
 });
@@ -241,7 +242,7 @@ function buildAnnouncementForm(ctx, existing) {
             isPinned: pinnedCb.checked,
             isPublished: pubCb.checked
         };
-        if (!payload.title) { alert('Title is required'); return; }
+        if (!payload.title) { Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Validation Error', message: 'Title is required', okLabel: 'OK' }); return; }
 
         var url = '/admin/announcements';
         var method = 'POST';
@@ -252,7 +253,7 @@ function buildAnnouncementForm(ctx, existing) {
 
         (method === 'POST' ? apiPost(url, payload) : apiPut(url, payload))
             .then(function(res) {
-                if (res && res.error) { alert(res.error); return; }
+                    if (res && res.error) { Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res.error, okLabel: 'OK' }); return; }
                 ctx.close();
                 loadAnnouncements(1);
             });
@@ -279,7 +280,7 @@ function takeDownAnnouncement(id) {
         onConfirm: function() {
             apiPut('/admin/announcement?id=' + id, { isPublished: false })
                 .then(function(res) {
-                    if (res && res.error) { alert(res.error); return; }
+                if (res && res.error) { Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res.error, okLabel: 'OK' }); return; }
                     loadAnnouncements(1);
                 });
         }
@@ -306,7 +307,7 @@ function showAnnouncementDetail(item) {
 
             var authorEl = document.createElement('span');
             authorEl.className = 'at-detail-author';
-            var authorAvatar = Avatar.render({ size: 24, avatar: null, isAdmin: item.authorIsAdmin });
+            var authorAvatar = Avatar.render({ size: 24, avatar: item.authorAvatar || null, isAdmin: item.authorIsAdmin });
             authorEl.appendChild(authorAvatar);
             var authorName = document.createElement('span');
             authorName.textContent = item.authorName || 'Unknown';
@@ -372,14 +373,9 @@ function autoOpenFromUrl() {
     var openId = params.get('open');
     if (!openId) return;
     var id = parseInt(openId, 10);
-    var item = _annCache[id];
-    if (item) {
-        showAnnouncementDetail(item);
-    } else {
-        apiGet('/announcements?id=' + id).then(function(res) {
-            if (res && res.data) showAnnouncementDetail(res.data);
-        });
-    }
+    apiGet('/announcements?id=' + id).then(function(res) {
+        if (res && res.data) showAnnouncementDetail(res.data);
+    });
 }
 
 // Init
@@ -393,10 +389,12 @@ if (typeof getMe === 'function') {
         })
         .catch(function() {})
         .then(function() {
+            showSkeleton('announcement-table', 'announcement-rows');
             loadAnnouncements(1);
             autoOpenFromUrl();
         });
 } else {
+    showSkeleton('announcement-table', 'announcement-rows');
     loadAnnouncements(1);
     autoOpenFromUrl();
 }

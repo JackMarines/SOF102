@@ -10,6 +10,7 @@ window.puzzleTable = PuzzleTable.init('puzzle-table', {
           }
         }
     ],
+    emptyMessage: 'No puzzles found.',
     searchPlaceholder: 'Search puzzles...',
     filterOptions: ['Easy', 'Medium', 'Hard'],
     filterLabel: 'Difficulty',
@@ -22,4 +23,5 @@ window.puzzleTable = PuzzleTable.init('puzzle-table', {
     onPageChange: function (page) { loadPuzzles(page); }
 });
 
+showSkeleton('puzzle-table', 'puzzle-rows');
 loadPuzzles();

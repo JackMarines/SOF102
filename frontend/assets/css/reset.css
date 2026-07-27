@@ -15,14 +15,15 @@ html {
 body {
   background-color: var(--bg-deep);
   color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
   overflow-x: hidden;
   min-height: 100vh;
 }
 
-img {
+img,
+canvas {
   max-width: 100%;
   height: auto;
   display: block;
@@ -32,6 +33,11 @@ a {
   color: var(--accent);
   text-decoration: none;
   transition: color 150ms ease-out;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 a:hover {
@@ -75,10 +81,33 @@ ul, ol {
   list-style: none;
 }
 
+/* ── Skip link (keyboard nav) ── */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 1000;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: none;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-mono);
   font-weight: 700;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 code, pre {
@@ -87,7 +116,7 @@ code, pre {
 
 ::selection {
   background: var(--accent);
-  color: var(--text-on-accent-dark);
+  color: inherit;
 }
 
 ::-webkit-scrollbar {
@@ -121,6 +150,11 @@ code, pre {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
   .scroll-reveal {
     opacity: 1;
     transform: none;

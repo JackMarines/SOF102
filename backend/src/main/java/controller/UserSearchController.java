@@ -21,10 +21,8 @@ public class UserSearchController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String query = req.getParameter("search");
-        if (query == null || query.trim().isEmpty()) {
-            ResponseUtil.error(resp, 400, "search is required");
-            return;
-        }
+        if (query == null) query = "";
+        query = query.trim();
 
         int page = 1;
         int limit = 10;

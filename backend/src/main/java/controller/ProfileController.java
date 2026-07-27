@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet({"/api/v1/profile", "/api/v1/profile/completed"})
+@WebServlet({"/api/v1/profile", "/api/v1/profile/completed", "/api/v1/profile/activity"})
 public class ProfileController extends HttpServlet {
 
     private UserDao userDao = new UserDao();
@@ -32,6 +32,12 @@ public class ProfileController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String uri = req.getRequestURI();
+
+        // /api/v1/profile/activity
+        if (uri.endsWith("/activity")) {
+            handleActivity(req, resp);
+            return;
+        }
 
         // /api/v1/profile/completed
         if (uri.endsWith("/completed")) {
@@ -56,6 +62,7 @@ public class ProfileController extends HttpServlet {
         data.put("bio", user.getUserBio());
         data.put("groupName", user.getTeam() != null ? user.getTeam().getTeamName() : null);
         data.put("teamId", user.getTeam() != null ? user.getTeam().getTeamId() : null);
+        data.put("groupAvatar", user.getTeam() != null ? user.getTeam().getTeamAvatar() : null);
         data.put("rank", rank);
         data.put("totalScore", totalScore);
         data.put("totalCompletedPuzzles", totalCompleted);
@@ -191,6 +198,38 @@ public class ProfileController extends HttpServlet {
         result.put("pagination", pagination);
 
         ResponseUtil.success(resp, result);
+    }
+
+    // GET /api/v1/profile/activity?id=X — số puzzle giải theo ngày của user
+    private void handleActivity(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String idParam = req.getParameter("id");
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        int userId;
+        if (idParam != null && !idParam.trim().isEmpty()) {
+            try {
+                userId = Integer.parseInt(idParam.trim());
+            } catch (NumberFormatException e) {
+                ResponseUtil.error(resp, 400, "Invalid userId");
+                return;
+            }
+        } else if (sessionUser != null) {
+            userId = sessionUser.getUserId();
+        } else {
+            ResponseUtil.error(resp, 401, "Not authenticated");
+            return;
+        }
+
+        List<Object[]> rows = progressDao.getUserActivityByDay(userId, 100);
+        List<Map<String, Object>> data = new ArrayList<>();
+        for (Object[] row : rows) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("date", row[0] != null ? row[0].toString() : null);
+            item.put("solves", ((Number) row[1]).intValue());
+            data.add(item);
+        }
+
+        ResponseUtil.success(resp, Map.of("period", "daily", "data", data));
     }
 
     @Override
