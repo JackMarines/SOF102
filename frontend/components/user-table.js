@@ -91,6 +91,7 @@
         // Vùng lưới thẻ (xóa và render lại mỗi lần setData)
         this._gridEl = document.createElement('div');
         this._gridEl.className = 'cg-grid';
+        this._gridEl.id = 'cg-grid-' + id;
         this.container.appendChild(this._gridEl);
 
         // Vùng phân trang

@@ -45,6 +45,9 @@
       toggleBtn.setAttribute('aria-expanded', navLinks.classList.contains('open'));
     });
 
+  });
+
+  window.addEventListener('deps-ready', function () {
     apiGet('/announcements/latest')
       .then(function (res) {
         var data = res && res.data;
@@ -68,7 +71,7 @@
         if (mainEl && mainEl.tagName === 'MAIN') {
           mainEl.insertBefore(banner, mainEl.firstChild);
         } else {
-          document.body.insertBefore(banner, document.body.firstChild);
+          document.body.insertBefore(banner, document.body.firstElementChild);
         }
       })
       .catch(function () {});

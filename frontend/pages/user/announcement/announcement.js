@@ -379,7 +379,7 @@ function autoOpenFromUrl() {
 }
 
 // Init
-if (typeof getMe === 'function') {
+window.addEventListener('deps-ready', function () {
     getMe()
         .then(function(session) {
             if (session && session.userIsadmin) {
@@ -389,12 +389,8 @@ if (typeof getMe === 'function') {
         })
         .catch(function() {})
         .then(function() {
-            showSkeleton('announcement-table', 'announcement-rows');
+            showSkeleton('pt-list-announcement-table', 'announcement-rows');
             loadAnnouncements(1);
             autoOpenFromUrl();
         });
-} else {
-    showSkeleton('announcement-table', 'announcement-rows');
-    loadAnnouncements(1);
-    autoOpenFromUrl();
-}
+});

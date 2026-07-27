@@ -1,4 +1,5 @@
 // Home page orchestrator — dynamic dashboard with team grid, weekly puzzles, and team activity
+window.addEventListener('deps-ready', function () {
 getMe().then(async function (session) {
     if (typeof checkUserWarning === 'function') {
         checkUserWarning();
@@ -140,4 +141,5 @@ getMe().then(async function (session) {
 
     // --- Team Activity (with user column, excludes current user) ---
     renderPuzzleRows('team-activity', data.teamActivity, true);
+});
 });

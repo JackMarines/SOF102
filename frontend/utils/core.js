@@ -10,7 +10,10 @@
     '/frontend/services/authService.js'
   ];
   function loadNext() {
-    if (scriptSrcs.length === 0) return;
+    if (scriptSrcs.length === 0) {
+      window.dispatchEvent(new Event('deps-ready'));
+      return;
+    }
     var src = scriptSrcs.shift();
     var s = document.createElement('script');
     s.src = src;
@@ -20,13 +23,10 @@
   loadNext();
 })();
 
-// ── Kiểm tra Maintenance Mode ──
-// Admin users bypass the check entirely.
-// Browser checks are silent: if maintenance mode is on the user gets redirected at any point.
-// Guest/user body visibility is controlled by the auth redirect block below, not here.
-document.addEventListener('DOMContentLoaded', function () {
+// ── Auth-dependent checks (run after deps are loaded) ──
+window.addEventListener('deps-ready', function () {
     var path = window.location.pathname;
-    if (path.indexOf('/common/maintenance/') !== -1 || path.indexOf('login.html') !== -1 ||path.indexOf('common/announcement') !== -1 ||path.indexOf('common/auth') !== -1) return;
+    if (path.indexOf('/common/maintenance/') !== -1 || path.indexOf('login.html') !== -1 || path.indexOf('common/announcement') !== -1 || path.indexOf('common/auth') !== -1) return;
 
     getMe()
         .then(function (session) {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Nếu trang có data-auth="user" → kiểm tra đăng nhập, nếu chưa thì redirect sang login
 if (document.body.dataset.auth === 'user') {
     document.body.style.display = 'none';
-    document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('deps-ready', function () {
         checkAuth().then(function () {
             document.body.style.display = '';
         });

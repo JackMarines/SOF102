@@ -71,24 +71,6 @@
       renderNavAvatar(cachedAvatar);
     }
 
-    if (typeof apiGet === 'function') {
-      getMe().then(function (session) {
-        if (session && session.teamId) {
-          var teamLink = document.getElementById('nav-team-link');
-          if (teamLink) teamLink.href = '/frontend/pages/user/team/index.html?id=' + session.teamId;
-        }
-        if (session && session.userIsadmin) {
-          var badge = document.getElementById('admin-badge');
-          if (badge) badge.classList.remove('d-none');
-        }
-      });
-      apiGet('/profile').then(function (p) {
-        if (!p || p.error) return;
-        renderNavAvatar(p.avatar);
-        try { localStorage.setItem('user_avatar', p.avatar || ''); } catch (e) {}
-      });
-    }
-
     var logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', function (e) {
@@ -105,7 +87,27 @@
         }
       });
     }
+  });
 
+  window.addEventListener('deps-ready', function () {
+    getMe().then(function (session) {
+      if (session && session.teamId) {
+        var teamLink = document.getElementById('nav-team-link');
+        if (teamLink) teamLink.href = '/frontend/pages/user/team/index.html?id=' + session.teamId;
+      }
+      if (session && session.userIsadmin) {
+        var badge = document.getElementById('admin-badge');
+        if (badge) badge.classList.remove('d-none');
+      }
+    });
+    apiGet('/profile').then(function (p) {
+      if (!p || p.error) return;
+      var opts = { size: 36 };
+      if (p.avatar) opts.avatar = p.avatar;
+      var desktop = document.getElementById('nav-avatar-desktop');
+      if (desktop) { desktop.innerHTML = ''; desktop.appendChild(Avatar.render(opts)); }
+      try { localStorage.setItem('user_avatar', p.avatar || ''); } catch (e) {}
+    });
     apiGet('/announcements/latest')
       .then(function (res) {
         var data = res && res.data;

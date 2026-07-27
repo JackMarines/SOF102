@@ -1,4 +1,5 @@
 // Guest profile orchestrator — read-only profile view matching user page layout
+window.addEventListener('deps-ready', function () {
 (async function () {
     if (typeof getMe === 'function') {
         try { await getMe(); } catch (e) {}
@@ -85,4 +86,5 @@
     });
 
     loadSolved();
-})();
+  })();
+});

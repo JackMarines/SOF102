@@ -198,7 +198,7 @@
 <script src="dashboard.js"></script>
 
 <script>
-  initDashboard();
+  window.addEventListener('deps-ready', function () { initDashboard(); });
 </script>
 
 </body>

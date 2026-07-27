@@ -1,4 +1,5 @@
 // Trang chi tiết nhóm — xem thông tin nhóm, chỉnh sửa, rời/nhập nhóm, kiểm soát chủ nhóm (chỉnh sửa, chuyển nhượng, đá thành viên), và bảng thành viên
+window.addEventListener('deps-ready', function () {
 getMe().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
@@ -707,4 +708,5 @@ getMe().then(async function (session) {
             cards[r].style.background = r === 0 ? 'rgba(255,215,0,0.06)' : r === 1 ? 'rgba(192,192,192,0.06)' : 'rgba(205,127,50,0.06)';
         }
     }, 100);
+});
 });

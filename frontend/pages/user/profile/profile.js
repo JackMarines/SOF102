@@ -1,4 +1,5 @@
 // Profile page orchestrator — user profile view with edit modal, group banner, charts, and solved puzzles table
+window.addEventListener('deps-ready', function () {
 getMe().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var targetId = params.get('id');
@@ -315,8 +316,10 @@ getMe().then(async function (session) {
                 btn.classList.add('active');
                 var filter = btn.getAttribute('data-filter');
                 var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
-                initActivityChart(days);
-            });
+            initActivityChart(days);
         });
     });
+});
+});
+
 });

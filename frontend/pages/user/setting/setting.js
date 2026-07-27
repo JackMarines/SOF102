@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('deps-ready', function() {
 
     // ── 1. Active warning glass-box ──
     apiGet('/my-warning').then(function(res) {

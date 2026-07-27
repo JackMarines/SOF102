@@ -194,7 +194,7 @@
 <script src="/frontend/components/theme-toggle.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/components/spinner.js"></script>
-<script>redirectIfAuthenticated()</script>
+<script>window.addEventListener('deps-ready', function() { if (typeof redirectIfAuthenticated === 'function') redirectIfAuthenticated(); })</script>
 <script>
   document.querySelectorAll('.btn-devclimb').forEach(function(btn) {
     btn.addEventListener('mousedown', function() {

@@ -52,7 +52,7 @@
 <script src="/frontend/components/team-table.js"></script>
 <script src="/frontend/services/teamSearchService.js"></script>
 <script src="search.js"></script>
-<script>redirectIfAuthenticated();</script>
+<script>window.addEventListener('deps-ready', function() { if (typeof redirectIfAuthenticated === 'function') redirectIfAuthenticated(); })</script>
 
 </body>
 </html>
