@@ -28,6 +28,9 @@ public class AdminController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        // Lấy tổng số liệu thống kê cho dashboard admin
+        // Mỗi chart (today, week, month, 3months, total) trả về mảng {date, count}
+        // Dữ liệu chart được tính từ ProgressDao, đếm số puzzle đã giải theo ngày
         long totalUsers = userDao.countActive();
         long totalTeams = teamDao.countActive();
         long totalPuzzles = puzzleDao.count(null, null, null);

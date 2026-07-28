@@ -25,6 +25,7 @@ async function register(email, password, username) {
 // 2. Gọi backend để hủy session
 async function logout() {
   sessionStorage.removeItem('warningChecked');
+  invalidateCache('/auth/me');
   await auth.signOut();
   return apiPost('/auth/logout', {});
 }
@@ -34,7 +35,7 @@ async function logout() {
 // Nếu còn → trả về thông tin user
 // Nếu hết → trả về { error: "Not authenticated" }
 async function getMe() {
-  return apiGet('/auth/me');
+  return apiGetCached('/auth/me', 60000);
 }
 
 // redirect to login if not authenticated

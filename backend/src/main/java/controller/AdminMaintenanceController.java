@@ -65,6 +65,10 @@ public class AdminMaintenanceController extends HttpServlet {
             return;
         }
 
+        // Maintenance mode chỉ có 1 row trong DB (maintId = 1)
+        // Khi bật: tất cả request API không phải admin sẽ bị chặn với 503
+        // Kiểm tra ở CorsFilter.java → maintenance gate
+        // Lưu lịch sử ai bật/tắt và thời gian để audit
         Maintenance m = maintenanceDao.get();
         if (m == null) {
             m = new Maintenance();

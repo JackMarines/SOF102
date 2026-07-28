@@ -1,4 +1,5 @@
 // Guest profile orchestrator — read-only profile view matching user page layout
+window.addEventListener('deps-ready', function () {
 (async function () {
     if (typeof getMe === 'function') {
         try { await getMe(); } catch (e) {}
@@ -9,6 +10,8 @@
 
     document.getElementById('group-heading').textContent = 'Group';
 
+    showSkeleton('profile-avatar', 'profile-info');
+    showSkeleton('solved-table', 'puzzle-rows');
     var p = await fetchProfile(targetId);
     if (!p || p.error) return;
 
@@ -19,6 +22,7 @@
     document.getElementById('profile-completed').textContent = p.totalCompletedPuzzles || 0;
 
     var avatarEl = document.getElementById('profile-avatar');
+    avatarEl.innerHTML = '';
     avatarEl.appendChild(Avatar.render({
         size: 120,
         avatar: p.avatar,
@@ -28,6 +32,16 @@
     if (p.groupName) {
         var groupEl = document.getElementById('group-name');
         groupEl.textContent = p.groupName;
+    }
+
+    if (p.groupAvatar) {
+        var gaImg = document.getElementById('group-avatar-img');
+        var gaFallback = document.getElementById('group-avatar-fallback');
+        if (gaImg && gaFallback) {
+            gaImg.src = p.groupAvatar;
+            gaImg.style.display = 'block';
+            gaFallback.style.display = 'none';
+        }
     }
 
     if (p.teamId) {
@@ -59,6 +73,7 @@
             },
             { key: 'score', label: 'Score', width: '80px' }
         ],
+        emptyMessage: 'No puzzles solved yet.',
         searchPlaceholder: 'Search solved puzzles...',
         filterOptions: ['Easy', 'Medium', 'Hard'],
         filterLabel: 'Difficulty',
@@ -72,4 +87,5 @@
     });
 
     loadSolved();
-})();
+  })();
+});

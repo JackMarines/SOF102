@@ -5,6 +5,9 @@
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn && btn.disabled) return;
+        if (btn) btn.disabled = true;
 
         var errorDiv = document.getElementById('forgotError');
         errorDiv.textContent = '';
@@ -34,6 +37,8 @@
             document.getElementById('forgotSuccess').classList.remove('d-none');
             document.getElementById('successEmail').textContent =
                 'We sent a password reset link to ' + email;
+        } finally {
+            if (btn) btn.disabled = false;
         }
     });
 })();

@@ -21,6 +21,9 @@ function initLoginForm() {
     if (loginForm) {
       loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        var btn = loginForm.querySelector('button[type="submit"]');
+        if (btn && btn.disabled) return;
+        if (btn) btn.disabled = true;
 
         var errorDiv = document.getElementById('loginError');
         errorDiv.textContent = '';
@@ -42,6 +45,8 @@ function initLoginForm() {
         } catch (err) {
           hideSpinner("loginForm");
           errorDiv.textContent = friendlyAuthError(err);
+        } finally {
+          if (btn) btn.disabled = false;
         }
       });
     }
@@ -52,6 +57,9 @@ function initRegisterForm() {
     if (registerForm) {
       registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        var btn = registerForm.querySelector('button[type="submit"]');
+        if (btn && btn.disabled) return;
+        if (btn) btn.disabled = true;
 
         var errorDiv = document.getElementById('registerError');
         errorDiv.textContent = '';
@@ -63,6 +71,7 @@ function initRegisterForm() {
 
         if (password !== confirm) {
           errorDiv.textContent = 'Passwords do not match';
+          if (btn) btn.disabled = false;
           return;
         }
 
@@ -80,6 +89,8 @@ function initRegisterForm() {
         } catch (err) {
           hideSpinner("registerForm");
           errorDiv.textContent = friendlyAuthError(err);
+        } finally {
+          if (btn) btn.disabled = false;
         }
       });
     }

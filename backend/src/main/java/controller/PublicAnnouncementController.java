@@ -108,10 +108,10 @@ public class PublicAnnouncementController extends HttpServlet {
             item.put("isPinned", a.getAnnIspinned());
             item.put("isPublished", a.getAnnIspublished());
             item.put("type", a.getAnnType());
-            // Resolve author name + isAdmin
             entity.User author = a.getAnnAuthorid() != null ? userDao.findById(a.getAnnAuthorid()) : null;
             item.put("authorName", author != null ? author.getUserName() : "Unknown");
             item.put("authorIsAdmin", author != null && author.getUserIsadmin() != null && author.getUserIsadmin());
+            item.put("authorAvatar", author != null ? author.getUserAvatar() : null);
             dataList.add(item);
         }
         return dataList;

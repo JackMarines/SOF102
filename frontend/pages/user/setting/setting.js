@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('deps-ready', function() {
 
     // ── 1. Active warning glass-box ──
     apiGet('/my-warning').then(function(res) {
@@ -81,13 +81,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function submitAppeal() {
         var msg = document.getElementById('appeal-message');
-        if (!msg || !msg.value.trim()) { alert('Please enter your appeal message.'); return; }
+        if (!msg || !msg.value.trim()) { Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Validation Error', message: 'Please enter your appeal message.', okLabel: 'OK' }); return; }
 
         var existing = await apiGet('/appeal');
         if (existing && existing.data) {
             for (var i = 0; i < existing.data.length; i++) {
                 if (existing.data[i].status === 'PENDING') {
-                    alert('You already have a pending appeal. Wait for it to be reviewed.');
+                    Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Pending Appeal', message: 'You already have a pending appeal. Wait for it to be reviewed.', okLabel: 'OK' });
                     return;
                 }
             }
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Popup.close('appeal-form');
             location.reload();
         } else {
-            alert(res.message || 'Failed to submit appeal');
+            Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res.message || 'Failed to submit appeal', okLabel: 'OK' });
         }
     }
 
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.parentElement.addEventListener('click', function() {
                 document.querySelectorAll('.glass-box .bi-display, .glass-box .bi-sun-fill, .glass-box .bi-moon-stars-fill')
                     .forEach(function(item) { item.parentElement.style.border = ''; });
-                this.style.border = '2px solid #b388ff';
+                this.style.border = '2px solid var(--accent)';
 
                 var cls = icon.classList;
                 if (cls.contains('bi-sun-fill')) {
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var theme = localStorage.getItem('theme');
         var selector = theme === 'light' ? '.bi-sun-fill' : theme === 'dark' ? '.bi-moon-stars-fill' : '.bi-display';
         var icon = document.querySelector(selector);
-        if (icon) icon.style.border = '2px solid #b388ff';
+        if (icon) icon.style.border = '2px solid var(--accent)';
     })();
 
     // ── 3. Account actions ──
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 render: function(ctx) {
                     var icon = document.createElement('div');
                     icon.className = 'popup-icon';
-                    icon.innerHTML = '<i class="bi bi-check-circle-fill" style="color:#22c55e;"></i>';
+                    icon.innerHTML = '<i class="bi bi-check-circle-fill" style="color:var(--success);"></i>';
                     ctx.body.appendChild(icon);
                     var msg = document.createElement('p');
                     msg.className = 'text-secondary mb-0';
@@ -210,8 +210,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 submit.className = 'custom-btn border-0';
                 submit.textContent = 'Update';
                 submit.addEventListener('click', async function() {
+                    if (submit.disabled) return;
+                    submit.disabled = true;
                     var email = input.value.trim();
                     if (!email || !email.includes('@')) {
+                        submit.disabled = false;
                         status.textContent = 'Please enter a valid email';
                         status.style.color = '#ef4444';
                         return;
@@ -219,8 +222,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     try {
                         var user = firebase.auth().currentUser;
                         if (!user) {
+                            submit.disabled = false;
                             status.textContent = 'Please login again';
-                            status.style.color = '#ef4444';
+                            status.style.color = 'var(--error)';
                             return;
                         }
                         await user.updateEmail(email);
@@ -228,10 +232,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (res && !res.error) {
                             Popup.close('email-popup');
                         } else {
+                            submit.disabled = false;
                             status.textContent = res.error || 'Failed to update email';
-                            status.style.color = '#ef4444';
+                            status.style.color = 'var(--error)';
                         }
                     } catch (err) {
+                        submit.disabled = false;
                         if (err.code === 'auth/requires-recent-login') {
                             status.textContent = 'Please login again before changing email';
                         } else if (err.code === 'auth/email-already-in-use') {

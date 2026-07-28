@@ -1,8 +1,14 @@
 // Home page orchestrator — dynamic dashboard with team grid, weekly puzzles, and team activity
+window.addEventListener('deps-ready', function () {
 getMe().then(async function (session) {
     if (typeof checkUserWarning === 'function') {
         checkUserWarning();
     }
+
+    showSkeleton('team-members', 'team-grid');
+    showSkeleton('weekly-puzzles', 'puzzle-rows');
+    showSkeleton('team-activity', 'puzzle-rows-has-user');
+
     var data = await fetchHome();
     if (!data || data.error) return;
 
@@ -11,12 +17,21 @@ getMe().then(async function (session) {
 
     // --- Team Members ---
     var team = data.team;
-    if (team && team.topMembers && team.topMembers.length > 0) {
+
+    function renderTeamMembers() {
         var membersEl = document.getElementById('team-members');
         membersEl.innerHTML = '';
 
-        for (var i = 0; i < team.topMembers.length; i++) {
-            var m = team.topMembers[i];
+        var all = team && team.topMembers || [];
+        if (all.length === 0) {
+            document.getElementById('team-section').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('team-section').style.display = '';
+
+        for (var i = 0; i < all.length; i++) {
+            var m = all[i];
             var col = document.createElement('div');
 
             var card = document.createElement('a');
@@ -26,27 +41,35 @@ getMe().then(async function (session) {
             var box = document.createElement('div');
             box.className = 'glass-box p-3 text-center home-member-card';
 
-            // Rank badge
             var rankBadge = document.createElement('div');
             rankBadge.className = 'mb-1 fw-bold';
             rankBadge.style.fontSize = '13px';
             rankBadge.textContent = '#' + m.rank;
-            if (m.rank === 1) rankBadge.style.color = '#FFD700';
-            else if (m.rank === 2) rankBadge.style.color = '#C0C0C0';
-            else if (m.rank === 3) rankBadge.style.color = '#CD7F32';
-            else rankBadge.className += ' text-secondary';
+            box.style.boxSizing = 'border-box';
+            if (m.rank === 1) {
+                rankBadge.style.color = '#FFD700';
+                box.style.border = '2px solid #FFD700';
+                box.style.background = 'rgba(255,215,0,0.06)';
+            } else if (m.rank === 2) {
+                rankBadge.style.color = '#C0C0C0';
+                box.style.border = '2px solid #C0C0C0';
+                box.style.background = 'rgba(192,192,192,0.06)';
+            } else if (m.rank === 3) {
+                rankBadge.style.color = '#CD7F32';
+                box.style.border = '2px solid #CD7F32';
+                box.style.background = 'rgba(205,127,50,0.06)';
+            } else {
+                rankBadge.className += ' text-secondary';
+            }
 
-            // Avatar
             var avatarWrap = document.createElement('div');
             avatarWrap.className = 'd-flex justify-content-center mb-2';
             avatarWrap.appendChild(Avatar.render({ size: 64, avatar: m.avatar, isAdmin: m.isAdmin }));
 
-            // Name
             var nameEl = document.createElement('div');
             nameEl.className = 'home-member-name';
             nameEl.textContent = m.displayName || '';
 
-            // Score
             var scoreEl = document.createElement('small');
             scoreEl.className = 'text-secondary';
             scoreEl.style.fontSize = '12px';
@@ -60,9 +83,9 @@ getMe().then(async function (session) {
             col.appendChild(card);
             membersEl.appendChild(col);
         }
-    } else {
-        document.getElementById('team-section').style.display = 'none';
     }
+
+    renderTeamMembers();
 
     // --- Helper: Render puzzle rows as clickable links to solve page ---
     function renderPuzzleRows(containerId, items, showUser) {
@@ -96,4 +119,5 @@ getMe().then(async function (session) {
 
     // --- Team Activity (with user column, excludes current user) ---
     renderPuzzleRows('team-activity', data.teamActivity, true);
+});
 });

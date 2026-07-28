@@ -5,6 +5,7 @@
 
 var maintenanceEnabled = false;       // Trạng thái hiện tại của maintenance mode
 var maintenanceCountdownInterval = null; // Timer đếm ngược popup
+var resetCountdownInterval = null; // Timer đếm ngược reset progress
 var dashboardData = null;              // Dữ liệu dashboard cache (để chuyển đổi biểu đồ)
 var solvedChart = null;                // Chart.js instance
 var manageUsersTable = null;           // CardTable instance
@@ -15,6 +16,13 @@ var warnTargetUser = null;             // User đang bị chọn để cảnh b�
 var warnTargetTeam = null;             // Team đang bị chọn để cảnh báo
 var addPuzzleNewId = null;             // ID puzzle vừa tạo, dùng khi thêm testcase
 var appealTable = null;                // PuzzleTable instance (Appeals popup)
+
+function css(key) { return getComputedStyle(document.documentElement).getPropertyValue(key).trim(); }
+function csstext(key) { return getComputedStyle(document.documentElement).getPropertyValue('--text-' + key).trim(); }
+function accentRgb(a) {
+    var h = css('--accent');
+    return 'rgba(' + parseInt(h.slice(1,3),16) + ',' + parseInt(h.slice(3,5),16) + ',' + parseInt(h.slice(5,7),16) + ',' + a + ')';
+}
 
 // ── Maintenance Mode ──
 
@@ -82,6 +90,8 @@ function openMaintenancePopup() {
             confirmBtn.disabled = true;
             confirmBtn.textContent = 'Confirm';
             confirmBtn.addEventListener('click', function () {
+                if (confirmBtn.disabled) return;
+                confirmBtn.disabled = true;
                 var newEnabled = !maintenanceEnabled;
                 toggleMaintenance(newEnabled).then(function () {
                     maintenanceEnabled = newEnabled;
@@ -278,21 +288,25 @@ async function submitWarning(ctx) {
     var errorEl = document.getElementById('warn-reason-error');
     var submitBtn = ctx.footer.querySelector('.btn-danger');
 
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+
     errorEl.classList.add('d-none');
 
     if (!reason) {
+        submitBtn.disabled = false;
         errorEl.textContent = 'Reason is required';
         errorEl.classList.remove('d-none');
         return;
     }
 
     if (!startDate || !endDate) {
+        submitBtn.disabled = false;
         errorEl.textContent = 'Start and end dates are required';
         errorEl.classList.remove('d-none');
         return;
     }
 
-    submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
 
     var res = await sendWarning(warnTargetUser.userId, reason, startDate, endDate);
@@ -331,11 +345,14 @@ function openBanConfirm(user) {
         okLabel: 'Ban',
         okClass: 'btn-danger',
         onConfirm: async function () {
+            if (window._banningInProgress) return;
+            window._banningInProgress = true;
             var res = await banUser(user.userId);
+            window._banningInProgress = false;
             if (res && !res.error) {
                 loadManageUsers(1);
             } else {
-                alert(res ? (res.error || 'Failed to ban user') : 'Failed to ban user');
+                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to ban user') : 'Failed to ban user', okLabel: 'OK' });
             }
         }
     });
@@ -350,11 +367,14 @@ function openReactivateConfirm(user) {
         message: 'Are you sure you want to reactivate ' + (user.userName || 'this user') + '?',
         okLabel: 'Reactivate',
         onConfirm: async function () {
+            if (window._reactivatingInProgress) return;
+            window._reactivatingInProgress = true;
             var res = await reactivateUser(user.userId);
+            window._reactivatingInProgress = false;
             if (res && !res.error) {
                 loadManageUsers(1);
             } else {
-                alert(res ? (res.error || 'Failed to reactivate user') : 'Failed to reactivate user');
+                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to reactivate user') : 'Failed to reactivate user', okLabel: 'OK' });
             }
         }
     });
@@ -421,7 +441,7 @@ function openManageTeamsPopup() {
                         var img = document.createElement('img');
                         img.src = t.avatar || '';
                         img.alt = '';
-                        img.style.cssText = 'width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:10px;background:var(--accent-blue-soft, #334155)';
+                        img.style.cssText = 'width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:10px;background:var(--bg-elevated)';
                         img.onerror = function () { this.style.display = 'none'; };
                         wrap.appendChild(img);
 
@@ -436,8 +456,8 @@ function openManageTeamsPopup() {
                         wrap.appendChild(info);
                         return wrap;
                     },
-                    members: function (t) { return String(t.memberCount != null ? t.memberCount : 0); },
-                    solved: function (t) { return String(t.totalSolved != null ? t.totalSolved : 0); }
+                    members: function (t) { return '<span class="material-symbols-outlined" style="font-size:0.875rem;vertical-align:middle;margin-right:4px;">group</span> ' + (t.memberCount || 0) + ' members'; },
+                    solved: function (t) { return '<span class="material-symbols-outlined" style="font-size:0.875rem;vertical-align:middle;margin-right:4px;">check_circle</span> ' + (t.totalSolved || 0) + ' solved'; }
                 },
                 onSearch: function () { loadManageTeams(1); },
                 onPageChange: function (page) { loadManageTeams(page); },
@@ -474,7 +494,7 @@ function openBanTeamConfirm(team) {
             if (res && !res.error) {
                 loadManageTeams(1);
             } else {
-                alert(res ? (res.error || 'Failed to ban team') : 'Failed to ban team');
+                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to ban team') : 'Failed to ban team', okLabel: 'OK' });
             }
         }
     });
@@ -493,7 +513,7 @@ function openReactivateTeamConfirm(team) {
             if (res && !res.error) {
                 loadManageTeams(1);
             } else {
-                alert(res ? (res.error || 'Failed to reactivate team') : 'Failed to reactivate team');
+                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to reactivate team') : 'Failed to reactivate team', okLabel: 'OK' });
             }
         }
     });
@@ -585,21 +605,25 @@ async function submitTeamWarning(ctx) {
     var errorEl = document.getElementById('warn-team-reason-error');
     var submitBtn = ctx.footer.querySelector('.btn-danger');
 
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+
     errorEl.classList.add('d-none');
 
     if (!reason) {
+        submitBtn.disabled = false;
         errorEl.textContent = 'Reason is required';
         errorEl.classList.remove('d-none');
         return;
     }
 
     if (!startDate || !endDate) {
+        submitBtn.disabled = false;
         errorEl.textContent = 'Start and end dates are required';
         errorEl.classList.remove('d-none');
         return;
     }
 
-    submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
 
     var res = await sendTeamWarning(warnTargetTeam.id, reason, startDate, endDate);
@@ -688,37 +712,61 @@ async function openAppealDetailPopup(appealId) {
             var isReviewed = res.reviewerId != null;
 
             ctx.body.innerHTML =
-                '<div class="popup-icon"><i class="bi bi-chat-dots-fill"></i></div>' +
-                '<table class="table table-borderless text-start" style="font-size:14px;">' +
-                    '<tr><td class="text-secondary pe-3" style="width:90px;">User ID</td><td><strong>' + res.applicantId + '</strong></td></tr>' +
-                    '<tr><td class="text-secondary pe-3">Date</td><td><strong>' + ds + '</strong></td></tr>' +
-                    '<tr><td class="text-secondary pe-3">Status</td><td><span class="badge bg-' + ({ PENDING: 'warning', APPROVED: 'success', REJECTED: 'danger' }[res.status] || 'secondary') + '">' + res.status + '</span></td></tr>' +
-                    (isReviewed ? '<tr><td class="text-secondary pe-3">Reviewed by</td><td><strong>ID ' + res.reviewerId + '</strong></td></tr>' : '') +
-                    (isReviewed ? '<tr><td class="text-secondary pe-3">Reviewed at</td><td><strong>' + new Date(res.reviewDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + '</strong></td></tr>' : '') +
-                '</table>' +
-                '<div class="mb-2"><strong class="text-secondary" style="font-size:13px;">Message</strong></div>' +
-                '<div class="p-3 rounded-3 mb-3" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);font-size:14px;word-break:break-word;">' + (res.message || '') + '</div>';
+                '<div class="popup-icon"><span class="material-symbols-outlined" style="font-size:48px;color:var(--accent);">forum</span></div>' +
+                '<div style="display:grid;grid-template-columns:auto 1fr;gap:var(--space-8px) var(--space-24px);margin-bottom:var(--space-24px);font-size:0.875rem;">' +
+                    '<span class="content-meta" style="font-size:0.75rem;">User ID</span><strong style="color:var(--text-primary);">' + res.applicantId + '</strong>' +
+                    '<span class="content-meta" style="font-size:0.75rem;">Date</span><strong style="color:var(--text-primary);">' + ds + '</strong>' +
+                    '<span class="content-meta" style="font-size:0.75rem;">Status</span><span class="badge-terminal ' + ({ PENDING: '', APPROVED: 'public', REJECTED: 'private' }[res.status] || '') + '" style="color:' + ({ PENDING: 'var(--warning)', APPROVED: 'var(--success)', REJECTED: 'var(--error)' }[res.status] || 'var(--text-muted)') + ';">' + res.status + '</span>' +
+                    (isReviewed ? '<span class="content-meta" style="font-size:0.75rem;">Reviewed by</span><strong style="color:var(--text-primary);">Admin (ID: ' + res.reviewerId + ')</strong>' : '') +
+                    (isReviewed ? '<span class="content-meta" style="font-size:0.75rem;">Reviewed at</span><strong style="color:var(--text-primary);">' + new Date(res.reviewDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + '</strong>' : '') +
+                '</div>' +
+                '<div class="content-section-heading" style="font-size:0.75rem;margin-bottom:var(--space-8px);">Message</div>' +
+                '<div class="content-panel pad-sm" style="font-size:0.875rem;word-break:break-word;">' + (res.message || '') + '</div>';
 
             if (res.status === 'PENDING') {
                 var approve = document.createElement('button');
                 approve.className = 'custom-btn btn-success border-0';
-                approve.style.minWidth = '120px';
-                approve.innerHTML = '<i class="bi bi-check-lg me-1"></i>APPROVED';
-                approve.addEventListener('click', async function () {
-                    await reviewAppeal(appealId, 'APPROVED');
+                approve.style.cssText = 'min-width:120px;display:inline-flex;align-items:center;gap:var(--space-8px);justify-content:center;';
+                approve.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">check</span> APPROVED';
+                approve.addEventListener('click', function () {
                     ctx.close();
-                    loadAppeals(appealTable ? appealTable.getCurrentPage() : 1);
+                    Popup.confirm({
+                        icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--accent);">warning</span>',
+                        title: 'Approve Appeal?',
+                        message: 'Are you sure you want to approve this appeal?',
+                        okLabel: 'Approve',
+                        okClass: 'btn-success',
+                        onConfirm: async function () {
+                            if (window._reviewingAppeal) return;
+                            window._reviewingAppeal = true;
+                            await reviewAppeal(appealId, 'APPROVED');
+                            window._reviewingAppeal = false;
+                            loadAppeals(appealTable ? appealTable.getCurrentPage() : 1);
+                        }
+                    });
                 });
                 ctx.footer.appendChild(approve);
 
                 var reject = document.createElement('button');
                 reject.className = 'custom-btn btn-danger border-0';
-                reject.style.minWidth = '120px';
-                reject.innerHTML = '<i class="bi bi-x-lg me-1"></i>REJECTED';
-                reject.addEventListener('click', async function () {
-                    await reviewAppeal(appealId, 'REJECTED');
+                reject.style.cssText = 'min-width:120px;display:inline-flex;align-items:center;gap:var(--space-8px);justify-content:center;';
+                reject.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">close</span> REJECTED';
+                reject.addEventListener('click', function () {
                     ctx.close();
-                    loadAppeals(appealTable ? appealTable.getCurrentPage() : 1);
+                    Popup.confirm({
+                        icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--accent);">warning</span>',
+                        title: 'Reject Appeal?',
+                        message: 'Are you sure you want to reject this appeal?',
+                        okLabel: 'Reject',
+                        okClass: 'btn-danger',
+                        onConfirm: async function () {
+                            if (window._reviewingAppeal) return;
+                            window._reviewingAppeal = true;
+                            await reviewAppeal(appealId, 'REJECTED');
+                            window._reviewingAppeal = false;
+                            loadAppeals(appealTable ? appealTable.getCurrentPage() : 1);
+                        }
+                    });
                 });
                 ctx.footer.appendChild(reject);
             } else {
@@ -739,27 +787,27 @@ async function openAppealDetailPopup(appealId) {
 function buildPuzzleFormHtml(p) {
     var x = p.prefix;
     return '<div class="mb-3">' +
-        '<label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>' +
+        '<label for="' + x + 'puzzle-title" class="form-label fw-semibold">Title <span class="text-danger">*</span></label>' +
         '<input type="text" id="' + x + 'puzzle-title" class="form-control" placeholder="e.g. Two Sum" maxlength="200">' +
         '<div id="' + x + 'puzzle-title-error" class="text-danger small mt-1 d-none"></div>' +
     '</div>' +
     '<div class="mb-3">' +
-        '<label class="form-label fw-semibold">Content / Problem Description</label>' +
+        '<label for="' + x + 'puzzle-content" class="form-label fw-semibold">Content / Problem Description</label>' +
         '<textarea id="' + x + 'puzzle-content" class="form-control" rows="5" placeholder="Describe the problem..."></textarea>' +
     '</div>' +
     '<div class="row g-3 mb-3">' +
         '<div class="col-md-6">' +
-            '<label class="form-label fw-semibold">Function Name</label>' +
+            '<label for="' + x + 'puzzle-function" class="form-label fw-semibold">Function Name</label>' +
             '<input type="text" id="' + x + 'puzzle-function" class="form-control" placeholder="e.g. twoSum">' +
         '</div>' +
         '<div class="col-md-6">' +
-            '<label class="form-label fw-semibold">Score</label>' +
+            '<label for="' + x + 'puzzle-score" class="form-label fw-semibold">Score</label>' +
             '<input type="number" id="' + x + 'puzzle-score" class="form-control" value="0" min="0">' +
         '</div>' +
     '</div>' +
     '<div class="row g-3 mb-4">' +
         '<div class="col-md-6">' +
-            '<label class="form-label fw-semibold">Difficulty</label>' +
+            '<label for="' + x + 'puzzle-difficulty" class="form-label fw-semibold">Difficulty</label>' +
             '<select id="' + x + 'puzzle-difficulty" class="form-select">' +
                 '<option value="Easy">Easy</option>' +
                 '<option value="Medium">Medium</option>' +
@@ -767,7 +815,7 @@ function buildPuzzleFormHtml(p) {
             '</select>' +
         '</div>' +
         '<div class="col-md-6">' +
-            '<label class="form-label fw-semibold">Language</label>' +
+            '<label for="' + x + 'puzzle-language" class="form-label fw-semibold">Language</label>' +
             '<select id="' + x + 'puzzle-language" class="form-select">' +
                 '<option value="">Select language...</option>' +
             '</select>' +
@@ -883,14 +931,15 @@ function openManagePuzzlesPopup() {
                     { key: 'id', label: '', width: '50px',
                       render: function (val, item) {
                           return '<span class="pt-row-actions" data-id="' + item.id + '" data-title="' + (item.title || '').replace(/"/g, '&quot;') + '">' +
-                              '<button class="pt-row-menu-btn" type="button"><i class="bi bi-three-dots-vertical"></i></button>' +
-                              '<div class="pt-row-dropdown">' +
-                                  '<div class="pt-row-dropdown-item" data-action="edit"><i class="bi bi-pencil"></i> Edit</div>' +
-                                  '<div class="pt-row-dropdown-item text-danger" data-action="delete"><i class="bi bi-trash"></i> Delete</div>' +
+              '<button class="pt-row-menu-btn" type="button"><span class="material-symbols-outlined" style="font-size:1rem;">more_vert</span></button>' +
+              '<div class="pt-row-dropdown">' +
+                  '<div class="pt-row-dropdown-item" data-action="edit"><span class="material-symbols-outlined" style="font-size:0.875rem;">edit</span> Edit</div>' +
+                  '<div class="pt-row-dropdown-item text-danger" data-action="delete"><span class="material-symbols-outlined" style="font-size:0.875rem;">delete</span> Delete</div>' +
                               '</div></span>';
                       }
                     }
                 ],
+                emptyMessage: 'No puzzles found.',
                 searchPlaceholder: 'Search puzzles...',
                 filterOptions: ['Easy', 'Medium', 'Hard'],
                 filterLabel: 'Difficulty',
@@ -980,6 +1029,7 @@ function openEditPuzzlePopup(puzzle) {
             // Wire Update
             document.getElementById('edit-puzzle-save-btn').addEventListener('click', async function () {
                 var btn = this;
+                if (btn.disabled) return;
                 if (!validatePuzzleForm('edit-')) return;
                 btn.disabled = true; btn.textContent = 'Updating...';
                 var res = await updatePuzzle(puzzle.id, readPuzzleForm('edit-'));
@@ -992,6 +1042,7 @@ function openEditPuzzlePopup(puzzle) {
             document.getElementById('edit-tc-add-btn').addEventListener('click', function () { addTestcaseRow(null, null, 'edit-testcase-list'); });
             document.getElementById('edit-tc-done-btn').addEventListener('click', async function () {
                 var btn = this;
+                if (btn.disabled) return;
                 btn.disabled = true; btn.textContent = 'Saving...';
                 var r = await saveTestcaseRows(puzzle.id, 'edit-testcase-list', editPuzzleDeletedTcIds);
                 btn.disabled = false; btn.textContent = 'Done';
@@ -1016,6 +1067,7 @@ async function loadEditPuzzleFull(id) {
 // ── Xóa Puzzle ──
 
 function deletePuzzleConfirm(puzzle) {
+    var deleting = false;
     Popup.confirm({
         icon: '<i class="bi bi-trash-fill"></i>',
         title: 'Delete Puzzle',
@@ -1023,9 +1075,12 @@ function deletePuzzleConfirm(puzzle) {
         okLabel: 'Delete',
         okClass: 'btn-danger',
         onConfirm: async function () {
+            if (deleting) return;
+            deleting = true;
             var res = await deletePuzzle(puzzle.id);
+            deleting = false;
             if (res && !res.error) loadManagePuzzles(managePuzzlesTable ? managePuzzlesTable.getCurrentPage() : 1);
-            else alert(res ? (res.error || 'Failed to delete') : 'Failed to delete');
+            else Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to delete') : 'Failed to delete', okLabel: 'OK' });
         }
     });
 }
@@ -1061,6 +1116,7 @@ function openAddPuzzlePopup() {
             // Wire Create
             document.getElementById('puzzle-save-btn').addEventListener('click', async function () {
                 var btn = this;
+                if (btn.disabled) return;
                 if (!validatePuzzleForm('')) return;
                 btn.disabled = true; btn.textContent = 'Creating...';
                 var res = await createPuzzle(readPuzzleForm(''));
@@ -1078,6 +1134,7 @@ function openAddPuzzlePopup() {
             document.getElementById('tc-add-btn').addEventListener('click', function () { addTestcaseRow(); });
             document.getElementById('tc-done-btn').addEventListener('click', async function () {
                 var btn = this;
+                if (btn.disabled) return;
                 if (!addPuzzleNewId) { ctx.close(); return; }
                 var rows = document.getElementById('testcase-list').children;
                 if (rows.length === 0) { ctx.close(); return; }
@@ -1161,24 +1218,85 @@ async function initDashboard() {
     document.getElementById('btn-add-puzzle').addEventListener('click', openAddPuzzlePopup);
     document.getElementById('btn-view-appeals').addEventListener('click', openViewAppealsPopup);
     document.getElementById('btn-reset-progress').addEventListener('click', function () {
-        Popup.confirm({
-            icon: '<i class="bi bi-exclamation-triangle-fill"></i>',
-            title: 'Reset All Progress',
-            message: 'Are you sure you want to delete ALL progress? This will reset every solved puzzle and leaderboard. This cannot be undone.',
-            okLabel: 'Reset',
-            okClass: 'btn-danger',
-            onConfirm: async function () {
-                var res = await resetProgress();
-                if (res && !res.error) {
-                    loadDashboardStats();
-                    Popup.confirm({
-                        icon: '<i class="bi bi-check-circle-fill"></i>',
-                        title: 'Progress Reset',
-                        message: 'All progress has been deleted successfully.'
-                    });
-                } else {
-                    alert(res ? (res.error || 'Failed to reset progress') : 'Failed to reset progress');
+        Popup.open({
+            id: 'reset-progress-popup',
+            title: null,
+            size: 'sm',
+            onClose: function () {
+                if (resetCountdownInterval) {
+                    clearInterval(resetCountdownInterval);
+                    resetCountdownInterval = null;
                 }
+            },
+            render: function (ctx) {
+                var iconEl = document.createElement('div');
+                iconEl.className = 'popup-icon';
+                iconEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i>';
+                iconEl.style.color = 'var(--error)';
+                ctx.body.appendChild(iconEl);
+
+                var titleEl = document.createElement('h5');
+                titleEl.className = 'mb-2';
+                titleEl.style.color = 'var(--text-primary)';
+                titleEl.textContent = 'Reset All Progress';
+                ctx.body.appendChild(titleEl);
+
+                var descEl = document.createElement('p');
+                descEl.className = 'text-secondary mb-3';
+                descEl.style.fontSize = '14px';
+                descEl.textContent = 'Are you sure you want to delete ALL progress? This will reset every solved puzzle and leaderboard. This cannot be undone.';
+                ctx.body.appendChild(descEl);
+
+                var countdownEl = document.createElement('p');
+                countdownEl.className = 'mb-3';
+                countdownEl.style.cssText = 'font-size:28px;font-weight:700;color:var(--error);text-align:center;';
+                countdownEl.textContent = '5';
+                ctx.body.appendChild(countdownEl);
+
+                var confirmBtn = document.createElement('button');
+                confirmBtn.className = 'custom-btn btn-danger';
+                confirmBtn.style.minWidth = '120px';
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = 'Reset';
+                confirmBtn.addEventListener('click', async function () {
+                    if (confirmBtn.disabled) return;
+                    confirmBtn.disabled = true;
+                    var res = await resetProgress();
+                    if (res && !res.error) {
+                        ctx.close();
+                        loadDashboardStats();
+                        Popup.confirm({
+                            icon: '<i class="bi bi-check-circle-fill"></i>',
+                            title: 'Progress Reset',
+                            message: 'All progress has been deleted successfully.'
+                        });
+                    } else {
+                        confirmBtn.disabled = false;
+                        ctx.close();
+                        Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to reset progress') : 'Failed to reset progress', okLabel: 'OK' });
+                    }
+                });
+                ctx.footer.appendChild(confirmBtn);
+
+                var cancelBtn = document.createElement('button');
+                cancelBtn.className = 'custom-btn btn-secondary';
+                cancelBtn.style.minWidth = '120px';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.addEventListener('click', function () { ctx.close(); });
+                ctx.footer.appendChild(cancelBtn);
+
+                var count = 5;
+                resetCountdownInterval = setInterval(function () {
+                    count--;
+                    if (count <= 0) {
+                        clearInterval(resetCountdownInterval);
+                        resetCountdownInterval = null;
+                        countdownEl.textContent = '0';
+                        confirmBtn.disabled = false;
+                    } else {
+                        countdownEl.textContent = count;
+                    }
+                }, 1000);
             }
         });
     });
@@ -1243,10 +1361,10 @@ function initSolvedChart(chart) {
             datasets: [{
                 label: 'Puzzles Solved',
                 data: chart.data,
-                borderColor: '#b388ff',
-                backgroundColor: 'rgba(179,136,255,0.1)',
+                borderColor: css('--accent'),
+                backgroundColor: accentRgb(0.1),
                 borderWidth: 3,
-                pointBackgroundColor: '#b388ff',
+                pointBackgroundColor: css('--accent'),
                 pointRadius: 5,
                 pointHoverRadius: 7,
                 tension: 0.3,
@@ -1260,12 +1378,12 @@ function initSolvedChart(chart) {
             scales: {
                 x: {
                     grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#888' }
+                    ticks: { color: csstext('muted') }
                 },
                 y: {
                     beginAtZero: true,
                     grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#888' }
+                    ticks: { color: csstext('muted') }
                 }
             }
         }

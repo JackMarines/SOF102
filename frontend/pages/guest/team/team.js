@@ -1,9 +1,12 @@
 // Guest team detail — read-only team view with clickable members, top contributors, and owner link
-(async function () {
+window.addEventListener('deps-ready', async function () {
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
     if (!teamId) return;
 
+    showSkeleton('team-name', 'team-info');
+    showSkeleton('member-table', 'member-rows');
+    showSkeleton('top-contributors', 'contributor-rows');
     var team = await fetchTeamDetail(teamId);
     if (!team || team.error) return;
 
@@ -157,4 +160,4 @@
     };
 
     loadMembers(1);
-})();
+});

@@ -1,205 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Team</title>
 
-    <!-- META -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-    <title>Team</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="stylesheet" href="/frontend/components/tables.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/frontend/assets/css/style.css">
-    <link rel="stylesheet" href="/frontend/components/tables.css">
-
-    <link rel="icon" href="/frontend/assets/images/icon.png">
-
-    <script>
-        try {
-            if (localStorage.getItem('theme') === 'light')
-                document.documentElement.classList.add('light-mode')
-        } catch (e) { }
-    </script>
-
+  <script>
+    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+  </script>
 </head>
-
 <body data-auth="user">
 
-    <!-- Navbar -->
-    <div id="navbar"></div>
+<div class="scanline"></div>
+<div id="navbar"></div>
 
-    <!-- ================= CONTENT ================= -->
+<main id="main-content" role="main" style="padding-top: var(--nav-height);">
+  <section class="section-page">
+    <div class="container-page">
 
-    <section class="container" style="margin-top:120px; margin-bottom:80px;">
+      <div style="text-align:right;margin-bottom:var(--space-24px);">
+        <a href="/frontend/pages/user/team-search/index.html" class="content-link">
+          Explore more teams <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">arrow_forward</span>
+        </a>
+      </div>
 
-        <!-- Explore more teams link (right-aligned) -->
-        <div class="d-flex justify-content-end mb-4">
-            <a href="/frontend/pages/user/team-search/index.html" class="fw-semibold"
-                style="color:var(--accent);text-decoration:none;font-size:15px;">
-                Explore more teams <i class="bi bi-arrow-right"></i>
-            </a>
+      <div class="tt-banner">
+        <div id="team-banner" class="tt-banner-img" style="background:linear-gradient(135deg,#0d0d0d,#1c1b1b,#0d0d0d);"></div>
+        <div class="tt-banner-overlay"></div>
+        <div class="tt-banner-info">
+          <h1 style="font-family:var(--font-mono);font-size:clamp(1.5rem,3vw,2rem);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#e5e2e1;margin-bottom:var(--space-12px);">
+            <span id="team-name"></span>
+            <span id="team-visibility-badge"></span>
+          </h1>
+          <div id="team-owner-wrapper" style="margin-bottom:var(--space-8px);">
+            <div id="team-owner" style="display:inline-flex;align-items:center;gap:var(--space-8px);text-decoration:none;color:inherit;"></div>
+          </div>
+          <div id="join-btn-wrapper" style="margin-top:var(--space-12px);"></div>
         </div>
+      </div>
 
-        <!-- Team Banner -->
-        <div class="glass-box position-relative overflow-hidden mb-5 tt-banner">
-
-            <div id="team-banner" class="w-100 tt-banner-img"
-                style="height:320px;background:linear-gradient(135deg,#1a0a2e,#2d1b69,#1a0a2e);"></div>
-
-            <div class="tt-banner-overlay"></div>
-
-            <div class="position-absolute top-50 start-0 translate-middle-y w-100 px-5 tt-banner-info">
-
-                <div class="row align-items-center">
-
-                    <div class="col-lg-9">
-
-                        <h1 class="fw-bold mb-3 text-white">
-                            <span id="team-name"></span>
-                            <span id="team-visibility-badge" class="badge ms-2"></span>
-                        </h1>
-
-                        <div id="team-owner-wrapper" class="mb-2">
-                            <div id="team-owner" class="d-inline-flex align-items-center gap-2 text-decoration-none" style="color: inherit;"></div>
-                        </div>
-
-                        <div id="join-btn-wrapper" class="mt-3"></div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+      <div class="content-panel pad-lg scroll-reveal">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12px);">
+          <h4 class="content-section-heading" style="margin-bottom:0;">
+            <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:middle;margin-right:var(--space-8px);color:var(--warning);">campaign</span>
+            Group Shoutout
+          </h4>
+          <button id="shoutout-edit-btn" class="btn-devclimb secondary sm d-none">
+            <span class="material-symbols-outlined" style="font-size:0.875rem;">edit</span>
+          </button>
         </div>
-
-        <!-- Group Shoutout -->
-        <div class="glass-box p-4 mb-4">
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold mb-0">
-                    <i class="bi bi-megaphone-fill text-warning"></i>
-                    Group Shoutout
-                </h4>
-                <button id="shoutout-edit-btn" class="btn btn-sm btn-outline-light d-none">
-                    <i class="bi bi-pencil-square"></i>
-                </button>
-            </div>
-
-            <p id="team-shoutout" class="mb-0"></p>
-            <div id="shoutout-edit" class="d-none">
-                <textarea id="shoutout-input" class="form-control mb-3" rows="3" maxlength="500" placeholder="Write a shoutout..."></textarea>
-                <div class="d-flex justify-content-end gap-2">
-                    <button id="shoutout-cancel" class="custom-btn btn-secondary btn-sm">Cancel</button>
-                    <button id="shoutout-save" class="custom-btn btn-sm">Save</button>
-                </div>
-            </div>
-
+        <p id="team-shoutout" style="font-size:0.8125rem;color:var(--text-secondary);"></p>
+        <div id="shoutout-edit" class="d-none">
+          <textarea id="shoutout-input" rows="3" maxlength="500" placeholder="Write a shoutout..." style="resize:none;"></textarea>
+          <div style="display:flex;justify-content:flex-end;gap:var(--space-8px);margin-top:var(--space-12px);">
+            <button id="shoutout-cancel" class="btn-devclimb secondary sm">Cancel</button>
+            <button id="shoutout-save" class="btn-devclimb primary sm">Save</button>
+          </div>
         </div>
+      </div>
 
-        <div class="row g-4">
-
-            <!-- LEFT -->
-            <div class="col-lg-8">
-
-                <!-- MEMBERS TABLE -->
-                <div class="glass-box p-4">
-
-                    <h4 class="fw-bold mb-4">
-                        <i class="bi bi-people-fill"></i>
-                        Members
-                    </h4>
-
-                    <div id="member-table"></div>
-
-                </div>
-
-            </div>
-
-            <!-- RIGHT -->
-            <div class="col-lg-4">
-
-                <!-- PERFORMANCE -->
-                <div class="glass-box p-4 mb-4">
-
-                    <h4 class="fw-bold mb-4">
-                        Performance Matrix
-                    </h4>
-
-                    <p class="mb-1">Group Throughput</p>
-                    <div class="progress mb-3">
-                        <div id="perf-throughput-bar" class="progress-bar" style="width:0%"></div>
-                    </div>
-                    <p id="perf-throughput-text" class="text-end text-secondary small mb-4">0%</p>
-
-                    <div class="row text-center">
-
-                        <div class="col">
-                            <div class="glass-box p-3">
-                                <h5 id="perf-total-solved">0</h5>
-                                <small>Solved</small>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="glass-box p-3">
-                                <h5 id="perf-total-score">0</h5>
-                                <small>Total Score</small>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- TOP CONTRIBUTORS -->
-                <div class="glass-box p-4">
-
-                    <h4 class="fw-bold mb-4">
-                        <i class="bi bi-trophy-fill text-warning"></i>
-                        Top Contributors
-                    </h4>
-
-                    <div id="top-contributors"></div>
-
-                </div>
-
-            </div>
-
+      <div class="content-grid-2col scroll-reveal" data-delay="100">
+        <div>
+          <div class="content-panel">
+            <h4 class="content-section-heading">
+              <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:middle;margin-right:var(--space-8px);">group</span>
+              Members
+            </h4>
+            <div id="member-table"></div>
+          </div>
         </div>
+        <div>
+          <div class="content-panel pad-lg" style="margin-bottom:var(--space-24px);">
+            <h4 class="content-section-heading">Performance Matrix</h4>
+            <p class="content-meta" style="margin-bottom:var(--space-4px);">Group Throughput</p>
+            <div class="progress-terminal">
+              <div id="perf-throughput-bar" class="progress-fill" style="width:0%"></div>
+            </div>
+            <p id="perf-throughput-text" style="font-size:0.75rem;color:var(--text-muted);text-align:right;margin-bottom:var(--space-24px);">0%</p>
+            <div class="content-grid-2col-equal" style="text-align:center;">
+              <div class="content-panel pad-sm">
+                <p class="stat-number-sm" id="perf-total-solved">0</p>
+                <p class="stat-label-sm">Solved</p>
+              </div>
+              <div class="content-panel pad-sm">
+                <p class="stat-number-sm" id="perf-total-score">0</p>
+                <p class="stat-label-sm">Total Score</p>
+              </div>
+            </div>
+          </div>
+          <div class="content-panel pad-lg" style="margin-bottom:var(--space-24px);">
+            <h4 class="content-section-heading">Group Solved Chart</h4>
+            <div style="display:flex;gap:0;margin-bottom:var(--space-16px);flex-wrap:wrap;">
+              <button class="chart-filter-btn active" data-filter="today">Today</button>
+              <button class="chart-filter-btn" data-filter="week">Week</button>
+              <button class="chart-filter-btn" data-filter="month">Month</button>
+              <button class="chart-filter-btn" data-filter="total">Total</button>
+            </div>
+            <div style="background:var(--bg-deep);border:1px solid var(--border-default);padding:var(--space-16px);">
+              <canvas id="team-solved-chart" height="180"></canvas>
+            </div>
+          </div>
+          <div class="content-panel pad-lg">
+            <h4 class="content-section-heading">
+              <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:middle;margin-right:var(--space-8px);color:var(--warning);">trophy</span>
+              Top Contributors
+            </h4>
+            <div id="top-contributors"></div>
+          </div>
+        </div>
+      </div>
 
-    </section>
+    </div>
+  </section>
+</main>
 
-    <div id="footer"></div>
+<div id="footer"></div>
 
-    <!-- Components -->
-    <script src="/frontend/utils/core.js"></script>
-    <script src="/frontend/components/navbar-user.js"></script>
-    <script src="/frontend/components/footer.js"></script>
-    <script src="/frontend/components/spinner.js"></script>
-    <script src="/frontend/components/avatar.js"></script>
-    <script src="/frontend/components/user-table.js"></script>
-    <script src="/frontend/components/card-table.js"></script>
-    <script src="/frontend/components/popup.js"></script>
-    <script src="/frontend/services/teamService.js"></script>
-
-    <!-- Orchestrator -->
-    <script src="/frontend/pages/user/team/team.js"></script>
-
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/frontend/utils/core.js"></script>
+<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/scroll-reveal.js"></script>
+<script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/skeleton.js"></script>
+<script src="/frontend/components/avatar.js"></script>
+<script src="/frontend/components/user-table.js"></script>
+<script src="/frontend/components/card-table.js"></script>
+<script src="/frontend/components/popup.js"></script>
+<script src="/frontend/services/teamService.js"></script>
+<script src="/frontend/pages/user/team/team.js"></script>
 
 </body>
-
 </html>

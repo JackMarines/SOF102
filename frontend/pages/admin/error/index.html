@@ -1,431 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Admin 404</title>
 
-    <!-- META -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-    <title>404 - Admin Page Not Found</title>
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/frontend/assets/css/style.css">
-
-    <link rel="icon" href="/frontend/assets/images/icon.png">
-
-    <script>
-        try {
-            if (localStorage.getItem("theme") === "light") {
-                document.documentElement.classList.add("light-mode");
-            }
-        } catch (e) { }
-    </script>
-
+  <script>
+    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+  </script>
 </head>
-
 <body>
 
-    <!-- NAVBAR -->
-
-    <nav class="navbar navbar-expand-lg fixed-top">
-
-        <div class="container">
-
-            <!-- LOGO -->
-
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="/frontend/index.html">
-
-                <img src="/frontend/assets/images/logo.png" alt="Logo" style="height:42px" class="me-2">
-
-                Puzzle Solve
-
-            </a>
-
-            <!-- MOBILE -->
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdmin">
-
-                <span class="navbar-toggler-icon"></span>
-
-            </button>
-
-            <!-- MENU -->
-
-            <div class="collapse navbar-collapse" id="navbarAdmin">
-
-                <ul class="navbar-nav mx-auto">
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/dashboard/index.html">
-
-                            Dashboard
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/users/index.html">
-
-                            Users
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/team/index.html">
-
-                            Teams
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/puzzle/index.html">
-
-                            Puzzles
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="/frontend/pages/admin/progress/index.html">
-
-                            Progress
-
-                        </a>
-
-                    </li>
-
-                </ul>
-
-                <!-- RIGHT -->
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <button class="btn btn-link text-white p-0">
-
-                        <i class="bi bi-bell fs-5"></i>
-
-                    </button>
-
-                    <button class="btn btn-link text-white p-0">
-
-                        <i class="bi bi-gear fs-5"></i>
-
-                    </button>
-
-                    <div class="rounded-circle d-flex justify-content-center align-items-center" style="width:42px;
-                               height:42px;
-                               background:#241243;
-                               border:2px solid #b388ff;">
-
-                        <i class="bi bi-person-fill text-white"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-    <!-- ERROR PAGE -->
-
-    <section class="container" style="margin-top:120px;
-               margin-bottom:80px;">
-        <div class="row justify-content-center">
-
-            <div class="col-lg-8 col-xl-7">
-
-                <div class="glass-box p-5 text-center">
-
-                    <!-- ICON -->
-
-                    <div class="mb-4">
-
-                        <div class="mx-auto rounded-circle d-flex justify-content-center align-items-center" style="width:130px;
-                                   height:130px;
-                                   background:#120924;
-                                   border:3px solid #dc3545;">
-
-                            <i class="bi bi-shield-exclamation" style="font-size:64px;color:#dc3545;"></i>
-
-                        </div>
-
-                    </div>
-
-                    <!-- ERROR CODE -->
-
-                    <h1 class="fw-bold mb-0" style="font-size:110px;
-                               line-height:1;
-                               color:#dc3545;">
-
-                        404
-
-                    </h1>
-
-                    <h2 class="fw-bold mt-3">
-
-                        Admin Page Not Found
-
-                    </h2>
-
-                    <p class="text-secondary mt-3 mb-4" style="max-width:650px;
-                               margin:auto;">
-
-                        The page you requested could not be found.
-
-                        <br>
-
-                        It may have been deleted, renamed,
-                        or you may not have permission to access it.
-
-                    </p>
-
-                    <!-- BUTTON -->
-
-                    <div class="d-flex justify-content-center flex-wrap gap-3 mb-5">
-
-                        <a href="/frontend/pages/admin/dashboard/index.html"
-                            class="custom-btn text-decoration-none border-0">
-
-                            <i class="bi bi-speedometer2 me-2"></i>
-
-                            Dashboard
-
-                        </a>
-
-                        <a href="/frontend/index.html" class="custom-btn text-decoration-none border-0">
-
-                            <i class="bi bi-house-fill me-2"></i>
-
-                            Website Home
-
-                        </a>
-
-                    </div>
-
-                    <hr class="my-4">
-
-                    <!-- ADMIN INFORMATION -->
-
-                    <div class="row text-center g-4">
-
-                        <div class="col-md-4">
-
-                            <i class="bi bi-folder2-open fs-1" style="color:#b388ff;"></i>
-
-                            <h6 class="fw-bold mt-3">
-
-                                Invalid Route
-
-                            </h6>
-
-                            <small class="text-secondary">
-
-                                The requested admin route does not exist.
-
-                            </small>
-
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <i class="bi bi-shield-lock fs-1" style="color:#b388ff;"></i>
-
-                            <h6 class="fw-bold mt-3">
-
-                                Permission
-
-                            </h6>
-
-                            <small class="text-secondary">
-
-                                Verify that your administrator account has access.
-
-                            </small>
-
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <i class="bi bi-tools fs-1" style="color:#b388ff;"></i>
-
-                            <h6 class="fw-bold mt-3">
-
-                                Administrator Tips
-
-                            </h6>
-
-                            <small class="text-secondary">
-
-                                Return to the Dashboard and continue managing the system.
-
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <!-- QUICK LINKS -->
-
-                    <div class="glass-box p-4 mt-5">
-
-                        <h5 class="fw-bold mb-4">
-
-                            Quick Navigation
-
-                        </h5>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-3">
-
-                                <a href="/frontend/pages/admin/dashboard/index.html" class="text-decoration-none">
-
-                                    <div class="glass-box p-3">
-
-                                        <i class="bi bi-speedometer2 fs-2"></i>
-
-                                        <div class="mt-2">
-
-                                            Dashboard
-
-                                        </div>
-
-                                    </div>
-
-                                </a>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <a href="/frontend/pages/admin/users/index.html" class="text-decoration-none">
-
-                                    <div class="glass-box p-3">
-
-                                        <i class="bi bi-people-fill fs-2"></i>
-
-                                        <div class="mt-2">
-
-                                            Users
-
-                                        </div>
-
-                                    </div>
-
-                                </a>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <a href="/frontend/pages/admin/puzzle/index.html" class="text-decoration-none">
-
-                                    <div class="glass-box p-3">
-
-                                        <i class="bi bi-puzzle-fill fs-2"></i>
-
-                                        <div class="mt-2">
-
-                                            Puzzles
-
-                                        </div>
-
-                                    </div>
-
-                                </a>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <a href="/frontend/pages/admin/team/index.html" class="text-decoration-none">
-
-                                    <div class="glass-box p-3">
-
-                                        <i class="bi bi-diagram-3-fill fs-2"></i>
-
-                                        <div class="mt-2">
-
-                                            Teams
-
-                                        </div>
-
-                                    </div>
-
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-    <!-- FOOTER -->
-
-    <div id="footer"></div>
-
-    <!-- COMPONENTS -->
-
-    <script src="/frontend/components/footer.js"></script>
-
-    <!-- SERVICES -->
-
-    <script src="/frontend/utils/constants.js"></script>
-
-    <script>
-
-        // Highlight current page
-
-        document.querySelectorAll(".nav-link").forEach(link => {
-
-            if (link.href === window.location.href) {
-
-                link.classList.add("active");
-
-            }
-
-        });
-
-    </script>
-
-    <!-- Bootstrap -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="scanline"></div>
+<div id="navbar"></div>
+
+<main id="main-content" role="main" style="min-height:calc(100vh - var(--nav-height));display:flex;align-items:center;justify-content:center;padding:var(--space-24px);padding-top:calc(var(--nav-height) + var(--space-48px));">
+  <div style="max-width:720px;width:100%;">
+
+    <div class="content-panel" style="text-align:center;max-width:500px;margin:0 auto var(--space-24px);">
+      <div style="width:80px;height:80px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);display:inline-flex;align-items:center;justify-content:center;margin-bottom:var(--space-24px);">
+        <span class="material-symbols-outlined" style="font-size:40px;color:var(--error);">shield_alert</span>
+      </div>
+      <h1 style="font-family:var(--font-mono);font-size:clamp(3rem,8vw,5rem);font-weight:700;color:var(--error);line-height:1;">404</h1>
+      <h2 style="font-family:var(--font-mono);font-size:1.125rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-primary);margin:var(--space-16px) 0;">Admin Page Not Found</h2>
+      <p style="color:var(--text-secondary);margin-bottom:var(--space-24px);">The requested admin route does not exist.</p>
+      <div style="display:flex;gap:var(--space-12px);justify-content:center;flex-wrap:wrap;">
+        <a href="/frontend/pages/admin/dashboard/index.html" class="btn-devclimb primary">Dashboard</a>
+        <a href="/frontend/index.html" class="btn-devclimb secondary">Website Home</a>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-16px);margin-bottom:var(--space-24px);">
+      <div class="content-panel pad-sm">
+        <h4 style="font-family:var(--font-mono);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-primary);margin-bottom:var(--space-8px);">Invalid Route</h4>
+        <p style="font-size:0.75rem;color:var(--text-secondary);">The URL you entered is not a valid admin endpoint.</p>
+      </div>
+      <div class="content-panel pad-sm">
+        <h4 style="font-family:var(--font-mono);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-primary);margin-bottom:var(--space-8px);">Permission</h4>
+        <p style="font-size:0.75rem;color:var(--text-secondary);">Access requires administrator credentials.</p>
+      </div>
+      <div class="content-panel pad-sm">
+        <h4 style="font-family:var(--font-mono);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-primary);margin-bottom:var(--space-8px);">Administrator Tips</h4>
+        <p style="font-size:0.75rem;color:var(--text-secondary);">Use the dashboard navigation to manage users, teams, and puzzles.</p>
+      </div>
+    </div>
+
+    <div class="content-panel" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--space-12px);text-align:center;padding:var(--space-24px);">
+      <a href="/frontend/pages/admin/dashboard/index.html" class="btn-devclimb secondary sm">Dashboard</a>
+      <a href="/frontend/pages/user/user-search/index.html" class="btn-devclimb secondary sm">Users</a>
+      <a href="/frontend/pages/user/puzzle/index.html" class="btn-devclimb secondary sm">Puzzles</a>
+      <a href="/frontend/pages/user/team-search/index.html" class="btn-devclimb secondary sm">Teams</a>
+    </div>
+
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/frontend/utils/core.js"></script>
+<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/avatar.js"></script>
+<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/scroll-reveal.js"></script>
 
 </body>
-
 </html>

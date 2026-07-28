@@ -1,4 +1,30 @@
 // API utility — thin wrappers around fetch() with session cookie support. Paths are relative to /api/v1.
+// Caching: in-memory Map with TTL, invalidate on mutations.
+
+var _apiCache = new Map();
+var _CACHE_TTL = 30000; // 30s default
+
+function apiGetCached(path, ttl) {
+  ttl = ttl || _CACHE_TTL;
+  var key = path;
+  if (_apiCache.has(key)) {
+    var entry = _apiCache.get(key);
+    if (Date.now() - entry.timestamp < ttl) {
+      return Promise.resolve(entry.data);
+    }
+    _apiCache.delete(key);
+  }
+  return apiGet(path).then(function (data) {
+    _apiCache.set(key, { data: data, timestamp: Date.now() });
+    return data;
+  });
+}
+
+function invalidateCache(path) {
+  if (path) { _apiCache.delete(path); }
+  else { _apiCache.clear(); }
+}
+
 async function apiPost(path, body) {
   const res = await fetch(API_BASE + path, {
     method: 'POST',

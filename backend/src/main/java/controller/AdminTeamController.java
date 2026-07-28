@@ -133,6 +133,9 @@ public class AdminTeamController extends HttpServlet {
     }
 
     // PUT /admin/team/ban?id=X
+    // Ban team: set team_isactive=false, ghi "TEAM_BANNED" vào mọi thành viên
+    // Quan trọng: members bị setLastTeamInfo để khi họ login sẽ thấy notification
+    // Nếu chỉ setInactive team mà không xoá members, user vẫn còn trong team nhưng team đã khoá
     private void handleBan(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         String idParam = req.getParameter("id");
@@ -150,6 +153,8 @@ public class AdminTeamController extends HttpServlet {
             String teamName = team.getTeamName();
 
             // Remove all members: save last team info, set team=null
+            // Set team_isactive=false, nhưng các user vẫn còn trong team
+            // Cần setLastTeamInfo để họ biết team đã bị ban khi login
             List<Object[]> members = teamDao.getMembers(teamId, null);
             for (Object[] m : members) {
                 int uid = ((Number) m[0]).intValue();

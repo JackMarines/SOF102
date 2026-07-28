@@ -33,12 +33,12 @@ function showTeamBanPopup(ban) {
         render: function (ctx) {
             var icon = document.createElement('div');
             icon.className = 'popup-icon';
-            icon.innerHTML = '<i class="bi bi-people-fill" style="color:#ef4444;"></i>';
+            icon.innerHTML = '<i class="bi bi-people-fill" style="color:var(--error);"></i>';
             ctx.body.appendChild(icon);
 
             var title = document.createElement('h5');
             title.className = 'fw-bold mb-3';
-            title.style.color = '#ef4444';
+            title.style.color = 'var(--error)';
             title.textContent = 'Team Banned';
             ctx.body.appendChild(title);
 
@@ -84,12 +84,12 @@ function showWarningPopup(w) {
         render: function (ctx) {
             var icon = document.createElement('div');
             icon.className = 'popup-icon';
-            icon.innerHTML = '<i class="bi bi-exclamation-triangle-fill" style="color:#ef4444;"></i>';
+            icon.innerHTML = '<i class="bi bi-exclamation-triangle-fill" style="color:var(--error);"></i>';
             ctx.body.appendChild(icon);
 
             var titleEl = document.createElement('h5');
             titleEl.className = 'fw-bold mb-3';
-            titleEl.style.color = '#ef4444';
+            titleEl.style.color = 'var(--error)';
             titleEl.textContent = title;
             ctx.body.appendChild(titleEl);
 

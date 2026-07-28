@@ -16,6 +16,7 @@
             filter2Options: [],       // Tùy chọn bộ lọc 2 (VD: language)
             filter2Label: 'Filter',
             urlTemplate: null,        // Nếu set, mỗi hàng sẽ là <a> trỏ đến urlTemplate + item.id
+            emptyMessage: 'No items found.',
             onSearch: function () {}, // Callback khi tìm kiếm
             onFilter: function () {}, // Callback khi chọn bộ lọc 1
             onFilter2: function () {}, // Callback khi chọn bộ lọc 2
@@ -68,7 +69,7 @@
         var btn = document.createElement('button');
         btn.className = 'btn';
         btn.type = 'button';
-        btn.innerHTML = '<i class="bi bi-search"></i>';
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">search</span>';
         btn.addEventListener('click', function () { self._doSearch(); });
 
         searchBox.appendChild(input);
@@ -208,6 +209,12 @@
         showSpinner(this._listEl.id);
         var list = this._listEl;
         list.innerHTML = '';
+
+        if (!data || data.length === 0) {
+            list.innerHTML = '<div class="pt-empty">' + (this.opts.emptyMessage || 'No items found.') + '</div>';
+            hideSpinner(this._listEl.id);
+            return;
+        }
 
         var cols = this.opts.columns;
         var urlTpl = this.opts.urlTemplate;
