@@ -14,9 +14,6 @@
       return false;
     }
 
-    var isLight = document.documentElement.classList.contains('light-mode');
-    var themeIcon = isLight ? '\u263E' : '\u2600';
-
     var nav = document.createElement('nav');
     nav.className = 'navbar-devclimb';
     nav.setAttribute('role', 'navigation');
@@ -35,7 +32,6 @@
           '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOG IN</a>' +
         '</div>' +
         '<div class="nav-actions">' +
-          '<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">' + themeIcon + '</button>' +
           '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
         '</div>' +
       '</div>';
