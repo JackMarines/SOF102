@@ -89,6 +89,7 @@ public class PuzzleController extends HttpServlet {
             Map<String, Object> item = new HashMap<>();
             item.put("id", p.getPuzId());
             item.put("title", p.getPuzTitle());
+            item.put("content", p.getPuzContent());
             item.put("language", p.getLanguage() != null ? p.getLanguage().getLangName() : null);
             item.put("difficulty", p.getPuzDifficulty());
             item.put("score", p.getPuzScore());

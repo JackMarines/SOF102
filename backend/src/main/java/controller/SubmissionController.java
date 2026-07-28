@@ -1,8 +1,11 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dao.PuzzleDao;
 import dao.ProgressDao;
 import dao.TestcaseDao;
+import dao.UserTrophyDao;
+import entity.Puzzle;
 import entity.Testcase;
 import entity.User;
 import jakarta.servlet.ServletException;
@@ -25,6 +28,8 @@ public class SubmissionController extends HttpServlet {
 
     private TestcaseDao testcaseDao = new TestcaseDao();
     private ProgressDao progressDao = new ProgressDao();
+    private PuzzleDao puzzleDao = new PuzzleDao();
+    private UserTrophyDao userTrophyDao = new UserTrophyDao();
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final Map<Integer, String> TEMPLATES = new HashMap<>();
     private static final Map<Integer, Long> LAST_SUBMIT = new ConcurrentHashMap<>();
@@ -85,6 +90,7 @@ public class SubmissionController extends HttpServlet {
         String funcName = (String) body.get("function_name");
         Integer progTime = body.get("prog_time") != null
             ? Integer.parseInt(body.get("prog_time").toString()) : null;
+        String progCode = (String) body.get("prog_code");
 
         int judge0Lang = JUDGE0_LANG_MAP.getOrDefault(langId, 71);
 
@@ -289,16 +295,45 @@ public class SubmissionController extends HttpServlet {
         }
 
         boolean puzzlePass = failed.isEmpty() && !error;
+
+        Map<String, Object> response = new HashMap<>();
+
         if (puzzlePass) {
-            progressDao.upsert(user.getUserId(), puzId, progTime);
+            progressDao.upsert(user.getUserId(), puzId, progTime, progCode);
             logger.info("Puzzle passed: userId={}, puzId={}, passed={}/{}",
                 userId, puzId, passed, testcases.size());
+
+            // Trophy award logic — only if contest hasn't ended
+            Puzzle puzzle = puzzleDao.findById(puzId);
+            entity.Contest contest = (puzzle != null) ? puzzle.getContest() : null;
+            if (contest != null && contest.getTrophy() != null) {
+                boolean contestEnded = contest.getConEnd() != null
+                    && System.currentTimeMillis() > contest.getConEnd().getTime();
+                if (!contestEnded) {
+                    int trophyId = contest.getTrophy().getTropId();
+                    if (!userTrophyDao.hasTrophy(userId, trophyId)) {
+                        long total = progressDao.countContestPuzzles(contest.getConId());
+                        long solved = progressDao.countUserContestSolves(userId, contest.getConId());
+                        if (total > 0 && total == solved) {
+                            userTrophyDao.award(userId, trophyId);
+                            response.put("trophyAwarded", true);
+                            response.put("trophyName", contest.getTrophy().getTropName());
+                            response.put("trophyAvatar", contest.getTrophy().getTropAvatar());
+                            logger.info("Trophy awarded: userId={}, trophyId={}", userId, trophyId);
+                        } else {
+                            Map<String, Object> progress = new HashMap<>();
+                            progress.put("solved", solved);
+                            progress.put("total", total);
+                            progress.put("contestId", contest.getConId());
+                            response.put("contestProgress", progress);
+                        }
+                    }
+                }
+            }
         } else {
             logger.info("Puzzle failed: userId={}, puzId={}, passed={}/{}, errors={}",
                 userId, puzId, passed, testcases.size(), failed.size());
         }
-
-        Map<String, Object> response = new HashMap<>();
         response.put("testcount",    testcases.size());
         response.put("testpassed",   passed);
         response.put("testfailed",   failed);

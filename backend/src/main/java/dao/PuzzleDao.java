@@ -16,7 +16,7 @@ public class PuzzleDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             StringBuilder jpql = new StringBuilder(
-                "SELECT p FROM Puzzle p JOIN FETCH p.language WHERE 1=1");
+                "SELECT p FROM Puzzle p JOIN FETCH p.language LEFT JOIN FETCH p.contest WHERE 1=1");
             if (search != null && !search.trim().isEmpty()) {
                 jpql.append(" AND LOWER(p.puzTitle) LIKE LOWER(:search)");
             }
@@ -83,7 +83,7 @@ public class PuzzleDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             TypedQuery<Puzzle> query = em.createQuery(
-                "SELECT p FROM Puzzle p JOIN FETCH p.language WHERE p.puzId = :id",
+                "SELECT p FROM Puzzle p JOIN FETCH p.language LEFT JOIN FETCH p.contest WHERE p.puzId = :id",
                 Puzzle.class);
             query.setParameter("id", id);
             List<Puzzle> result = query.getResultList();
@@ -128,6 +128,20 @@ public class PuzzleDao {
             em.getTransaction().begin();
             Puzzle p = em.find(Puzzle.class, id);
             if (p != null) em.remove(p);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Unlink all puzzles from a contest
+    public void unlinkAllFromContest(int contestId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createQuery("UPDATE Puzzle p SET p.contest = null WHERE p.contest.conId = :cid")
+              .setParameter("cid", contestId)
+              .executeUpdate();
             em.getTransaction().commit();
         } finally {
             em.close();

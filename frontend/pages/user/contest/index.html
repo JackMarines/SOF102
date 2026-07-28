@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Contests</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="stylesheet" href="/frontend/components/tables.css">
+  <link rel="stylesheet" href="/frontend/assets/css/contestMERGELATER.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
+
+  <script>
+    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+  </script>
+</head>
+<body data-auth="user">
+
+<div class="scanline"></div>
+<div id="navbar"></div>
+
+<main style="padding-top: var(--nav-height);">
+  <section class="section-page">
+    <div class="container-page">
+
+      <h1 class="page-title">Contests</h1>
+
+      <div class="tt-search-box input-group" style="margin-bottom:var(--space-24px);">
+        <input type="text" class="form-control" placeholder="Search contests..." id="contest-search-input">
+        <button class="btn" type="button" onclick="document.getElementById('contest-search-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}))">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+
+      <div class="tt-grid" id="contest-grid"></div>
+
+      <div class="tt-pagination" id="contest-pagination"></div>
+
+      <hr class="section-divider">
+
+      <div id="hall-of-fame-section">
+        <h2 class="content-section-heading">Hall of Fame</h2>
+        <div class="hall-fame-grid" id="hall-of-fame"></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer"></div>
+
+<script src="/frontend/utils/core.js"></script>
+<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/scroll-reveal.js"></script>
+<script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/avatar.js"></script>
+<script src="/frontend/components/team-table.js"></script>
+<script src="/frontend/services/contestService.js"></script>
+<script src="contest.js"></script>
+
+</body>
+</html>

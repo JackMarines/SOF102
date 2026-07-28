@@ -25,6 +25,10 @@ public class Puzzle {
     @JoinColumn(name = "lang_id")
     private Language language;
 
+    @ManyToOne
+    @JoinColumn(name = "con_id")
+    private Contest contest;
+
     @Column(name = "puz_difficulty")
     private String puzDifficulty;
 
@@ -47,4 +51,6 @@ public class Puzzle {
     public void setPuzDifficulty(String puzDifficulty) { this.puzDifficulty = puzDifficulty; }
     public Integer getPuzScore() { return puzScore; }
     public void setPuzScore(Integer puzScore) { this.puzScore = puzScore; }
+    public Contest getContest() { return contest; }
+    public void setContest(Contest contest) { this.contest = contest; }
 }

@@ -243,6 +243,10 @@ white-space: nowrap;
 .tt-card {
     text-decoration: none; color: var(--text-primary);
     animation: ttCardIn 0.4s ease backwards;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
 }
 /* Hiệu ứng fade-in tuần tự cho 8 thẻ đầu */
 .tt-card:nth-child(1) { animation-delay: 0s; }
@@ -255,7 +259,11 @@ white-space: nowrap;
 .tt-card:nth-child(8) { animation-delay: 0.28s; }
 /* Glass box effect + hover lift */
 .tt-card .glass-box {
-    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .tt-card:hover .glass-box {
@@ -264,10 +272,12 @@ white-space: nowrap;
 }
 /* Ảnh đại diện nhóm (hoặc fallback icon) */
 .tt-card-avatar {
-    width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px;
+    width: 100%; height: 180px; object-fit: cover; border-radius: 12px;
+    display: block; flex: 0 0 auto;
 }
 .tt-card-avatar-fallback {
-    width: 100%; aspect-ratio: 1/1; border-radius: 12px;
+    width: 100%; height: 180px; border-radius: 12px;
+    flex: 0 0 auto;
     display: flex; align-items: center; justify-content: center;
     background: var(--bg-input); color: var(--text-secondary); font-size: 42px;
 }

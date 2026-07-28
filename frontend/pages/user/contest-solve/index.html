@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVCLIMB | Contest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
+  <link rel="stylesheet" href="/frontend/assets/css/reset.css">
+  <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="stylesheet" href="/frontend/assets/css/contestMERGELATER.css">
+  <link rel="icon" href="/frontend/assets/images/icon.png">
+
+  <script>
+    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+  </script>
+</head>
+<body data-auth="user">
+
+<div class="scanline"></div>
+<div id="navbar"></div>
+
+<main style="padding-top: var(--nav-height);">
+  <section class="section-page">
+    <div class="container-page">
+
+      <a class="back-link" href="/frontend/pages/user/contest/index.html">
+        <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
+        Back to Contests
+      </a>
+
+      <div class="contest-detail-grid">
+        <div class="contest-detail-left" id="contest-left"></div>
+        <div class="contest-detail-right" id="contest-right"></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer"></div>
+
+<script src="/frontend/utils/core.js"></script>
+<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/popup.js"></script>
+<script src="/frontend/components/avatar.js"></script>
+<script src="/frontend/services/contestService.js"></script>
+<script src="contest-solve.js"></script>
+
+</body>
+</html>

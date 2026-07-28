@@ -58,6 +58,7 @@ public class AdminProgressController extends HttpServlet {
             item.put("puzId", p.getPuzId());
             item.put("progDate", p.getProgDate());
             item.put("progTime", p.getProgTime());
+            item.put("progCode", p.getProgCode());
             dataList.add(item);
         }
         ResponseUtil.success(resp, Map.of("data", dataList));
@@ -90,6 +91,7 @@ public class AdminProgressController extends HttpServlet {
             : new Timestamp(System.currentTimeMillis()));
         p.setProgTime(body.get("progTime") != null
             ? ((Number) body.get("progTime")).intValue() : null);
+        p.setProgCode((String) body.get("progCode"));
 
         progressDao.create(p);
 
@@ -121,6 +123,7 @@ public class AdminProgressController extends HttpServlet {
 
             Map<String, Object> body = objectMapper.readValue(req.getReader(), Map.class);
             if (body.containsKey("progTime")) existing.setProgTime(((Number) body.get("progTime")).intValue());
+            if (body.containsKey("progCode")) existing.setProgCode((String) body.get("progCode"));
             if (body.containsKey("progDate")) existing.setProgDate(Timestamp.valueOf((String) body.get("progDate")));
 
             progressDao.update(existing);

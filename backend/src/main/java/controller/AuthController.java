@@ -132,6 +132,7 @@ public class AuthController extends HttpServlet {
         data.put("userName", user.getUserName());
         data.put("userEmail", user.getUserEmail());
         data.put("userIsadmin", user.getUserIsadmin());
+        data.put("userAvatar", user.getUserAvatar());
         data.put("teamId", user.getTeam() != null ? user.getTeam().getTeamId() : null);
 
         // Warning info — reuse activeWarn from lazy ban check (no extra DB query)
@@ -209,6 +210,7 @@ public class AuthController extends HttpServlet {
         data.put("userName", user.getUserName());
         data.put("userEmail", user.getUserEmail());
         data.put("userIsadmin", user.getUserIsadmin());
+        data.put("userAvatar", user.getUserAvatar());
 
         ResponseUtil.success(resp, data);
     }
@@ -255,6 +257,7 @@ public class AuthController extends HttpServlet {
         data.put("userName", user.getUserName());
         data.put("userEmail", user.getUserEmail());
         data.put("userIsadmin", user.getUserIsadmin());
+        data.put("userAvatar", user.getUserAvatar());
         data.put("teamId", user.getTeam() != null ? user.getTeam().getTeamId() : null);
         ResponseUtil.success(resp, data);
     }

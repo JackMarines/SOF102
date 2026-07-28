@@ -242,7 +242,9 @@ async function handleSubmit() {
         puz_id: parseInt(puzzleIdGlobal),
         lang_id: puzzleLangId,
         user_code: typeof window.getEditorCode === 'function' ? window.getEditorCode() : '',
-        function_name: puzzleFuncName
+        function_name: puzzleFuncName,
+        prog_time: secondsGlobal,
+        prog_code: typeof window.getEditorCode === 'function' ? window.getEditorCode() : ''
     };
 
     var result = await apiPost('/submit', body);
@@ -362,6 +364,105 @@ async function handleSubmit() {
 
     if (result.puzzlepass) {
         localStorage.removeItem("puzzle_code_" + puzzleIdGlobal);
+
+        // Trophy award popup
+        if (result.trophyAwarded) {
+            setTimeout(function () {
+                Popup.open({
+                    id: 'trophy-popup',
+                    size: 'sm',
+                    title: null,
+                    className: 'trophy-popup',
+                    render: function (ctx) {
+                        ctx.footer.style.display = 'none';
+
+                        var header = document.createElement('div');
+                        header.className = 'trophy-popup-header';
+                        var label = document.createElement('span');
+                        label.textContent = 'REWARD_STDOUT';
+                        header.appendChild(label);
+                        var closeSquare = document.createElement('button');
+                        closeSquare.className = 'trophy-popup-close';
+                        closeSquare.addEventListener('click', function () { ctx.close(); });
+                        header.appendChild(closeSquare);
+                        ctx.body.parentElement.insertBefore(header, ctx.body);
+
+                        ctx.body.style.padding = '0';
+                        ctx.body.style.margin = '0';
+
+                        var inner = document.createElement('div');
+                        inner.className = 'trophy-popup-body';
+
+                        var iconWrap = document.createElement('div');
+                        iconWrap.className = 'trophy-popup-icon';
+                        var icon = document.createElement('span');
+                        icon.className = 'material-symbols-outlined';
+                        icon.textContent = 'emoji_events';
+                        iconWrap.appendChild(icon);
+                        inner.appendChild(iconWrap);
+
+                        var title = document.createElement('div');
+                        title.className = 'trophy-popup-title';
+                        title.textContent = 'REWARD UNLOCKED';
+                        inner.appendChild(title);
+
+                        var line = document.createElement('div');
+                        line.className = 'trophy-popup-gradient-line';
+                        inner.appendChild(line);
+
+                        if (result.trophyAvatar) {
+                            var imgContainer = document.createElement('div');
+                            imgContainer.className = 'trophy-popup-image';
+                            var img = document.createElement('img');
+                            img.src = result.trophyAvatar;
+                            img.alt = result.trophyName || '';
+                            imgContainer.appendChild(img);
+                            inner.appendChild(imgContainer);
+                        }
+
+                        var name = document.createElement('div');
+                        name.className = 'trophy-popup-name';
+                        name.textContent = result.trophyName || '';
+                        inner.appendChild(name);
+
+                        var desc = document.createElement('p');
+                        desc.className = 'trophy-popup-desc';
+                        desc.textContent = 'You completed all puzzles in this contest!';
+                        inner.appendChild(desc);
+
+                        var closeFull = document.createElement('button');
+                        closeFull.style.cssText = 'width:100%;margin-top:var(--space-8px);padding:var(--space-12px);border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:var(--font-mono);font-size:0.8125rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 150ms;';
+                        closeFull.textContent = 'CLOSE';
+                        closeFull.addEventListener('mouseenter', function () {
+                            this.style.background = 'var(--accent)';
+                            this.style.color = 'var(--bg-base)';
+                        });
+                        closeFull.addEventListener('mouseleave', function () {
+                            this.style.background = 'transparent';
+                            this.style.color = 'var(--accent)';
+                        });
+                        closeFull.addEventListener('click', function () { ctx.close(); });
+                        inner.appendChild(closeFull);
+
+                        ctx.body.appendChild(inner);
+
+                        var footerBar = document.createElement('div');
+                        footerBar.className = 'trophy-popup-footer-bar';
+                        ctx.body.parentElement.appendChild(footerBar);
+                    }
+                });
+            }, 300);
+        }
+
+        // Contest progress message
+        if (result.contestProgress) {
+            var cp = result.contestProgress;
+            var progressMsg = document.createElement('div');
+            progressMsg.style.cssText = 'margin-top:var(--space-16px);padding:var(--space-12px);background:var(--bg-elevated);border:1px solid var(--border-default);font-size:0.8125rem;color:var(--text-secondary);';
+            var pct = cp.total > 0 ? Math.round((cp.solved / cp.total) * 100) : 0;
+            progressMsg.innerHTML = '<span style="color:var(--accent);font-weight:600;">Contest progress:</span> ' + cp.solved + '/' + cp.total + ' puzzles completed (' + pct + '%)';
+            testCases.appendChild(progressMsg);
+        }
     }
 
     submitBtn.disabled = false;
