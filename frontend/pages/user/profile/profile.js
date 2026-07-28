@@ -28,6 +28,7 @@ getMe().then(async function (session) {
     document.getElementById('profile-completed').textContent = p.totalCompletedPuzzles || 0;
 
     var avatarEl = document.getElementById('profile-avatar');
+    avatarEl.innerHTML = '';
     avatarEl.appendChild(Avatar.render({
         size: 120,
         avatar: p.avatar,
@@ -316,7 +317,16 @@ getMe().then(async function (session) {
                 btn.classList.add('active');
                 var filter = btn.getAttribute('data-filter');
                 var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
-            initActivityChart(days);
+                apiGet('/profile/activity?id=' + effectiveId).then(function(res) {
+                    if (res && res.data) {
+                        dayCounts = {};
+                        for (var i = 0; i < res.data.length; i++) {
+                            var item = res.data[i];
+                            dayCounts[item.date] = (dayCounts[item.date] || 0) + item.solves;
+                        }
+                    }
+                    initActivityChart(days);
+                });
         });
     });
 });

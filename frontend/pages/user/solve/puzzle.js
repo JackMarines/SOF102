@@ -20,5 +20,4 @@ codeEditor.addEventListener("input", () => {
 });
 
 initSubmit();
-initVerticalResize();
 initSolveTabs();

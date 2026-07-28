@@ -30,9 +30,8 @@
         }
         .av-admin-badge {
             position: absolute;
-            border-radius: 0;
+            border-radius: 50%;
             overflow: hidden;
-            background: var(--bg-elevated);
             display: flex;
             align-items: center;
             justify-content: center;

@@ -22,6 +22,7 @@ window.addEventListener('deps-ready', function () {
     document.getElementById('profile-completed').textContent = p.totalCompletedPuzzles || 0;
 
     var avatarEl = document.getElementById('profile-avatar');
+    avatarEl.innerHTML = '';
     avatarEl.appendChild(Avatar.render({
         size: 120,
         avatar: p.avatar,

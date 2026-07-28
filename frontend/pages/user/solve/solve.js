@@ -181,34 +181,6 @@ function initSolveTabs() {
     });
 }
 
-// ── Resize Left / Right ──
-
-function initVerticalResize() {
-    const resizer = document.getElementById("verticalResizer");
-    const topPanel = document.querySelector(".top-panel");
-
-    let isVertical = false;
-
-    resizer.addEventListener("mousedown", () => {
-        isVertical = true;
-    });
-
-    document.addEventListener("mouseup", () => {
-        isVertical = false;
-    });
-
-    document.addEventListener("mousemove", (e) => {
-        if (!isVertical) return;
-
-        const total = topPanel.offsetWidth;
-        let left = e.clientX;
-        left = Math.max(250, left);
-        left = Math.min(total - 350, left);
-
-        topPanel.style.gridTemplateColumns = `${left}px 6px auto`;
-    });
-}
-
 // ══════════════════════════════════════════════════════
 // TIMER
 // ══════════════════════════════════════════════════════
@@ -217,15 +189,13 @@ var started = false;
 var seconds = 0;
 var secondsGlobal = 0;
 var timerInterval;
-document.addEventListener('DOMContentLoaded',function(){var r=document.getElementById('resetBtn');if(!r)return;r.addEventListener('click',async function(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}document.getElementById('timer').textContent='00:00';var tf=document.getElementById('timerFooter');if(tf)tf.textContent='00:00';localStorage.removeItem('puzzle_code_'+puzzleIdGlobal);document.getElementById('statusText').textContent='Waiting...';document.getElementById('passResult').textContent='-';var tc=document.getElementById('testCases');if(tc)tc.innerHTML='';if(puzzleSetCode)puzzleSetCode(await initSignature(puzzleLanguage,puzzleFuncName))})});
+document.addEventListener('DOMContentLoaded',function(){var r=document.getElementById('resetBtn');if(!r)return;r.addEventListener('click',async function(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}started=false;document.getElementById('timer').textContent='00:00';localStorage.removeItem('puzzle_code_'+puzzleIdGlobal);document.getElementById('statusText').textContent='Waiting...';document.getElementById('passResult').textContent='-';var tc=document.getElementById('testCases');if(tc)tc.innerHTML='';if(puzzleSetCode)puzzleSetCode(await initSignature(puzzleLanguage,puzzleFuncName))})});
 
 function updateTimerDisplay() {
     const timerEl = document.getElementById("timer");
     const m = String(Math.floor(seconds / 60)).padStart(2, "0");
     const s = String(seconds % 60).padStart(2, "0");
     timerEl.textContent = `${m}:${s}`;
-    const tf = document.getElementById("timerFooter");
-    if (tf) tf.textContent = `${m}:${s}`;
 }
 
 function startTimer() {

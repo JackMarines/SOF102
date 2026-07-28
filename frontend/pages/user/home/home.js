@@ -16,11 +16,9 @@ getMe().then(async function (session) {
     document.getElementById('username').textContent = data.displayName || '';
 
     // --- Team Members ---
-    var PER_PAGE = 5;
-    var teamPage = 1;
     var team = data.team;
 
-    function renderTeamMembers(page) {
+    function renderTeamMembers() {
         var membersEl = document.getElementById('team-members');
         membersEl.innerHTML = '';
 
@@ -32,17 +30,8 @@ getMe().then(async function (session) {
 
         document.getElementById('team-section').style.display = '';
 
-        var totalPages = Math.ceil(all.length / PER_PAGE);
-        if (page < 1) page = 1;
-        if (page > totalPages) page = totalPages;
-        teamPage = page;
-
-        var start = (teamPage - 1) * PER_PAGE;
-        var end = Math.min(start + PER_PAGE, all.length);
-        var pageMembers = all.slice(start, end);
-
-        for (var i = 0; i < pageMembers.length; i++) {
-            var m = pageMembers[i];
+        for (var i = 0; i < all.length; i++) {
+            var m = all[i];
             var col = document.createElement('div');
 
             var card = document.createElement('a');
@@ -94,20 +83,9 @@ getMe().then(async function (session) {
             col.appendChild(card);
             membersEl.appendChild(col);
         }
-
-        document.getElementById('team-page-info').textContent = teamPage + ' / ' + totalPages;
-        document.getElementById('team-prev').disabled = teamPage <= 1;
-        document.getElementById('team-next').disabled = teamPage >= totalPages;
     }
 
-    document.getElementById('team-prev').addEventListener('click', function () {
-        renderTeamMembers(teamPage - 1);
-    });
-    document.getElementById('team-next').addEventListener('click', function () {
-        renderTeamMembers(teamPage + 1);
-    });
-
-    renderTeamMembers(1);
+    renderTeamMembers();
 
     // --- Helper: Render puzzle rows as clickable links to solve page ---
     function renderPuzzleRows(containerId, items, showUser) {

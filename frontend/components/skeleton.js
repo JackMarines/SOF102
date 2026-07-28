@@ -2,9 +2,10 @@ var _skeletonTemplates = {
   'announcement-rows': function () {
     var html = '';
     for (var i = 0; i < 5; i++) {
-      html += '<div class="skeleton-table-row" style="grid-template-columns:1fr 120px 100px;padding:16px 20px;">' +
+      html += '<div class="skeleton-table-row" style="grid-template-columns:200px 1fr 120px 130px;padding:16px 20px;">' +
+        '<div class="skeleton skeleton-text" style="width:60%;"></div>' +
         '<div class="skeleton skeleton-text"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:70%;margin:0 auto;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:60%;margin:0 auto;"></div>' +
         '<div class="skeleton skeleton-text-sm" style="width:50%;margin:0 0 0 auto;"></div>' +
         '</div>';
     }
@@ -14,10 +15,11 @@ var _skeletonTemplates = {
   'puzzle-rows': function () {
     var html = '';
     for (var i = 0; i < 6; i++) {
-      html += '<div class="skeleton-table-row">' +
-        '<div class="skeleton skeleton-text"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:60%;"></div>' +
+      html += '<div class="skeleton-table-row" style="grid-template-columns:60px 1fr 150px 120px;">' +
         '<div class="skeleton skeleton-text-sm" style="width:40%;"></div>' +
+        '<div class="skeleton skeleton-text"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:50%;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:50%;"></div>' +
         '</div>';
     }
     return html;
@@ -26,11 +28,11 @@ var _skeletonTemplates = {
   'puzzle-rows-has-user': function () {
     var html = '';
     for (var i = 0; i < 6; i++) {
-      html += '<div class="skeleton-table-row has-user">' +
+      html += '<div class="skeleton-table-row has-user" style="grid-template-columns:150px 1fr 120px 100px;">' +
+        '<div class="skeleton skeleton-text" style="width:60%;"></div>' +
         '<div class="skeleton skeleton-text"></div>' +
-        '<div class="skeleton skeleton-text"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:60%;"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:40%;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:50%;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:50%;"></div>' +
         '</div>';
     }
     return html;
@@ -49,8 +51,8 @@ var _skeletonTemplates = {
   },
 
   'profile-info': function () {
-    return '<div style="display:flex;align-items:center;gap:var(--space-24px);margin-bottom:var(--space-32px);">' +
-      '<div class="skeleton skeleton-avatar-lg"></div>' +
+    return '<div style="display:flex;align-items:center;gap:var(--space-32px);">' +
+      '<div class="skeleton skeleton-avatar-lg" style="width:120px;height:120px;"></div>' +
       '<div style="flex:1;">' +
       '<div class="skeleton skeleton-title" style="width:40%;"></div>' +
       '<div class="skeleton skeleton-text" style="width:70%;"></div>' +
@@ -66,9 +68,10 @@ var _skeletonTemplates = {
     var html = '<div class="skeleton-team-grid">';
     for (var i = 0; i < 6; i++) {
       html += '<div class="skeleton skeleton-team-card">' +
-        '<div class="skeleton skeleton-avatar"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:60%;"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:40%;"></div>' +
+        '<div class="skeleton skeleton-avatar" style="width:64px;height:64px;margin-bottom:8px;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:60%;margin:0 auto 4px;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:50%;margin:0 auto 8px;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:40%;margin:0 auto;"></div>' +
         '</div>';
     }
     return html + '</div>';
@@ -128,15 +131,15 @@ var _skeletonTemplates = {
   },
 
   'search-rows': function () {
-    var html = '';
+    var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">';
     for (var i = 0; i < 8; i++) {
-      html += '<div style="display:flex;align-items:center;gap:var(--space-12px);padding:12px 16px;border-bottom:1px solid var(--border-subtle);">' +
-        '<div class="skeleton skeleton-avatar"></div>' +
-        '<div class="skeleton skeleton-text" style="flex:1;"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:80px;"></div>' +
+      html += '<div class="glass-box p-3" style="text-align:center;">' +
+        '<div class="skeleton skeleton-avatar" style="width:80px;height:80px;margin:0 auto 12px;"></div>' +
+        '<div class="skeleton skeleton-text" style="width:70%;margin:0 auto 8px;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:40%;margin:0 auto;"></div>' +
         '</div>';
     }
-    return html;
+    return html + '</div>';
   }
 };
 
