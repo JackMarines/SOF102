@@ -199,4 +199,4 @@ Security
 
 License
 -------
-  Internal project — PRO230 coursework.
+  MIT License - Copyright (c) 2026 LBKT Studio
