@@ -21,9 +21,7 @@
     nav.innerHTML =
       '<div class="nav-inner">' +
         '<a class="nav-logo-link" href="/frontend/pages/user/home/index.html" aria-label="DevClimb home">' +
-          '<span class="nav-logo-dev">DEV</span>' +
-          '<span class="nav-logo-climb">CLIMB</span>' +
-          '<span class="nav-logo-cursor"></span>' +
+          '<img class="nav-logo-img" src="/frontend/assets/images/devclimblogo.png" alt="DevClimb">' +
         '</a>' +
         '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
         '<div class="nav-links" id="nav-links" role="list">' +
@@ -46,7 +44,7 @@
           '</div>' +
         '</div>' +
         '<div class="nav-actions">' +
-          '<a id="admin-badge" class="admin-badge d-none" href="/frontend/pages/admin/dashboard/index.html" aria-label="Admin dashboard">ADMIN</a>' +
+          '<a id="admin-badge" class="admin-badge" href="/frontend/pages/admin/dashboard/index.html" aria-label="Admin dashboard">ADMIN</a>' +
         '</div>' +
       '</div>';
 
@@ -99,7 +97,7 @@
       }
       if (session && session.userIsadmin) {
         var badge = document.getElementById('admin-badge');
-        if (badge) badge.classList.remove('d-none');
+        if (badge) badge.classList.add('admin-badge-visible');
       }
     });
     apiGet('/profile').then(function (p) {

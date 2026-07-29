@@ -22,16 +22,14 @@
     nav.innerHTML =
       '<div class="nav-inner">' +
         '<a class="nav-logo-link" href="/frontend/index.html" aria-label="DevClimb home">' +
-          '<span class="nav-logo-dev">DEV</span>' +
-          '<span class="nav-logo-climb">CLIMB</span>' +
-          '<span class="nav-logo-cursor"></span>' +
+          '<img class="nav-logo-img" src="/frontend/assets/images/devclimblogo.png" alt="DevClimb">' +
         '</a>' +
         '<div class="nav-links" id="nav-links" role="list">' +
           '<a href="/frontend/pages/guest/team-search/index.html" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
           '<a href="/frontend/pages/guest/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
           '<a href="/frontend/pages/guest/contest/index.html" role="listitem"' + (isActive('contests') ? ' class="active"' : '') + '>CONTEST</a>' +
           '<a href="/frontend/pages/guest/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
-          '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOG IN</a>' +
+          '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOGIN</a>' +
         '</div>' +
         '<div class="nav-actions">' +
           '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +

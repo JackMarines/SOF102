@@ -90,6 +90,7 @@
     display: grid; grid-template-columns: var(--pt-grid);
     padding: 14px 20px; border-bottom: 1px solid var(--row-border);
     transition: 0.2s; text-decoration: none; color: var(--text-primary);
+    font-family: var(--font-mono); font-size: 0.875rem;
     animation: ptFadeIn 0.4s ease backwards;
     position: relative;
 }
@@ -110,13 +111,24 @@ white-space: nowrap;
 .pt-row-medium { color: #fbbf24; }
 .pt-row-hard { color: #ef4444; }
 
+/* Grid cells must shrink to column width — enables text-overflow: ellipsis on children */
+.pt-row > span {
+  min-width: 0;
+  overflow: hidden;
+}
+
 /* Menu ngữ cảnh hàng (dropdown 3 chấm) */
 .pt-row-actions { position: relative; display: inline-block; }
 .pt-row-menu-btn {
     background: none; border: none; color: var(--text-secondary); cursor: pointer;
     padding: 4px 6px; border-radius: 4px; transition: all 0.2s;
+    display: inline-flex; align-items: center; justify-content: center;
 }
 .pt-row-menu-btn:hover { background: var(--bg-hover); color: var(--accent); }
+.pt-row-menu-btn .material-symbols-outlined {
+    font-size: 16px; margin-top: 3px;
+}
+
 .pt-row-dropdown {
     display: none; position: absolute; right: 0; top: 100%; z-index: 100;
     background: var(--bg-secondary, #1e293b); border: 1px solid var(--border-input);
@@ -129,7 +141,8 @@ white-space: nowrap;
     font-size: 13px; color: var(--text-primary); cursor: pointer; transition: background 0.15s;
 }
 .pt-row-dropdown-item:hover { background: var(--bg-hover); }
-.pt-row-dropdown-item i { font-size: 13px; }
+.pt-row-dropdown-item i,
+.pt-row-dropdown-item .material-symbols-outlined { font-size: 13px; }
 
 /* Phân trang */
 .pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
@@ -443,6 +456,12 @@ white-space: nowrap;
    ANNOUNCEMENT TABLE (at-) — puzzle-table variant with author avatar + pinned section
    ═══════════════════════════════════════════════ */
 
+/* Announcement table grid gap — keeps type and date columns from being flush */
+#announcement-table .pt-row,
+#announcement-table .pt-table-header {
+    column-gap: 16px;
+}
+
 /* Author cell: avatar + name in flex row */
 .at-author-cell {
     display: flex;
@@ -457,6 +476,24 @@ white-space: nowrap;
     text-overflow: ellipsis;
 }
 
+/* Announcement type badges — style matches announcement-banner badge in components.css */
+.at-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.at-type-badge.general { background: var(--ann-general-bg); color: #93c5fd; }
+.at-type-badge.maintenance { background: var(--ann-maintenance-bg); color: #fbbf24; }
+.at-type-badge.release { background: var(--ann-release-bg); color: #4ade80; }
+.at-type-badge.feature { background: var(--ann-feature-bg); color: #818cf8; }
+.at-type-badge.bug-fix { background: var(--ann-bug-fix-bg); color: #f87171; }
+.at-type-badge.security { background: var(--ann-security-bg); color: #c084fc; }
+.at-type-badge.incident { background: var(--ann-incident-bg); color: #ef4444; }
+.at-type-badge.event { background: var(--ann-event-bg); color: #60a5fa; }
+
 /* Pin corner icon — absolutely positioned at top-left of the row */
 .at-pin-corner {
     position: absolute;
@@ -466,6 +503,9 @@ white-space: nowrap;
     font-size: 13px;
     z-index: 2;
     line-height: 1;
+}
+.at-pin-corner .material-symbols-outlined {
+    font-size: inherit;
 }
 
 /* ═══════════════════════════════════════════════
@@ -487,7 +527,6 @@ white-space: nowrap;
     flex-wrap: wrap;
     gap: 4px;
     margin-bottom: 20px;
-    padding-left: 42px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border-subtle);
     overflow-wrap: break-word;
