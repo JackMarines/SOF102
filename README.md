@@ -10,7 +10,7 @@ a terminal UI.
 
 Built with Java servlets on the backend and vanilla HTML/CSS/JS on the frontend.
 
-  [Screenshot: Landing page / hero section]
+  ![DevClimb Demo](frontend/assets/videos/hero.gif)
 
 
 About
