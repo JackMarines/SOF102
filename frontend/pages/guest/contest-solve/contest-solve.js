@@ -1,4 +1,4 @@
-// Contest-solve page orchestrator — tải chi tiết contest, hiển thị header + danh sách puzzle + sidebar
+// Guest contest-solve — hiển thị chi tiết contest + puzzles, nút dẫn đến đăng nhập
 (function () {
 
     var leftEl = document.getElementById('contest-left');
@@ -12,7 +12,7 @@
     }
 
     function formatDuration(start, end) {
-        if (!start || !end) return '—';
+        if (!start || !end) return '\u2014';
         var ms = end - start;
         var days = Math.floor(ms / 86400000);
         if (days >= 1) return days + ' day' + (days > 1 ? 's' : '');
@@ -24,8 +24,6 @@
         if (!str) return '';
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
-
-    // ── Left Column ──
 
     function renderHeader(c) {
         var header = document.createElement('div');
@@ -76,7 +74,7 @@
         if (c.start) {
             var dates = document.createElement('span');
             dates.className = 'contest-header-dates';
-            dates.innerHTML = '<span class="material-symbols-outlined" style="font-size:0.875rem;">calendar_today</span> ' + formatDate(c.start) + (c.end ? ' — ' + formatDate(c.end) : '');
+            dates.innerHTML = '<span class="material-symbols-outlined" style="font-size:0.875rem;">calendar_today</span> ' + formatDate(c.start) + (c.end ? ' \u2014 ' + formatDate(c.end) : '');
             meta.appendChild(dates);
         }
 
@@ -134,13 +132,6 @@
                 titleRow.appendChild(langBadge);
             }
 
-            if (p.solved) {
-                var solvedBadge = document.createElement('span');
-                solvedBadge.className = 'puzzle-badge solved';
-                solvedBadge.textContent = 'SOLVED';
-                titleRow.appendChild(solvedBadge);
-            }
-
             body.appendChild(titleRow);
 
             if (p.content) {
@@ -153,9 +144,9 @@
             var btnRow = document.createElement('div');
             btnRow.className = 'solve-btn';
             var btn = document.createElement('a');
-            btn.className = 'btn-devclimb ' + (p.solved ? 'secondary' : 'primary');
-            btn.href = '/frontend/pages/user/solve/?id=' + p.id;
-            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">' + (p.solved ? 'replay' : 'play_arrow') + '</span> ' + (p.solved ? 'REVISIT' : 'SOLVE PUZZLE');
+            btn.className = 'btn-devclimb primary';
+            btn.href = '/frontend/pages/guest/auth/login.html?redirect=' + encodeURIComponent(window.location.href);
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">login</span> LOG IN TO SOLVE';
             btnRow.appendChild(btn);
             body.appendChild(btnRow);
 
@@ -164,10 +155,7 @@
         }
     }
 
-    // ── Right Column ──
-
     function renderSidebar(c) {
-        // Thông tin hệ thống
         var sysPanel = createPanel('panel-system', 'SYSTEM_INFO');
         var sysBody = sysPanel.querySelector('.sidebar-body');
         addRow(sysBody, 'Duration', formatDuration(c.start, c.end));
@@ -175,7 +163,6 @@
         addRow(sysBody, 'Participants', String(c.participants || 0));
         rightEl.appendChild(sysPanel);
 
-        // Phần thưởng
         if (c.trophyName) {
             var rewardPanel = createPanel('panel-reward', 'REWARD');
             var rewardBody = rewardPanel.querySelector('.sidebar-body');
@@ -201,12 +188,7 @@
                 rewardBody.appendChild(rDesc);
             }
 
-            if (c.userHasTrophy) {
-                var earned = document.createElement('div');
-                earned.className = 'reward-earned';
-                earned.textContent = 'TROPHY EARNED';
-                rewardBody.appendChild(earned);
-            } else if (c.status === 'ended') {
+            if (c.status === 'ended') {
                 var ended = document.createElement('div');
                 ended.className = 'reward-ended';
                 ended.textContent = 'CONTEST ENDED';
@@ -216,7 +198,6 @@
             rightEl.appendChild(rewardPanel);
         }
 
-        // Luật lệ
         var rulesPanel = createPanel('panel-rules', 'CONTEST_RULES');
         var rulesBody = rulesPanel.querySelector('.sidebar-body');
         var rulesList = document.createElement('ul');
@@ -229,14 +210,12 @@
         ];
         for (var i = 0; i < rules.length; i++) {
             var li = document.createElement('li');
-            li.innerHTML = '<span class="arrow">›</span> ' + rules[i];
+            li.innerHTML = '<span class="arrow">\u203A</span> ' + rules[i];
             rulesList.appendChild(li);
         }
         rulesBody.appendChild(rulesList);
         rightEl.appendChild(rulesPanel);
     }
-
-    // ── Init ──
 
     async function init() {
         var params = new URLSearchParams(window.location.search);
@@ -258,30 +237,6 @@
         renderHeader(data);
         renderPuzzles(data.puzzles);
         renderSidebar(data);
-
-        if (typeof getMe === 'function') {
-            try {
-                var session = await getMe();
-                if (session && session.userIsadmin) {
-                    renderAdminBar(id);
-                }
-            } catch (e) {}
-        }
-    }
-
-    function renderAdminBar(contestId) {
-        var bar = document.createElement('div');
-        bar.style.cssText = 'display:flex;gap:var(--space-8px);margin-bottom:var(--space-16px);';
-        var btn = document.createElement('a');
-        btn.className = 'btn-devclimb secondary';
-        btn.href = '/frontend/pages/admin/contest-create/index.html?id=' + contestId;
-        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">edit</span> EDIT CONTEST';
-        btn.style.textDecoration = 'none';
-        btn.style.display = 'inline-flex';
-        btn.style.alignItems = 'center';
-        bar.appendChild(btn);
-        var grid = leftEl.parentElement;
-        grid.parentElement.insertBefore(bar, grid);
     }
 
     window.addEventListener('deps-ready', init);

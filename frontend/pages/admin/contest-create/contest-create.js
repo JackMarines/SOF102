@@ -677,44 +677,6 @@
         durationEl.textContent = hours + ' hour' + (hours > 1 ? 's' : '');
     }
 
-    function createPanel(id, label) {
-        var panel = document.createElement('div');
-        panel.className = 'sidebar-panel';
-        panel.id = id;
-
-        var header = document.createElement('div');
-        header.className = 'puzzle-terminal-header';
-        header.onclick = function () { panel.classList.toggle('collapsed'); };
-        var span = document.createElement('span');
-        span.textContent = label;
-        header.appendChild(span);
-        var icon = document.createElement('span');
-        icon.className = 'collapse-icon material-symbols-outlined';
-        icon.textContent = 'expand_more';
-        header.appendChild(icon);
-        panel.appendChild(header);
-
-        var body = document.createElement('div');
-        body.className = 'sidebar-body';
-        panel.appendChild(body);
-
-        return panel;
-    }
-
-    function addRow(container, label, value) {
-        var row = document.createElement('div');
-        row.className = 'sidebar-row';
-        var l = document.createElement('span');
-        l.className = 'label';
-        l.textContent = label;
-        var v = document.createElement('span');
-        v.className = 'value';
-        v.textContent = value;
-        row.appendChild(l);
-        row.appendChild(v);
-        container.appendChild(row);
-    }
-
     function buildInput(label, type, required) {
         var wrap = document.createElement('label');
         wrap.style.cssText = 'display:flex;flex-direction:column;gap:var(--space-4px);';
@@ -744,8 +706,8 @@
         return { el: wrap, input: textarea };
     }
 
-    // ── Start ──
+    // ── Start (wait for deps: api.js, authService.js) ──
 
-    init();
+    window.addEventListener('deps-ready', init);
 
 })();

@@ -1,4 +1,4 @@
-// Contest page orchestrator — hiển thị danh sách contest, tìm kiếm, phân trang, hall of fame
+// Guest contest page — hiển thị danh sách contest, tìm kiếm, phân trang, hall of fame (không có admin)
 (function () {
 
     var gridEl = document.getElementById('contest-grid');
@@ -8,13 +8,9 @@
     var currentPage = 1;
     var currentSearch = '';
     var totalPages = 1;
-    var _isAdmin = false;
-
-    // ── Contest Cards ──
 
     function renderContests(data) {
         gridEl.innerHTML = '';
-
         if (!data || data.length === 0) {
             var empty = document.createElement('div');
             empty.className = 'tt-empty';
@@ -22,13 +18,11 @@
             gridEl.appendChild(empty);
             return;
         }
-
         for (var i = 0; i < data.length; i++) {
             var c = data[i];
-
             var card = document.createElement('a');
             card.className = 'tt-card';
-            card.href = '/frontend/pages/user/contest-solve/?id=' + c.id;
+            card.href = '/frontend/pages/guest/contest-solve/?id=' + c.id;
 
             var box = document.createElement('div');
             box.className = 'glass-box';
@@ -91,23 +85,19 @@
         var str = s.toLocaleDateString('en-US', opts);
         if (end) {
             var e = new Date(end);
-            str += ' – ' + e.toLocaleDateString('en-US', opts);
+            str += ' \u2013 ' + e.toLocaleDateString('en-US', opts);
         }
         return str;
     }
 
-    // ── Pagination ──
-
     function renderPagination() {
         pagEl.innerHTML = '';
-
         var start = Math.max(1, currentPage - 1);
         var end = Math.min(totalPages, currentPage + 1);
         if (end - start < 2) {
             if (start === 1) end = Math.min(3, totalPages);
             else start = Math.max(1, totalPages - 2);
         }
-
         function addBtn(text, disabled, onClick) {
             var a = document.createElement('a');
             a.className = 'tt-page';
@@ -119,10 +109,8 @@
             a.addEventListener('click', onClick);
             pagEl.appendChild(a);
         }
-
         addBtn('First', currentPage <= 1, function () { loadContests(1); });
         addBtn('Prev', currentPage <= 1, function () { loadContests(currentPage - 1); });
-
         for (var i = start; i <= end; i++) {
             (function (pageNum) {
                 var a = document.createElement('a');
@@ -133,12 +121,9 @@
                 pagEl.appendChild(a);
             })(i);
         }
-
         addBtn('Next', currentPage >= totalPages, function () { loadContests(currentPage + 1); });
         addBtn('Last', currentPage >= totalPages, function () { loadContests(totalPages); });
     }
-
-    // ── Search ──
 
     var searchInput = document.getElementById('contest-search-input');
     if (searchInput) {
@@ -149,8 +134,6 @@
             }
         });
     }
-
-    // ── Tải Contest ──
 
     async function loadContests(page) {
         showSkeleton('contest-grid', 'contest-grid');
@@ -163,24 +146,6 @@
             renderPagination();
         }
     }
-
-    // ── Admin: Tạo Contest ──
-
-    function showCreateButton() {
-        var wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:var(--space-16px);';
-        var btn = document.createElement('a');
-        btn.className = 'btn-devclimb primary';
-        btn.href = '/frontend/pages/admin/contest-create/index.html';
-        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">add</span> Create Contest';
-        btn.style.textDecoration = 'none';
-        btn.style.display = 'inline-flex';
-        btn.style.alignItems = 'center';
-        wrap.appendChild(btn);
-        gridEl.parentElement.insertBefore(wrap, gridEl);
-    }
-
-    // ── Hall of Fame ──
 
     function renderHallOfFame(data) {
         if (!data) return;
@@ -248,7 +213,6 @@
 
         hallEl.innerHTML = html;
 
-        // Render avatar sau khi render HTML
         var avatarSlots = hallEl.querySelectorAll('.avatar-sm');
         avatarSlots.forEach(function (slot) {
             var idx = parseInt(slot.dataset.idx);
@@ -286,21 +250,9 @@
         if (res) renderHallOfFame(res);
     }
 
-    // ── Khởi tạo (chờ deps: api.js, authService.js) ──
-
     window.addEventListener('deps-ready', function () {
-        getMe()
-            .then(function (session) {
-                if (session && session.userIsadmin) {
-                    _isAdmin = true;
-                    showCreateButton();
-                }
-            })
-            .catch(function () {})
-            .then(function () {
-                loadContests(1);
-                loadHallOfFame();
-            });
+        loadContests(1);
+        loadHallOfFame();
     });
 
 })();

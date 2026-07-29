@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DEVCLIMB | Contest</title>
+  <title>DEVCLIMB | Contests</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
+  <link rel="stylesheet" href="/frontend/components/tables.css">
   <link rel="stylesheet" href="/frontend/assets/css/contestMERGELATER.css">
   <link rel="icon" href="/frontend/assets/images/icon.png">
 
@@ -19,7 +20,7 @@
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
   </script>
 </head>
-<body data-auth="user">
+<body data-auth="guest">
 
 <div class="scanline"></div>
 <div id="navbar"></div>
@@ -28,14 +29,24 @@
   <section class="section-page">
     <div class="container-page">
 
-      <a class="back-link" href="/frontend/pages/user/contest/index.html">
-        <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
-        Back to Contests
-      </a>
+      <h1 class="page-title scroll-reveal">Contests</h1>
 
-      <div class="contest-detail-grid">
-        <div class="contest-detail-left" id="contest-left"></div>
-        <div class="contest-detail-right" id="contest-right"></div>
+      <div class="tt-search-box" style="margin-bottom:var(--space-24px);">
+        <input type="text" placeholder="Search contests..." id="contest-search-input">
+        <button type="button" onclick="document.getElementById('contest-search-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}))">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+      </div>
+
+      <div class="tt-grid" id="contest-grid"></div>
+
+      <div class="tt-pagination" id="contest-pagination"></div>
+
+      <hr class="section-divider">
+
+      <div id="hall-of-fame-section">
+        <h2 class="content-section-heading">Hall of Fame</h2>
+        <div class="hall-fame-grid" id="hall-of-fame"></div>
       </div>
 
     </div>
@@ -45,16 +56,15 @@
 <div id="footer"></div>
 
 <script src="/frontend/utils/core.js"></script>
-<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/navbar-guest.js"></script>
 <script src="/frontend/components/footer.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/components/spinner.js"></script>
-<script src="/frontend/components/popup.js"></script>
+<script src="/frontend/components/skeleton.js"></script>
 <script src="/frontend/components/avatar.js"></script>
-<script src="/frontend/utils/contentParser.js"></script>
-<script src="/frontend/utils/contestSidebar.js"></script>
+
 <script src="/frontend/services/contestService.js"></script>
-<script src="contest-solve.js"></script>
+<script src="contest.js"></script>
 
 </body>
 </html>

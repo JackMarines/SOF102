@@ -39,6 +39,9 @@ public class User {
     @Column(name = "user_lastleavereason")
     private String userLastleaveReason = "NONE";
 
+    @Column(name = "user_selectedtrophy_id")
+    private Integer userSelectedtrophyId;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
@@ -65,6 +68,8 @@ public class User {
     public void setUserLastteamname(String userLastteamname) { this.userLastteamname = userLastteamname; }
     public String getUserLastleaveReason() { return userLastleaveReason; }
     public void setUserLastleaveReason(String userLastleaveReason) { this.userLastleaveReason = userLastleaveReason; }
+    public Integer getUserSelectedtrophyId() { return userSelectedtrophyId; }
+    public void setUserSelectedtrophyId(Integer userSelectedtrophyId) { this.userSelectedtrophyId = userSelectedtrophyId; }
     public Team getTeam() { return team; }
     public void setTeam(Team team) { this.team = team; }
 }

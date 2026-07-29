@@ -29,6 +29,11 @@ public class AdminContestController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        entity.User sessionUser = (entity.User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         String uri = req.getRequestURI();
         if (uri.endsWith("/contests")) {
             handleListContests(req, resp);
@@ -42,18 +47,33 @@ public class AdminContestController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        entity.User sessionUser = (entity.User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         handleCreateContest(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        entity.User sessionUser = (entity.User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         handleUpdateContest(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        entity.User sessionUser = (entity.User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         String idParam = req.getParameter("id");
         if (idParam == null || idParam.trim().isEmpty()) {
             ResponseUtil.error(resp, 400, "id is required");

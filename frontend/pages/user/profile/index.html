@@ -111,6 +111,18 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="trophyCaseModal">
+  <div class="modal-panel" style="max-width:600px;">
+    <div class="modal-heading">
+      Trophy Case
+      <button onclick="document.getElementById('trophyCaseModal').classList.remove('show');">&times;</button>
+    </div>
+    <div id="trophy-case-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--space-12px);">
+    </div>
+    <p id="trophy-case-empty" style="text-align:center;color:var(--text-muted);font-size:0.8125rem;padding:var(--space-32px) 0;display:none;">No trophies earned yet.</p>
+  </div>
+</div>
+
 <div id="footer"></div>
 
 <script src="/frontend/utils/core.js"></script>

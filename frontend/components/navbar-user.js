@@ -10,6 +10,7 @@
       if (p === 'puzzles') return path.includes('/puzzle');
       if (p === 'users') return path.includes('/user-search');
       if (p === 'announcements') return path.includes('/user/announcement');
+      if (p === 'contest') return path.includes('/user/contest/');
       return false;
     }
 
@@ -30,6 +31,7 @@
           '<a href="/frontend/pages/user/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
           '<a href="/frontend/pages/user/user-search/index.html" role="listitem"' + (isActive('users') ? ' class="active"' : '') + '>USERS</a>' +
           '<a href="/frontend/pages/user/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
+          '<a href="/frontend/pages/user/contest/index.html" role="listitem"' + (isActive('contest') ? ' class="active"' : '') + '>CONTEST</a>' +
           '<div class="nav-profile-dropdown">' +
             '<a class="nav-avatar-link" href="/frontend/pages/user/profile/index.html" aria-label="Your profile">' +
               '<span class="nav-avatar" id="nav-avatar-desktop"></span>' +

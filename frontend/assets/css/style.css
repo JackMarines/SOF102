@@ -944,7 +944,7 @@ footer{
 }
 
 .upload-box {
-    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border: 2px dashed var(--border-default);
     border-radius: 16px;
     padding: 50px 20px;
     text-align: center;
@@ -953,12 +953,12 @@ footer{
 }
 
 .upload-box:hover {
-    border-color: #8b5cf6;
+    border-color: var(--accent);
 }
 
 .upload-box i {
     font-size: 40px;
-    color: #8b5cf6;
+    color: var(--accent);
 }
 
 .preview-avatar {
@@ -971,7 +971,7 @@ footer{
 }
 
 .visibility-card {
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--border-default);
     border-radius: 12px;
     padding: 16px;
     cursor: pointer;
@@ -979,12 +979,12 @@ footer{
 }
 
 .visibility-card.active {
-    border-color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.15);
+    border-color: var(--accent);
+    background: var(--glow);
 }
 
 .create-btn {
-    background: linear-gradient(90deg, #8b5cf6, #a855f7);
+    background: var(--accent);
     border: none;
     font-weight: 600;
 }

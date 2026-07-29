@@ -9,6 +9,7 @@
       if (p === 'home') return path === '/frontend/index.html';
       if (p === 'team') return path.includes('/guest/team');
       if (p === 'puzzles') return path.includes('/puzzle');
+      if (p === 'contests') return path.includes('/contest');
       if (p === 'announcements') return path.includes('/announcement');
       if (p === 'login') return path.includes('/guest/auth/');
       return false;
@@ -28,6 +29,7 @@
         '<div class="nav-links" id="nav-links" role="list">' +
           '<a href="/frontend/pages/guest/team-search/index.html" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
           '<a href="/frontend/pages/guest/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
+          '<a href="/frontend/pages/guest/contest/index.html" role="listitem"' + (isActive('contests') ? ' class="active"' : '') + '>CONTEST</a>' +
           '<a href="/frontend/pages/guest/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
           '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOG IN</a>' +
         '</div>' +

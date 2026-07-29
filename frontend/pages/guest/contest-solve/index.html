@@ -19,7 +19,7 @@
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
   </script>
 </head>
-<body data-auth="user">
+<body data-auth="guest">
 
 <div class="scanline"></div>
 <div id="navbar"></div>
@@ -28,7 +28,7 @@
   <section class="section-page">
     <div class="container-page">
 
-      <a class="back-link" href="/frontend/pages/user/contest/index.html">
+      <a class="back-link" href="/frontend/pages/guest/contest/index.html">
         <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
         Back to Contests
       </a>
@@ -45,7 +45,7 @@
 <div id="footer"></div>
 
 <script src="/frontend/utils/core.js"></script>
-<script src="/frontend/components/navbar-user.js"></script>
+<script src="/frontend/components/navbar-guest.js"></script>
 <script src="/frontend/components/footer.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/components/spinner.js"></script>

@@ -1,11 +1,11 @@
-// Profile page orchestrator — user profile view with edit modal, group banner, charts, and solved puzzles table
+// Profile page orchestrator — hiển thị profile, modal chỉnh sửa, group banner, biểu đồ, bảng puzzle đã giải
 window.addEventListener('deps-ready', function () {
 getMe().then(async function (session) {
     var params = new URLSearchParams(window.location.search);
     var targetId = params.get('id');
     var isOwn = !targetId || String(targetId) === String(session.userId);
 
-    // UI toggle for other user's profile
+    // Nút chỉnh sửa chỉ hiện với profile của chính user
     if (isOwn) {
         var btn = document.createElement('button');
         btn.className = 'custom-btn border-0';
@@ -13,6 +13,16 @@ getMe().then(async function (session) {
         btn.setAttribute('data-bs-target', '#editProfileModal');
         btn.textContent = 'Edit Profile';
         document.getElementById('edit-btn-wrapper').appendChild(btn);
+
+        // Nút Trophy Case
+        var trophyBtn = document.createElement('button');
+        trophyBtn.className = 'custom-btn border-0';
+        trophyBtn.style.marginLeft = 'var(--space-8px)';
+        trophyBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;vertical-align:middle;margin-right:var(--space-4px);">emoji_events</span> Trophy Case';
+        trophyBtn.addEventListener('click', function () {
+            openTrophyCase();
+        });
+        document.getElementById('edit-btn-wrapper').appendChild(trophyBtn);
     }
 
     // --- Profile ---
@@ -22,7 +32,16 @@ getMe().then(async function (session) {
     if (!p || p.error) return;
 
     document.title = (p.displayName || 'Profile') + ' - DevClimb';
-    document.getElementById('profile-displayname').textContent = p.displayName || 'Unknown';
+    var nameEl = document.getElementById('profile-displayname');
+    nameEl.innerHTML = '';
+    nameEl.appendChild(document.createTextNode(p.displayName || 'Unknown'));
+    if (p.selectedTrophyAvatar) {
+        var trophyIcon = document.createElement('img');
+        trophyIcon.src = p.selectedTrophyAvatar;
+        trophyIcon.alt = 'Trophy';
+        trophyIcon.style.cssText = 'width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-left:var(--space-8px);display:inline-block;';
+        nameEl.appendChild(trophyIcon);
+    }
     document.getElementById('profile-bio').textContent = p.bio || '';
     document.getElementById('profile-score').textContent = (p.totalScore || 0).toLocaleString();
     document.getElementById('profile-completed').textContent = p.totalCompletedPuzzles || 0;
@@ -32,7 +51,8 @@ getMe().then(async function (session) {
     avatarEl.appendChild(Avatar.render({
         size: 120,
         avatar: p.avatar,
-        isAdmin: p.isAdmin
+        isAdmin: p.isAdmin,
+        trophySrc: p.selectedTrophyAvatar || null
     }));
 
     // --- Group Banner ---
@@ -57,7 +77,7 @@ getMe().then(async function (session) {
         groupHeading.textContent = 'No Group';
     }
 
-    // --- Edit Profile Modal ---
+    // --- Modal chỉnh sửa Profile ---
     if (isOwn) {
         var displayNameInput = document.getElementById('edit-username-input');
         var bioInput = document.getElementById('edit-bio-input');
@@ -68,7 +88,7 @@ getMe().then(async function (session) {
         displayNameInput.value = p.displayName || '';
         bioInput.value = p.bio || '';
 
-        // Show filename when file is selected
+        // Hiển thị tên file khi chọn ảnh
         avatarInput.addEventListener('change', function () {
             var fn = document.getElementById('edit-avatar-filename');
             fn.textContent = this.files[0] ? this.files[0].name : 'No file chosen';
@@ -136,7 +156,65 @@ getMe().then(async function (session) {
         }
     }
 
-    // --- Solved Puzzles (PuzzleTable) ---
+    // --- Trophy Case ---
+    async function openTrophyCase() {
+        var grid = document.getElementById('trophy-case-grid');
+        var empty = document.getElementById('trophy-case-empty');
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:var(--space-32px) 0;">Loading...</div>';
+        empty.style.display = 'none';
+        document.getElementById('trophyCaseModal').classList.add('show');
+
+        var trophies;
+        try {
+            trophies = await fetchUserTrophies(effectiveId);
+        } catch (e) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:var(--space-32px) 0;">Failed to load trophies.</div>';
+            return;
+        }
+        grid.innerHTML = '';
+        if (!trophies || trophies.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+        for (var i = 0; i < trophies.length; i++) {
+            var t = trophies[i];
+            (function (trophy) {
+                var card = document.createElement('div');
+                card.style.cssText = 'border:2px solid var(--border-default);padding:var(--space-16px);text-align:center;cursor:pointer;transition:border-color 150ms ease-out,background 150ms ease-out;';
+                if (trophy.selected) {
+                    card.style.borderColor = 'var(--accent)';
+                    card.style.background = 'var(--accent-dim)';
+                }
+                if (trophy.avatar) {
+                    var img = document.createElement('img');
+                    img.src = trophy.avatar;
+                    img.alt = trophy.name || '';
+                    img.style.cssText = 'width:64px;height:64px;object-fit:contain;margin-bottom:var(--space-8px);';
+                    card.appendChild(img);
+                } else {
+                    var icon = document.createElement('div');
+                    icon.style.cssText = 'font-size:2rem;color:var(--accent);margin-bottom:var(--space-8px);';
+                    icon.innerHTML = '<span class="material-symbols-outlined" style="font-size:2rem;">emoji_events</span>';
+                    card.appendChild(icon);
+                }
+                var name = document.createElement('div');
+                name.style.cssText = 'font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-primary);word-break:break-word;';
+                name.textContent = trophy.name || '';
+                card.appendChild(name);
+                if (isOwn) {
+                    card.addEventListener('click', async function () {
+                        var res = await setSelectedTrophy(trophy.id);
+                        if (res && !res.error) {
+                            window.location.reload();
+                        }
+                    });
+                }
+                grid.appendChild(card);
+            })(t);
+        }
+    }
+
+    // --- Bảng Puzzle đã giải ---
     var effectiveId = targetId || String(session.userId);
 
     window.loadSolved = async function (page) {
@@ -181,7 +259,7 @@ getMe().then(async function (session) {
         return 'rgba(' + parseInt(h.slice(1,3),16) + ',' + parseInt(h.slice(3,5),16) + ',' + parseInt(h.slice(5,7),16) + ',' + a + ')';
     }
 
-    // ── Language Distribution Chart (Chart.js) ──
+    // ── Biểu đồ phân bố ngôn ngữ (Chart.js) ──
     fetchCompletedPuzzles(effectiveId, '', '', '', 1, 100).then(function(res) {
         if (!res || !res.data) return;
         var langCounts = { 'Javascript': 0, 'Python': 0, 'PHP': 0 };
@@ -254,7 +332,7 @@ getMe().then(async function (session) {
         });
     });
 
-    // ── Activity Chart (Admin-style) ──
+    // ── Biểu đồ hoạt động ──
     apiGet('/profile/activity?id=' + effectiveId).then(function(res) {
         if (!res || !res.data) return;
 
