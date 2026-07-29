@@ -355,7 +355,7 @@
 .hero-devclimb .hero-sub {
   font-size: clamp(0.9375rem, 1.5vw, 1.125rem);
   color: var(--text-secondary);
-  max-width: 65ch;
+  max-width: 100ch;
   margin: 0 auto var(--space-48px);
   line-height: 1.6;
 }
@@ -425,7 +425,6 @@ code {
   display: flex;
   padding: var(--space-32px);
   gap: var(--space-24px);
-  overflow-x: auto;
   background: var(--bg-base);
 }
 
@@ -588,6 +587,19 @@ code {
   grid-template-columns: 1fr 1fr;
   gap: var(--space-64px);
   align-items: center;
+    position: relative;
+
+}
+.horizontal-track .section-devclimb:nth-child(2) .feature-block {
+    margin-top: 200px;
+}
+
+.horizontal-track .section-devclimb:nth-child(3) .feature-block {
+    margin-top: 450px;
+}
+
+.horizontal-track .section-devclimb:nth-child(4) .feature-block {
+    margin-top: 700px;
 }
 
 .feature-block.reverse {
@@ -679,6 +691,29 @@ code {
   line-height: 1.6;
   max-width: 55ch;
   margin: 0 auto var(--space-32px);
+}
+
+.horizontal-section {
+    height: 115vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.horizontal-track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+}
+
+.horizontal-track > section {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
 }
 
 /* ── Footer ── */

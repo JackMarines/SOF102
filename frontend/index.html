@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="/frontend/assets/css/tokens.css">
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
-  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
+  <link rel="stylesheet" href="/frontend/assets/css/solve.css">
 
+  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
+  <style> .cm-editor { min-height: calc(12 * 1.5em); max-height: calc(12 * 1.5em); }</style>
   <script>
     try {
       if (localStorage.getItem('theme') === 'light') {
@@ -22,6 +24,9 @@
       }
     } catch (e) {}
   </script>
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  
 </head>
 <body>
 
@@ -41,19 +46,21 @@
       </div>
 
       <h1>
-        > TRAIN YOUR <br>
-        <span class="hero-highlight">CODING SKILLS</span><br>
-        LIKE A GAME<span class="hero-cursor">_</span>
+        <span data-scramble>  > TRAIN YOUR</span><br>
+        <span class="hero-highlight" data-scramble>CODING SKILLS</span><br>
+        <span data-scramble> LIKE A GAME</span><span class="hero-cursor">_</span>
       </h1>
 
-      <p class="hero-sub">
-        Improve algorithms, logic thinking and programming skills through interactive coding challenges and competitive gameplay. Experience the flow state in a high-performance terminal environment.
+      <p  class="hero-sub  ">
+       <span data-scramble>  Improve algorithms, logic thinking and programming skills through interactive coding challenges and competitive gameplay.</span> <br>
+        <span data-scramble> Experience the flow state in a high-performance terminal environment.</span>
       </p>
 
       <div class="hero-actions">
         <a href="/frontend/pages/guest/auth/register.html" class="btn-devclimb primary">START_NOW</a>
         <a href="/frontend/pages/guest/puzzle/index.html" class="btn-devclimb secondary">EXPLORE_PUZZLES</a>
       </div>
+
 
       <div class="code-window">
         <div class="code-bar">
@@ -64,25 +71,10 @@
           </div>
           <span class="code-filename">main.py — devclimb-workspace</span>
         </div>
-        <div class="code-body">
-          <div class="code-lines">
-            <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span>
-            <span>06</span><span>07</span><span>08</span><span>09</span><span>10</span>
-            <span>11</span><span>12</span>
-          </div>
-          <code><span class="kw">import</span> os
-<span class="fn">def</span> <span class="kw">init_challenge</span>(uid):
-    session = os.getenv(<span class="str">'DEVCLIMB_TOKEN'</span>)
-    <span class="kw">if</span> not session:
-        <span class="err">raise</span> ConnectionError(<span class="str">"Access Denied"</span>)
+<div class="solve-editor-body"></div>
+      <div id="codeEditor" style="height:100%;"></div>
+      </div>
 
-    <span class="cm"># Fetching puzzle payload</span>
-    payload = api.get_puzzle(uid)
-    <span class="kw">return</span> payload.execute()
-
-<span class="cm"># Initializing root instance</span>
-<span class="kw">print</span>(<span class="str">"System operational."</span>)</code>
-        </div>
       </div>
     </div>
   </section>
@@ -131,6 +123,12 @@
     </div>
   </section>
 
+
+  <section class="horizontal-section">
+      <div class="horizontal-track">
+  <section class="section-devclimb">
+  </section>
+
   <section class="section-devclimb">
     <div class="section-inner">
       <div class="feature-block scroll-reveal" data-delay="0">
@@ -175,6 +173,10 @@
       </div>
     </div>
   </section>
+    <section class="section-devclimb">
+  </section>
+  </div>
+  </section>
 
   <section class="section-devclimb cta-devclimb">
     <div class="section-inner scroll-reveal" data-delay="0">
@@ -189,10 +191,12 @@
 </main>
 
 <script src="/frontend/utils/core.js"></script>
-<script src="/frontend/components/navbar-guest.js"></script>
+<script src="/frontend/components/navbar-guest.js" type="module"></script>
 <script src="/frontend/components/footer-guest.js"></script>
 <script src="/frontend/components/theme-toggle.js"></script>
-<script src="/frontend/components/scroll-reveal.js"></script>
+<script src="/frontend/components/gsap-reveal.js"></script>
+<script src="/frontend/components/gsap-horizontal.js"></script>
+<script src="/frontend/components/gsap-scramble.js"></script>
 <script src="/frontend/components/spinner.js"></script>
 <script>window.addEventListener('deps-ready', function() { if (typeof redirectIfAuthenticated === 'function') redirectIfAuthenticated(); })</script>
 <script>
@@ -207,6 +211,23 @@
       btn.style.transform = 'translateY(0)';
     });
   });
+
+</script>
+<script type="module">
+import { setLanguage, setCode, getCode,setSubmitCallback, editor, languages } from '/frontend/pages/user/solve/codeMirror.js';
+setLanguage("Python")
+setCode(`import os
+def init_challenge(uid):
+    session = os.getenv('DEVCLIMB_TOKEN')
+    if not session:
+        raise ConnectionError("Access Denied")
+
+    # Fetching puzzle payload
+    payload = api.get_puzzle(uid)
+    return payload.execute()
+
+# Initializing root instance
+print("System operational.")`)
 </script>
 
 </body>
