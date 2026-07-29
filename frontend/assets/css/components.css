@@ -42,10 +42,23 @@
   text-decoration: none;
 }
 
-.navbar-devclimb .nav-logo-img {
-  display: block;
-  height: 48px;
-  width: auto;
+.navbar-devclimb .nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.logo-symbol span{
+  display:inline-block;
+  font-size: 3em;
+  font-weight: 500;
+}
+
+.logo-cursor {
+  display: inline-block;
+  animation: blink-step 600ms step-start infinite;
 }
 
 .navbar-devclimb .nav-links {
@@ -702,11 +715,12 @@ code {
   letter-spacing: -0.02em;
 }
 
-.footer-devclimb .footer-logo-img {
-  display: block;
-  max-width: 140px;
-  height: auto;
-  margin: var(--space-8px) 0;
+.footer-devclimb .footer-logo-text {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -0.02em;
 }
 
 .footer-devclimb .footer-copyright {

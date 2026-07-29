@@ -10,7 +10,7 @@
         '<div class="footer-grid">' +
           '<div class="footer-brand">' +
             '<a href="/frontend/index.html" aria-label="DevClimb home">' +
-              '<img class="footer-logo-img" src="/frontend/assets/images/devclimblogo.png" alt="DevClimb">' +
+              '<span class="footer-logo-text"><span class="logo-symbol">\u25B7</span>ev:clmb<span class="logo-cursor">_</span></span>' +
             '</a>' +
             '<p class="footer-copyright">&copy; 2026 LBKT Studio</p>' +
           '</div>' +
