@@ -7,7 +7,7 @@ import java.util.List;
 import entity.UserTrophy;
 import jakarta.persistence.EntityManager;
 import util.JpaUtils;
-
+        
 public class UserTrophyDao {
 
     // Kiểm tra user đã sở hữu trophy chưa

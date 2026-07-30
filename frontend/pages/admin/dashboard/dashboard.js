@@ -436,21 +436,20 @@ function openManageTeamsPopup() {
                 columnRenderers: {
                     team: function (t) {
                         var wrap = document.createElement('div');
-                        wrap.className = 'd-flex align-items-center';
+                        wrap.style.cssText = 'display:flex;align-items:center;gap:6px;margin:0 auto;';
 
-                        var img = document.createElement('img');
-                        img.src = t.avatar || '';
-                        img.alt = '';
-                        img.style.cssText = 'width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:10px;background:var(--bg-elevated)';
-                        img.onerror = function () { this.style.display = 'none'; };
-                        wrap.appendChild(img);
+                        wrap.appendChild(Avatar.render({
+                            size: 32,
+                            avatar: t.avatar || null,
+                            isAdmin: false
+                        }));
 
                         var info = document.createElement('div');
                         var name = document.createElement('strong');
                         name.textContent = t.name || '';
                         info.appendChild(name);
                         var owner = document.createElement('small');
-                        owner.className = 'text-secondary d-block';
+                        owner.style.cssText = 'display:block;color:var(--text-secondary)';
                         owner.textContent = 'Owner: ' + (t.ownerName || '');
                         info.appendChild(owner);
                         wrap.appendChild(info);
@@ -663,7 +662,7 @@ function openViewAppealsPopup() {
                     { key: 'userName', label: 'User', render: function (v, item) {
                         var wrap = document.createElement('span');
                         wrap.style.cssText = 'display:inline-flex;align-items:center;gap:8px;';
-                        wrap.appendChild(Avatar.render({ size: 28, avatar: item.avatar }));
+                        wrap.appendChild(Avatar.render({ size: 28, avatar: item.avatar, trophySrc: item.selectedTrophyAvatar || null }));
                         wrap.appendChild(document.createTextNode(v || 'Unknown'));
                         return wrap;
                     } },

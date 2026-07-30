@@ -27,18 +27,21 @@
             var box = document.createElement('div');
             box.className = 'glass-box';
 
+            var wrap = document.createElement('div');
+            wrap.className = 'tt-card-avatar-wrap';
             if (c.avatar) {
                 var img = document.createElement('img');
                 img.src = c.avatar;
                 img.alt = c.title || '';
                 img.className = 'tt-card-avatar';
-                box.appendChild(img);
+                wrap.appendChild(img);
             } else {
                 var fallback = document.createElement('div');
                 fallback.className = 'tt-card-avatar-fallback';
                 fallback.innerHTML = '<span class="material-symbols-outlined">emoji_events</span>';
-                box.appendChild(fallback);
+                wrap.appendChild(fallback);
             }
+            box.appendChild(wrap);
 
             var header = document.createElement('div');
             header.className = 'tt-card-header';
@@ -57,7 +60,7 @@
 
             var authorRow = document.createElement('p');
             authorRow.className = 'tt-card-meta';
-            var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin });
+            var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin, trophySrc: c.authorSelectedTrophyAvatar || null });
             authorRow.appendChild(authorAvatar);
             var authorText = document.createElement('span');
             authorText.textContent = ' ' + (c.authorName || 'Unknown');
@@ -220,7 +223,7 @@
             var entry = standardBoards[bIdx].entries[idx];
             if (entry) {
                 slot.innerHTML = '';
-                slot.appendChild(Avatar.render({ size: 28, avatar: entry.avatar || null, isAdmin: !!entry.isAdmin }));
+                slot.appendChild(Avatar.render({ size: 28, avatar: entry.avatar || null, isAdmin: !!entry.isAdmin, trophySrc: entry.selectedTrophyAvatar || null }));
             }
         });
 
@@ -229,7 +232,7 @@
             var idx = parseInt(slot.dataset.idx);
             var s = shortest[idx];
             if (s) {
-                slot.appendChild(Avatar.render({ size: 18, avatar: s.avatar || null, isAdmin: !!s.isAdmin }));
+                slot.appendChild(Avatar.render({ size: 18, avatar: s.avatar || null, isAdmin: !!s.isAdmin, trophySrc: s.selectedTrophyAvatar || null }));
             }
         });
 

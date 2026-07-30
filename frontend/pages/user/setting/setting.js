@@ -54,52 +54,10 @@ window.addEventListener('deps-ready', function() {
         var btn = document.createElement('button');
         btn.className = 'custom-btn border-0 mt-3';
         btn.textContent = 'Submit Appeal';
-        btn.addEventListener('click', openAppealForm);
-        section.appendChild(btn);
-    }
-
-    function openAppealForm() {
-        Popup.open({
-            id: 'appeal-form',
-            size: 'sm',
-            render: function(ctx) {
-                var ta = document.createElement('textarea');
-                ta.className = 'form-control';
-                ta.id = 'appeal-message';
-                ta.rows = 5;
-                ta.placeholder = 'Explain why the warning should be removed...';
-                ctx.body.appendChild(ta);
-
-                var submit = document.createElement('button');
-                submit.className = 'custom-btn border-0';
-                submit.textContent = 'Submit';
-                submit.addEventListener('click', submitAppeal);
-                ctx.footer.appendChild(submit);
-            }
+        btn.addEventListener('click', function () {
+            if (typeof window.openAppealForm === 'function') window.openAppealForm();
         });
-    }
-
-    async function submitAppeal() {
-        var msg = document.getElementById('appeal-message');
-        if (!msg || !msg.value.trim()) { Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Validation Error', message: 'Please enter your appeal message.', okLabel: 'OK' }); return; }
-
-        var existing = await apiGet('/appeal');
-        if (existing && existing.data) {
-            for (var i = 0; i < existing.data.length; i++) {
-                if (existing.data[i].status === 'PENDING') {
-                    Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Pending Appeal', message: 'You already have a pending appeal. Wait for it to be reviewed.', okLabel: 'OK' });
-                    return;
-                }
-            }
-        }
-
-        var res = await apiPost('/appeal', { message: msg.value.trim() });
-        if (res && !res.error) {
-            Popup.close('appeal-form');
-            location.reload();
-        } else {
-            Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res.message || 'Failed to submit appeal', okLabel: 'OK' });
-        }
+        section.appendChild(btn);
     }
 
     // ── 2. Theme selection ──

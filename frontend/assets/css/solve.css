@@ -116,7 +116,7 @@
 .panel-content code {
   font-family: var(--font-mono);
   color: var(--text-primary);
-  background: rgba(255,255,255,0.04);
+  background: var(--bg-hover);
   padding: 1px 5px;
 }
 
@@ -156,14 +156,14 @@
   margin: 0 0 var(--space-16px) 0;
   padding: var(--space-12px) var(--space-16px);
   border-left: 2px solid var(--accent);
-  background: rgba(164, 201, 255, 0.04);
+  background: var(--accent-dim);
   font-style: italic;
   color: var(--text-secondary);
   font-size: 0.8125rem;
 }
 
 .panel-content .example {
-  background: rgba(0,0,0,0.35);
+  background: var(--bg-hover);
   border: 1px solid var(--border-subtle);
   padding: var(--space-12px) var(--space-16px);
   margin-bottom: var(--space-16px);
@@ -178,7 +178,7 @@
 }
 
 .panel-content .example-label {
-  color: rgba(164, 201, 255, 0.5);
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -209,13 +209,13 @@
 
 .testcase-row.success {
   border-left: 2px solid var(--success);
-  background: rgba(40, 194, 68, 0.04);
+  background: var(--bg-hover);
   color: var(--text-secondary);
 }
 
 .testcase-row.fail {
   border-left: 2px solid var(--error);
-  background: rgba(255, 180, 171, 0.04);
+  background: var(--bg-hover);
   color: var(--text-secondary);
 }
 

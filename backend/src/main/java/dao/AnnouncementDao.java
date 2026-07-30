@@ -129,6 +129,101 @@ public class AnnouncementDao {
         }
     }
 
+    // ──────────────────────────────────────────────────
+    // Các hàm JOIN với user + trophy — giúp giảm N+1 queries
+    // ──────────────────────────────────────────────────
+
+    // Base columns + JOIN dùng chung cho các query native
+    private static final String BASE_SQL =
+        "SELECT a.ann_id, a.ann_title, a.ann_content, a.ann_authorid, " +
+        "a.ann_createdat, a.ann_updatedat, a.ann_ispinned, a.ann_ispublished, a.ann_type, " +
+        "u.user_name, u.user_avatar, u.user_isadmin, " +
+        "t.trop_avatar " +
+        "FROM announcement a " +
+        "LEFT JOIN user u ON a.ann_authorid = u.user_id " +
+        "LEFT JOIN trophy t ON u.user_selectedtrophy_id = t.trop_id";
+
+    // Lấy announcement published kèm thông tin author + trophy (phân trang)
+    public List<Object[]> findPublishedWithAuthors(int page, int limit) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                BASE_SQL +
+                " WHERE a.ann_ispublished = TRUE " +
+                "ORDER BY a.ann_ispinned DESC, a.ann_createdat DESC");
+            q.setFirstResult((page - 1) * limit);
+            q.setMaxResults(limit);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy announcement published + pinned kèm thông tin author + trophy
+    public List<Object[]> findPinnedWithAuthors() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                BASE_SQL +
+                " WHERE a.ann_ispublished = TRUE AND a.ann_ispinned = TRUE " +
+                "ORDER BY a.ann_createdat DESC");
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy announcement còn hiệu lực (7 ngày) kèm thông tin author + trophy
+    public List<Object[]> findActiveWithAuthors() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            java.sql.Timestamp threshold = new java.sql.Timestamp(
+                System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+            jakarta.persistence.Query q = em.createNativeQuery(
+                BASE_SQL +
+                " WHERE COALESCE(a.ann_updatedat, a.ann_createdat) >= :threshold " +
+                "ORDER BY a.ann_createdat DESC");
+            q.setParameter("threshold", threshold);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy announcement mới nhất (7 ngày) kèm thông tin author + trophy
+    public Object[] findLatestRecentWithAuthor() {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            java.sql.Timestamp threshold = new java.sql.Timestamp(
+                System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+            jakarta.persistence.Query q = em.createNativeQuery(
+                BASE_SQL +
+                " WHERE a.ann_ispublished = TRUE AND a.ann_createdat >= :threshold " +
+                "ORDER BY a.ann_createdat DESC");
+            q.setParameter("threshold", threshold);
+            q.setMaxResults(1);
+            List<Object[]> results = q.getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Lấy announcement published theo ID kèm thông tin author + trophy
+    public Object[] findByIdWithAuthor(int id) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                BASE_SQL +
+                " WHERE a.ann_id = :id AND a.ann_ispublished = TRUE");
+            q.setParameter("id", id);
+            List<Object[]> results = q.getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     // Cập nhật
     public void update(Announcement entity) {
         EntityManager em = JpaUtils.getEntityManager();

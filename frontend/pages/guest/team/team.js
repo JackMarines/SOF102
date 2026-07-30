@@ -39,7 +39,7 @@ window.addEventListener('deps-ready', async function () {
     var ownerEl = document.getElementById('team-owner');
     if (owner) {
         ownerEl.href = '/frontend/pages/guest/profile/index.html?id=' + owner.userId;
-        ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar }));
+        ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar, trophySrc: owner.selectedTrophyAvatar || null }));
         var ownerName = document.createElement('span');
         ownerName.textContent = owner.displayName || 'Unknown';
         ownerEl.appendChild(ownerName);
@@ -58,6 +58,78 @@ window.addEventListener('deps-ready', async function () {
 
     // --- Shoutout ---
     document.getElementById('team-shoutout').textContent = team.shoutout || '';
+
+    // --- Group Solved Chart ---
+    var teamChart = null;
+    var teamChartData = null;
+
+    function css(key) { return getComputedStyle(document.documentElement).getPropertyValue(key).trim(); }
+    function csstext(key) { return getComputedStyle(document.documentElement).getPropertyValue('--text-' + key).trim(); }
+    function accentRgb(a) {
+        var h = css('--accent');
+        return 'rgba(' + parseInt(h.slice(1,3),16) + ',' + parseInt(h.slice(3,5),16) + ',' + parseInt(h.slice(5,7),16) + ',' + a + ')';
+    }
+
+    function initTeamChart(days) {
+        if (!teamChartData) return;
+        var cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        var filtered = teamChartData.filter(function(d) {
+            var dd = new Date(d.date);
+            return dd >= cutoff;
+        });
+        var labels = filtered.map(function(d) { return d.date.substring(5); });
+        var values = filtered.map(function(d) { return d.solves; });
+        var ctx = document.getElementById('team-solved-chart').getContext('2d');
+        if (teamChart) teamChart.destroy();
+        teamChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Puzzles Solved',
+                    data: values,
+                    borderColor: css('--accent'),
+                    backgroundColor: accentRgb(0.08),
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } }
+                }
+            }
+        });
+    }
+
+    function loadTeamChart(days) {
+        fetchTeamStats(teamId).then(function(stats) {
+            if (stats && stats.data) teamChartData = stats.data;
+            initTeamChart(days);
+        }).catch(function() {});
+    }
+
+    loadTeamChart(7);
+
+    var teamChartPanel = document.querySelector('.content-panel .chart-filter-btn');
+    var teamFilterBtns = teamChartPanel ? document.querySelectorAll('.content-panel .chart-filter-btn') : document.querySelectorAll('.chart-filter-btn');
+    teamFilterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            teamFilterBtns.forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            var filter = btn.getAttribute('data-filter');
+            var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 90;
+            loadTeamChart(days);
+        });
+    });
 
     // --- Performance Matrix ---
     document.getElementById('perf-throughput-bar').style.width = (team.throughput || 0) + '%';
@@ -98,7 +170,7 @@ window.addEventListener('deps-ready', async function () {
             }
 
             row.appendChild(rankBadge);
-            row.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
+            row.appendChild(Avatar.render({ size: 40, avatar: m.avatar, trophySrc: m.selectedTrophyAvatar || null }));
 
             var info = document.createElement('div');
             info.className = 'flex-grow-1 ms-3';
@@ -141,7 +213,7 @@ window.addEventListener('deps-ready', async function () {
             });
         }
 
-        var pageSize = 12;
+        var pageSize = 18;
         var p = page || 1;
         var start = (p - 1) * pageSize;
         var paged = allMembers.slice(start, start + pageSize);

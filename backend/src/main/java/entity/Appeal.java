@@ -31,6 +31,9 @@ public class Appeal {
     @Column(name = "app_reviewedat")
     private Timestamp appReviewdate;
 
+    @Column(name = "app_warnid")
+    private Integer appWarnid;
+
     public Appeal() {}
 
     public Integer getAppId() { return appId; }
@@ -47,4 +50,6 @@ public class Appeal {
     public void setAppReviewedby(Integer appReviewedby) { this.appReviewedby = appReviewedby; }
     public Timestamp getAppReviewdate() { return appReviewdate; }
     public void setAppReviewdate(Timestamp appReviewdate) { this.appReviewdate = appReviewdate; }
+    public Integer getAppWarnid() { return appWarnid; }
+    public void setAppWarnid(Integer appWarnid) { this.appWarnid = appWarnid; }
 }

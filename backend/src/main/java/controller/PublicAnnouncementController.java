@@ -1,14 +1,14 @@
-// Controller công khai lấy announcements
+// Controller công khai lấy announcements — dùng JOIN query + cache để tối ưu tốc độ
 package controller;
 
 import dao.AnnouncementDao;
-import dao.UserDao;
 import entity.Announcement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.AnnouncementCache;
 import util.ResponseUtil;
 
 import java.io.IOException;
@@ -18,7 +18,6 @@ import java.util.*;
 public class PublicAnnouncementController extends HttpServlet {
 
     private AnnouncementDao announcementDao = new AnnouncementDao();
-    private UserDao userDao = new UserDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -42,18 +41,22 @@ public class PublicAnnouncementController extends HttpServlet {
 
     private void handleLatest(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        Announcement a = announcementDao.findLatestRecent();
-        if (a == null) {
+        // Kiểm tra cache trước
+        String cacheKey = "latest";
+        Object cached = AnnouncementCache.get(cacheKey);
+        if (cached != null) {
+            ResponseUtil.success(resp, Map.of("data", cached));
+            return;
+        }
+
+        Object[] row = announcementDao.findLatestRecentWithAuthor();
+        if (row == null) {
             ResponseUtil.success(resp, Map.of("data", null));
             return;
         }
 
-        Map<String, Object> item = new HashMap<>();
-        item.put("id", a.getAnnId());
-        item.put("type", a.getAnnType());
-        item.put("title", a.getAnnTitle());
-        item.put("createdAt", a.getAnnCreatedat());
-
+        Map<String, Object> item = buildAnnouncementItem(row);
+        AnnouncementCache.put(cacheKey, item);
         ResponseUtil.success(resp, Map.of("data", item));
     }
 
@@ -71,11 +74,21 @@ public class PublicAnnouncementController extends HttpServlet {
             } catch (NumberFormatException e) {}
         }
 
+        // Kiểm tra cache trước
+        String cacheKey = "list:" + page + ":" + limit;
+        Object cached = AnnouncementCache.get(cacheKey);
+        if (cached != null) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> cachedResult = (Map<String, Object>) cached;
+            ResponseUtil.success(resp, cachedResult);
+            return;
+        }
+
         long total = announcementDao.countPublished();
         int totalPages = (int) Math.ceil((double) total / limit);
-        List<Announcement> list = announcementDao.findAllPublished(page, limit);
+        List<Object[]> rows = announcementDao.findPublishedWithAuthors(page, limit);
 
-        List<Map<String, Object>> dataList = buildAnnouncementList(list);
+        List<Map<String, Object>> dataList = buildAnnouncementList(rows);
         Map<String, Object> pagination = new HashMap<>();
         pagination.put("page", page);
         pagination.put("limit", limit);
@@ -85,49 +98,91 @@ public class PublicAnnouncementController extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
         result.put("data", dataList);
         result.put("pagination", pagination);
+
+        AnnouncementCache.put(cacheKey, result);
         ResponseUtil.success(resp, result);
     }
 
     private void handlePinned(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        List<Announcement> list = announcementDao.findAllPinned();
-        List<Map<String, Object>> dataList = buildAnnouncementList(list);
+        String cacheKey = "pinned";
+        Object cached = AnnouncementCache.get(cacheKey);
+        if (cached != null) {
+            ResponseUtil.success(resp, Map.of("data", cached));
+            return;
+        }
+
+        List<Object[]> rows = announcementDao.findPinnedWithAuthors();
+        List<Map<String, Object>> dataList = buildAnnouncementList(rows);
+        AnnouncementCache.put(cacheKey, dataList);
         ResponseUtil.success(resp, Map.of("data", dataList));
     }
 
-    private List<Map<String, Object>> buildAnnouncementList(List<Announcement> list) {
+    // Xây danh sách từ mảng Object[] — không còn N+1 queries
+    private List<Map<String, Object>> buildAnnouncementList(List<Object[]> rows) {
         List<Map<String, Object>> dataList = new ArrayList<>();
-        for (Announcement a : list) {
-            Map<String, Object> item = new HashMap<>();
-            item.put("id", a.getAnnId());
-            item.put("title", a.getAnnTitle());
-            item.put("content", a.getAnnContent());
-            item.put("authorId", a.getAnnAuthorid());
-            item.put("createdAt", a.getAnnCreatedat());
-            item.put("updatedAt", a.getAnnUpdatedat());
-            item.put("isPinned", a.getAnnIspinned());
-            item.put("isPublished", a.getAnnIspublished());
-            item.put("type", a.getAnnType());
-            entity.User author = a.getAnnAuthorid() != null ? userDao.findById(a.getAnnAuthorid()) : null;
-            item.put("authorName", author != null ? author.getUserName() : "Unknown");
-            item.put("authorIsAdmin", author != null && author.getUserIsadmin() != null && author.getUserIsadmin());
-            item.put("authorAvatar", author != null ? author.getUserAvatar() : null);
-            dataList.add(item);
+        for (Object[] row : rows) {
+            dataList.add(buildAnnouncementItem(row));
         }
         return dataList;
+    }
+
+    // Xây 1 item từ 1 dòng kết quả native query (đã JOIN sẵn user + trophy)
+    private Map<String, Object> buildAnnouncementItem(Object[] row) {
+        Map<String, Object> item = new HashMap<>();
+        // row[0..8] = announcement fields
+        item.put("id",            row[0]);
+        item.put("title",         row[1]);
+        item.put("content",       row[2]);
+        item.put("authorId",      row[3]);
+        item.put("createdAt",     row[4]);
+        item.put("updatedAt",     row[5]);
+        // row[6,7,11] = TINYINT(1) → Boolean từ MySQL JDBC
+        item.put("isPinned",      Boolean.TRUE.equals(row[6]));
+        item.put("isPublished",   Boolean.TRUE.equals(row[7]));
+        item.put("type",          row[8]);
+        // row[9] = user_name, row[10] = user_avatar, row[11] = user_isadmin
+        item.put("authorName",                row[9]  != null ? row[9]  : "Unknown");
+        item.put("authorAvatar",              row[10]);
+        item.put("authorIsAdmin",             Boolean.TRUE.equals(row[11]));
+        // row[12] = trop_avatar
+        item.put("authorSelectedTrophyAvatar", row[12]);
+        return item;
     }
 
     private void handleGetById(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         try {
             int id = Integer.parseInt(req.getParameter("id").trim());
-            Announcement a = announcementDao.findById(id);
-            if (a == null || !Boolean.TRUE.equals(a.getAnnIspublished())) {
+            Map<String, Object> cachedItem = null;
+            // Thử tìm trong cache trước (nếu có)
+            String cacheKey = "detail:" + id;
+            Object cached = AnnouncementCache.get(cacheKey);
+            if (cached != null) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> m = (Map<String, Object>) cached;
+                cachedItem = m;
+            }
+
+            if (cachedItem != null) {
+                ResponseUtil.success(resp, Map.of("data", cachedItem));
+                return;
+            }
+
+            Object[] row = announcementDao.findByIdWithAuthor(id);
+            if (row == null) {
+                // Kiểm tra kỹ: có thể announcement tồn tại nhưng chưa published
+                Announcement a = announcementDao.findById(id);
+                if (a == null || !Boolean.TRUE.equals(a.getAnnIspublished())) {
+                    ResponseUtil.error(resp, 404, "Announcement not found");
+                    return;
+                }
                 ResponseUtil.error(resp, 404, "Announcement not found");
                 return;
             }
-            List<Map<String, Object>> dataList = buildAnnouncementList(List.of(a));
-            ResponseUtil.success(resp, Map.of("data", dataList.isEmpty() ? null : dataList.get(0)));
+            Map<String, Object> item = buildAnnouncementItem(row);
+            AnnouncementCache.put(cacheKey, item);
+            ResponseUtil.success(resp, Map.of("data", item));
         } catch (NumberFormatException e) {
             ResponseUtil.error(resp, 400, "Invalid id");
         }
@@ -135,8 +190,16 @@ public class PublicAnnouncementController extends HttpServlet {
 
     private void handleAll(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        List<Announcement> list = announcementDao.findActive();
-        List<Map<String, Object>> dataList = buildAnnouncementList(list);
+        String cacheKey = "active";
+        Object cached = AnnouncementCache.get(cacheKey);
+        if (cached != null) {
+            ResponseUtil.success(resp, Map.of("data", cached));
+            return;
+        }
+
+        List<Object[]> rows = announcementDao.findActiveWithAuthors();
+        List<Map<String, Object>> dataList = buildAnnouncementList(rows);
+        AnnouncementCache.put(cacheKey, dataList);
         ResponseUtil.success(resp, Map.of("data", dataList));
     }
 }

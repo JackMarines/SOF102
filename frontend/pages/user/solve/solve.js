@@ -52,6 +52,17 @@ async function loadPuzzle(setLanguage, setCode) {
     langBadge.textContent = puzzle.language;
     setLanguage(puzzle.language)
 
+    document.title = 'DEVCLIMB | Solve (' + puzzle.language + ')';
+
+    var fnEl = document.getElementById('solution-filename');
+    var lang = (puzzle.language || '').toLowerCase();
+    if (lang.includes('python')) fnEl.textContent = 'solution.py';
+    else if (lang.includes('javascript') || lang.includes('node')) fnEl.textContent = 'solution.js';
+    else if (lang.includes('php')) fnEl.textContent = 'solution.php';
+    else fnEl.textContent = 'solution.txt';
+
+    document.getElementById('solution-lang-name').textContent = puzzle.language;
+
     badges.append(difficulty, langBadge);
 
     // ── Xây dựng panel content (parse plain text into structured sections) ──
@@ -213,6 +224,9 @@ async function handleSubmit() {
 
     // Hiển thị thời gian thực thi
     if (result.time || result.memory) {
+        const timeBox = document.createElement('div');
+        timeBox.style.cssText = 'padding:var(--space-8px) 0;font-size:0.8125rem;color:var(--text-secondary);';
+
         const timeSpan = document.createElement('span');
         timeSpan.textContent = 'Total runtime: ' + (result.time || 0) + 's';
 
@@ -221,8 +235,10 @@ async function handleSubmit() {
         const s = String(secondsGlobal % 60).padStart(2, '0');
         solveTimeSpan.textContent = 'Total solve time: ' + m + ':' + s;
 
-        testCases.appendChild(timeSpan)
-        testCases.appendChild(solveTimeSpan);
+        timeBox.appendChild(timeSpan);
+        timeBox.appendChild(document.createTextNode(' \u00b7 '));
+        timeBox.appendChild(solveTimeSpan);
+        testCases.appendChild(timeBox);
     }
 
     // Hiển thị test cases

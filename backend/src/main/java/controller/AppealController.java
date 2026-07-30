@@ -109,6 +109,7 @@ public class AppealController extends HttpServlet {
         appeal.setAppContent(message.trim());
         appeal.setAppDate(new Timestamp(System.currentTimeMillis()));
         appeal.setAppStatus("PENDING");
+        appeal.setAppWarnid(activeWarning.getWarnId());
 
         appealDao.create(appeal);
 

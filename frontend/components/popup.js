@@ -186,6 +186,13 @@
         return popup.open();
     };
 
+    // ── Static: Popup.close(id) ──
+
+    Popup.close = function (id) {
+        var popup = Popup._registry[id];
+        if (popup) popup.close();
+    };
+
     Popup._registry = {};
 
     // ── Static: Popup.confirm(opts) ──

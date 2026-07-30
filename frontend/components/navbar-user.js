@@ -25,13 +25,18 @@
           '<span class="nav-logo-climb">CLIMB</span>' +
           '<span class="nav-logo-cursor"></span>' +
         '</a>' +
-        '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
         '<div class="nav-links" id="nav-links" role="list">' +
           '<a href="/frontend/pages/user/team-search/index.html" id="nav-team-link" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
           '<a href="/frontend/pages/user/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
           '<a href="/frontend/pages/user/user-search/index.html" role="listitem"' + (isActive('users') ? ' class="active"' : '') + '>USERS</a>' +
           '<a href="/frontend/pages/user/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
           '<a href="/frontend/pages/user/contest/index.html" role="listitem"' + (isActive('contest') ? ' class="active"' : '') + '>CONTEST</a>' +
+          '<hr class="mobile-only" style="border-color:var(--text-muted);margin:8px 0;">' +
+          '<a href="/frontend/pages/user/profile/index.html" class="mobile-only" role="listitem">PROFILE</a>' +
+          '<a href="/frontend/pages/user/setting/index.html" class="mobile-only" role="listitem">SETTINGS</a>' +
+          '<a href="#" class="mobile-only" id="logout-btn-mobile" role="listitem">LOG OUT</a>' +
+        '</div>' +
+        '<div class="nav-actions">' +
           '<div class="nav-profile-dropdown">' +
             '<a class="nav-avatar-link" href="/frontend/pages/user/profile/index.html" aria-label="Your profile">' +
               '<span class="nav-avatar" id="nav-avatar-desktop"></span>' +
@@ -44,9 +49,8 @@
               '<a href="#" id="logout-btn" role="menuitem">LOG OUT</a>' +
             '</div>' +
           '</div>' +
-        '</div>' +
-        '<div class="nav-actions">' +
           '<a id="admin-badge" class="admin-badge d-none" href="/frontend/pages/admin/dashboard/index.html" aria-label="Admin dashboard">ADMIN</a>' +
+          '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
         '</div>' +
       '</div>';
 
@@ -73,22 +77,24 @@
       renderNavAvatar(cachedAvatar);
     }
 
-    var logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        try { localStorage.removeItem('user_avatar'); } catch (e2) {}
-        if (typeof logout === 'function') {
-          logout().then(function () {
-            window.location.href = '/frontend/index.html';
-          }).catch(function () {
-            window.location.href = '/frontend/index.html';
-          });
-        } else {
+    function handleLogout(e) {
+      e.preventDefault();
+      try { localStorage.removeItem('user_avatar'); } catch (e2) {}
+      if (typeof logout === 'function') {
+        logout().then(function () {
           window.location.href = '/frontend/index.html';
-        }
-      });
+        }).catch(function () {
+          window.location.href = '/frontend/index.html';
+        });
+      } else {
+        window.location.href = '/frontend/index.html';
+      }
     }
+
+    var logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+    var logoutBtnMobile = document.getElementById('logout-btn-mobile');
+    if (logoutBtnMobile) logoutBtnMobile.addEventListener('click', handleLogout);
   });
 
   window.addEventListener('deps-ready', function () {
@@ -104,7 +110,7 @@
     });
     apiGet('/profile').then(function (p) {
       if (!p || p.error) return;
-      var opts = { size: 36 };
+      var opts = { size: 36, trophySrc: p.selectedTrophyAvatar || null };
       if (p.avatar) opts.avatar = p.avatar;
       var desktop = document.getElementById('nav-avatar-desktop');
       if (desktop) { desktop.innerHTML = ''; desktop.appendChild(Avatar.render(opts)); }

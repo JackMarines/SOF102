@@ -151,6 +151,7 @@ public class TeamBrowseController extends HttpServlet {
             m.put("totalScore", row[3]);
             m.put("totalPuzzles", row[4]);
             m.put("isAdmin", Boolean.TRUE.equals(row[5]));
+            m.put("selectedTrophyAvatar", row[6]);
             members.add(m);
         }
 
@@ -163,6 +164,8 @@ public class TeamBrowseController extends HttpServlet {
             m.put("displayName", row[1]);
             m.put("avatar", row[2]);
             m.put("totalScore", row[3]);
+            m.put("isAdmin", Boolean.TRUE.equals(row[4]));
+            m.put("selectedTrophyAvatar", row[5]);
             m.put("rank", i + 1);
             topMembers.add(m);
         }

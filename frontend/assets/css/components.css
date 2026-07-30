@@ -7,7 +7,7 @@
   right: 0;
   height: var(--nav-height);
   background: var(--bg-deep);
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-hover);
   display: flex;
   align-items: center;
   z-index: 1000;
@@ -179,6 +179,14 @@
   .navbar-devclimb .nav-toggle {
     display: block;
   }
+
+  .mobile-only {
+    display: block !important;
+  }
+
+  .navbar-devclimb .nav-actions .nav-profile-dropdown {
+    display: none;
+  }
 }
 
 /* ── Announcement Banner ── */
@@ -188,7 +196,7 @@
   justify-content: center;
   align-items: center;
   gap: 12px;
-  background: var(--bg-deep);
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--border-default);
   padding: 12px var(--space-24px);
   font-size: 0.6875rem;
@@ -199,6 +207,14 @@
 
 .announcement-banner:hover {
   background: var(--bg-hover);
+}
+
+html.light-mode .announcement-banner {
+  background: #ddd4c2;
+}
+
+html.light-mode .announcement-banner:hover {
+  background: #d5cbb6;
 }
 
 .announcement-banner .ann-date {
@@ -265,7 +281,7 @@
 .btn-devclimb.secondary {
   background: transparent;
   color: var(--text-secondary);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-hover);
 }
 
 .btn-devclimb.secondary:hover {
@@ -289,6 +305,10 @@
 
 .section-devclimb {
   padding: clamp(4rem, 8vw, 8rem) 0;
+}
+
+.section-devclimb + .section-devclimb {
+  border-top: 1px solid var(--border-subtle);
 }
 
 .section-devclimb .section-inner {
@@ -379,7 +399,7 @@
 code {
   background: var(--bg-hover);
   padding: 1px 6px;
-  color: #d4e3ff;
+  color: var(--code-text);
   font-size: 0.875em;
 }
 
@@ -388,8 +408,8 @@ code {
 .code-window {
   max-width: 960px;
   margin: 0 auto;
-  border: 1px solid var(--border-default);
-  background: var(--bg-surface);
+  border: 1px solid var(--code-border);
+  background: var(--code-bg);
   text-align: left;
 }
 
@@ -399,8 +419,8 @@ code {
   justify-content: space-between;
   height: 32px;
   padding: 0 12px;
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-default);
+  background: var(--code-bar-bg);
+  border-bottom: 1px solid var(--code-border);
 }
 
 .code-window .code-dots {
@@ -426,18 +446,26 @@ code {
   color: var(--text-muted);
 }
 
+.hero-devclimb .code-window .code-bar {
+  background: #1a1a1a;
+}
+
+.hero-devclimb .code-window .code-filename {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .code-window .code-body {
   display: flex;
   padding: var(--space-32px);
   gap: var(--space-24px);
   overflow-x: auto;
-  background: var(--bg-base);
+  background: var(--code-bg);
 }
 
 .code-window .code-lines {
   flex-shrink: 0;
   text-align: right;
-  color: var(--text-faint);
+  color: var(--code-line-num);
   font-size: 0.875rem;
   line-height: 1.7;
   user-select: none;
@@ -453,8 +481,10 @@ code {
   display: block;
   font-size: 0.875rem;
   line-height: 1.7;
-  color: var(--text-secondary);
+  color: var(--code-text);
   white-space: pre;
+  background: transparent;
+  padding: 0;
   overflow-x: auto;
 }
 
@@ -755,6 +785,7 @@ code {
   letter-spacing: 0.02em;
   color: var(--text-primary);
   margin-bottom: var(--space-8px);
+  text-align: center;
 }
 
 .auth-card .auth-sub {
@@ -763,6 +794,7 @@ code {
   margin-bottom: var(--space-32px);
   line-height: 1.5;
   max-width: 50ch;
+  text-align: center;
 }
 
 .auth-form label {
@@ -984,7 +1016,7 @@ code {
 }
 
 .table-header.has-user {
-  grid-template-columns: 150px 1fr 140px 100px;
+  grid-template-columns: 180px 1fr 140px 100px;
 }
 
 /* ── Puzzle Rows (homepage tables) ── */
@@ -1030,12 +1062,14 @@ code {
 .puzzle-item .hard { color: #ef4444; }
 
 @media (max-width: 768px) {
+  .table-header,
   .puzzle-item {
     font-size: 0.75rem;
     padding: 12px;
     gap: 8px;
     grid-template-columns: 1fr 75px 70px;
   }
+  .table-header.has-user,
   .puzzle-item.has-user {
     grid-template-columns: 80px 1fr 75px 70px;
   }
@@ -1284,6 +1318,19 @@ code {
   background: var(--accent-hover);
 }
 
+.mobile-only {
+  display: none;
+}
+
+#logout-btn-mobile,
+#logout-btn {
+  color: var(--error) !important;
+}
+#logout-btn-mobile:hover,
+#logout-btn:hover {
+  background: rgba(255,107,107,0.1);
+}
+
 .nav-profile-dropdown {
   position: relative;
   margin-left: var(--space-12px);
@@ -1470,6 +1517,12 @@ code {
 .home-team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-24px);
+}
+
+.tt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: var(--space-16px);
 }
 
@@ -1482,7 +1535,7 @@ code {
 }
 
 .page-btn {
-  background: var(--surface-2);
+  background: var(--bg-elevated);
   border: 1px solid var(--border-default);
   color: var(--text-secondary);
   padding: 6px 16px;
@@ -1729,10 +1782,10 @@ code {
 
 .admin-chart-stat-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-12px);
   text-align: center;
-  margin-top: var(--space-16px);
+  margin-top: var(--space-32px);
 }
 
 .admin-chart-stat-row .chart-stat-value {
@@ -2684,7 +2737,7 @@ textarea.form-control {
 }
 
 .skeleton {
-  background: var(--bg-hover);
+  background: var(--skeleton-bg);
   position: relative;
   overflow: hidden;
   min-height: 1em;
@@ -2766,7 +2819,7 @@ textarea.form-control {
 
 .skeleton-table-row {
   display: grid;
-  grid-template-columns: 1fr 150px 120px;
+  grid-template-columns: var(--pt-grid, 1fr 150px 120px);
   gap: var(--space-16px);
   padding: 14px 20px;
   align-items: center;
@@ -2804,11 +2857,6 @@ textarea.form-control {
   margin: 0 auto;
 }
 
-.skeleton-team-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: var(--space-16px);
-}
 
 .skeleton-team-card {
   padding: var(--space-16px);
@@ -2817,7 +2865,6 @@ textarea.form-control {
   flex-direction: column;
   align-items: center;
   gap: var(--space-8px);
-  height: 100px;
 }
 
 .skeleton-team-card .skeleton-avatar {
@@ -2902,4 +2949,30 @@ textarea.form-control {
 @keyframes loading-pulse {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
+}
+
+/* ── Glass Box (card container for teams, contests, members) ── */
+
+.glass-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+}
+
+.home-member-card {
+  height: 100%;
+  overflow: hidden;
+  min-width: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.home-member-name {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

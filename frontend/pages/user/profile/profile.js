@@ -12,6 +12,11 @@ getMe().then(async function (session) {
         btn.setAttribute('data-bs-toggle', 'modal');
         btn.setAttribute('data-bs-target', '#editProfileModal');
         btn.textContent = 'Edit Profile';
+        btn.addEventListener('click', function () {
+            document.getElementById('edit-avatar-url').value = '';
+            document.getElementById('edit-avatar-input').value = '';
+            document.getElementById('edit-avatar-filename').textContent = 'No file chosen';
+        });
         document.getElementById('edit-btn-wrapper').appendChild(btn);
 
         // Nút Trophy Case
@@ -39,7 +44,7 @@ getMe().then(async function (session) {
         var trophyIcon = document.createElement('img');
         trophyIcon.src = p.selectedTrophyAvatar;
         trophyIcon.alt = 'Trophy';
-        trophyIcon.style.cssText = 'width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-left:var(--space-8px);display:inline-block;';
+        trophyIcon.style.cssText = 'width:24px;height:24px;object-fit:contain;margin-left:var(--space-8px);flex-shrink:0;';
         nameEl.appendChild(trophyIcon);
     }
     document.getElementById('profile-bio').textContent = p.bio || '';
@@ -73,6 +78,9 @@ getMe().then(async function (session) {
             groupBanner.style.cursor = 'pointer';
         }
         groupBanner.style.display = 'block';
+        if (groupMembers && p.groupMembers) {
+            groupMembers.textContent = p.groupMembers;
+        }
     } else {
         groupHeading.textContent = 'No Group';
     }
@@ -112,9 +120,7 @@ getMe().then(async function (session) {
             var urlVal = avatarUrlInput ? avatarUrlInput.value.trim() : '';
             var file = avatarInput.files[0];
 
-            if (urlVal) {
-                payload.avatar = urlVal;
-            } else if (file) {
+            if (file) {
                 btn.disabled = true;
                 btn.textContent = 'Uploading...';
                 var uploadRes = await apiUpload('/upload/avatar', file);
@@ -126,6 +132,8 @@ getMe().then(async function (session) {
                     Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Upload Failed', message: uploadRes ? (uploadRes.error || 'Avatar upload failed') : 'Avatar upload failed', okLabel: 'OK' });
                     return;
                 }
+            } else if (urlVal) {
+                payload.avatar = urlVal;
             }
 
             await doSave(btn, payload);
@@ -147,7 +155,7 @@ getMe().then(async function (session) {
                 if (payload.avatar) {
                     var av = document.getElementById('profile-avatar');
                     av.innerHTML = '';
-                    av.appendChild(Avatar.render({ size: 120, avatar: payload.avatar, isAdmin: p.isAdmin }));
+                    av.appendChild(Avatar.render({ size: 120, avatar: payload.avatar, isAdmin: p.isAdmin, trophySrc: p.selectedTrophyAvatar || null }));
                 }
                 invalidateCache('/auth/me');
             } else {
@@ -180,7 +188,7 @@ getMe().then(async function (session) {
             var t = trophies[i];
             (function (trophy) {
                 var card = document.createElement('div');
-                card.style.cssText = 'border:2px solid var(--border-default);padding:var(--space-16px);text-align:center;cursor:pointer;transition:border-color 150ms ease-out,background 150ms ease-out;';
+                card.style.cssText = 'border:2px solid var(--border-default);padding:var(--space-16px);display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:border-color 150ms ease-out,background 150ms ease-out;';
                 if (trophy.selected) {
                     card.style.borderColor = 'var(--accent)';
                     card.style.background = 'var(--accent-dim)';
@@ -211,6 +219,61 @@ getMe().then(async function (session) {
                 }
                 grid.appendChild(card);
             })(t);
+        }
+    }
+
+    // --- Badge Collection ---
+    async function renderBadgeCollection(userId) {
+        var grid = document.getElementById('badge-collection-grid');
+        var empty = document.getElementById('badge-collection-empty');
+        grid.innerHTML = '';
+        var trophies;
+        try {
+            trophies = await fetchUserTrophies(userId);
+        } catch (e) { return; }
+        if (!trophies || trophies.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+        empty.style.display = 'none';
+        for (var i = 0; i < trophies.length; i++) {
+            var t = trophies[i];
+            var card = document.createElement('div');
+            card.style.cssText = 'border:2px solid var(--border-default);padding:var(--space-16px);display:flex;flex-direction:column;align-items:center;transition:border-color 150ms ease-out;';
+            if (t.selected) {
+                card.style.borderColor = 'var(--accent)';
+                card.style.background = 'var(--accent-dim)';
+            }
+            if (t.avatar) {
+                var img = document.createElement('img');
+                img.src = t.avatar;
+                img.alt = t.name || '';
+                img.style.cssText = 'width:64px;height:64px;object-fit:contain;margin-bottom:var(--space-8px);';
+                card.appendChild(img);
+            } else {
+                var icon = document.createElement('div');
+                icon.style.cssText = 'font-size:2rem;color:var(--accent);margin-bottom:var(--space-8px);';
+                icon.innerHTML = '<span class="material-symbols-outlined" style="font-size:2rem;">emoji_events</span>';
+                card.appendChild(icon);
+            }
+            var name = document.createElement('div');
+            name.style.cssText = 'font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-primary);margin-bottom:var(--space-4px);word-break:break-word;';
+            name.textContent = t.name || '';
+            card.appendChild(name);
+            if (t.content) {
+                var desc = document.createElement('div');
+                desc.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-bottom:var(--space-4px);';
+                desc.textContent = t.content;
+                card.appendChild(desc);
+            }
+            if (t.awardedAt) {
+                var date = new Date(t.awardedAt);
+                var dateEl = document.createElement('div');
+                dateEl.style.cssText = 'font-size:0.6875rem;color:var(--text-secondary);font-family:var(--font-mono);';
+                dateEl.textContent = date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+                card.appendChild(dateEl);
+            }
+            grid.appendChild(card);
         }
     }
 
@@ -252,6 +315,9 @@ getMe().then(async function (session) {
 
     loadSolved();
 
+    // --- Badge Collection ---
+    renderBadgeCollection(effectiveId);
+
     function css(key) { return getComputedStyle(document.documentElement).getPropertyValue(key).trim(); }
     function csstext(key) { return getComputedStyle(document.documentElement).getPropertyValue('--text-' + key).trim(); }
     function accentRgb(a) {
@@ -274,61 +340,27 @@ getMe().then(async function (session) {
 
         var ctx = document.getElementById('langChart').getContext('2d');
         new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
                 labels: langs,
                 datasets: [{
-                    label: 'Solved',
                     data: langs.map(function(l) { return langCounts[l]; }),
-                    backgroundColor: accentRgb(0.7),
-                    borderColor: css('--accent'),
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    barThickness: 28
+                    backgroundColor: ['#f7df1e', '#3776ab', '#777bb3'],
+                    borderColor: 'transparent',
+                    borderWidth: 0
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                cutout: '55%',
                 plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: csstext('muted'),
-                            font: { family: 'JetBrains Mono', size: 10 }
-                        },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
-                    },
-                    y: {
-                        ticks: {
-                            color: csstext('secondary'),
-                            font: { family: 'JetBrains Mono', size: 11 }
-                        },
-                        grid: { display: false }
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: css('--text-secondary'), font: { family: 'JetBrains Mono', size: 11 }, padding: 16 }
                     }
                 }
-            },
-            plugins: [{
-                id: 'barLabels',
-                afterDatasetsDraw: function(chart) {
-                    var ctx2 = chart.ctx;
-                    chart.data.datasets.forEach(function(ds, i) {
-                        var meta = chart.getDatasetMeta(i);
-                        meta.data.forEach(function(bar, j) {
-                            var val = ds.data[j];
-                            if (val > 0) {
-                                ctx2.fillStyle = accentRgb(1);
-                                ctx2.font = '10px JetBrains Mono';
-                                ctx2.textAlign = 'left';
-                                ctx2.textBaseline = 'middle';
-                                ctx2.fillText(val, bar.x + 8, bar.y);
-                            }
-                        });
-                    });
-                }
-            }]
+            }
         });
     });
 
@@ -358,34 +390,64 @@ getMe().then(async function (session) {
                 values.push(dayCounts[key] || 0);
             }
 
-            var ctx2 = document.getElementById('profile-activity-chart').getContext('2d');
-            if (profileActivityChart) profileActivityChart.destroy();
-            profileActivityChart = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Puzzles Solved',
-                        data: values,
-                        borderColor: css('--accent'),
-                        backgroundColor: accentRgb(0.08),
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: csstext('muted'), font: { size: 9, family: 'JetBrains Mono' }, maxTicksLimit: 8 } },
-                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9, family: 'JetBrains Mono' } } }
+            var totalSolves = 0;
+            for (var i = 0; i < values.length; i++) totalSolves += values[i];
+            var now = new Date();
+            var todayKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            var todaySolves = dayCounts[todayKey] || 0;
+            var weekSolves = 0;
+            for (var i = 0; i < 7; i++) {
+                var d = new Date(now);
+                d.setDate(d.getDate() - i);
+                var k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                weekSolves += dayCounts[k] || 0;
+            }
+            var monthSolves = 0;
+            for (var i = 0; i < 30; i++) {
+                var d = new Date(now);
+                d.setDate(d.getDate() - i);
+                var k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                monthSolves += dayCounts[k] || 0;
+            }
+            document.getElementById('stat-solved-today').textContent = todaySolves;
+            document.getElementById('stat-solved-week').textContent = weekSolves;
+            document.getElementById('stat-solved-month').textContent = monthSolves;
+            document.getElementById('stat-solved-all').textContent = totalSolves;
+
+            if (profileActivityChart) {
+                profileActivityChart.data.labels = labels;
+                profileActivityChart.data.datasets[0].data = values;
+                profileActivityChart.update();
+            } else {
+                var ctx2 = document.getElementById('profile-activity-chart').getContext('2d');
+                profileActivityChart = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Puzzles Solved',
+                            data: values,
+                            borderColor: css('--accent'),
+                            backgroundColor: accentRgb(0.08),
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: csstext('muted'), font: { size: 9, family: 'JetBrains Mono' }, maxTicksLimit: 8 } },
+                            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9, family: 'JetBrains Mono' } } }
+                        },
+                        interaction: { intersect: false, mode: 'index' }
                     }
-                }
-            });
+                });
+            }
         }
 
         initActivityChart(7);
@@ -394,17 +456,8 @@ getMe().then(async function (session) {
                 document.querySelector('#profile-activity-chart').parentElement.querySelectorAll('.chart-filter-btn').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 var filter = btn.getAttribute('data-filter');
-                var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
-                apiGet('/profile/activity?id=' + effectiveId).then(function(res) {
-                    if (res && res.data) {
-                        dayCounts = {};
-                        for (var i = 0; i < res.data.length; i++) {
-                            var item = res.data[i];
-                            dayCounts[item.date] = (dayCounts[item.date] || 0) + item.solves;
-                        }
-                    }
-                    initActivityChart(days);
-                });
+                var days = filter === 'today' ? 7 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
+                initActivityChart(days);
         });
     });
 });

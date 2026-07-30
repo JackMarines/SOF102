@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DEVCLIMB | Profile</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -39,11 +41,11 @@
         </a>
       </div>
 
-      <div class="content-panel pad-lg scroll-reveal">
+      <div class="content-panel pad-lg scroll-reveal" style="margin-bottom:var(--space-32px);">
         <div style="display:flex;align-items:center;gap:var(--space-32px);flex-wrap:wrap;">
           <div id="profile-avatar" style="flex-shrink:0;"></div>
           <div style="flex:1;min-width:0;">
-            <h2 class="content-section-heading" id="profile-displayname" style="margin-bottom:var(--space-8px);word-break:break-word;">Loading...</h2>
+            <h2 class="content-section-heading" id="profile-displayname" style="margin-bottom:var(--space-8px);word-break:break-word;display:inline-flex;align-items:center;">Loading...</h2>
             <p class="content-meta" id="profile-bio" style="margin-bottom:var(--space-16px);"></p>
             <p style="font-size:0.8125rem;color:var(--text-secondary);">
               <strong style="color:var(--text-primary);">Total Score:</strong> <span id="profile-score">0</span>
@@ -55,25 +57,50 @@
         </div>
       </div>
 
-      <h3 class="content-section-heading" id="group-heading">Group</h3>
+      <div class="content-grid-2col-equal scroll-reveal" data-delay="50" style="margin-bottom:var(--space-32px);">
+        <div class="content-panel pad-lg">
+          <h4 class="content-section-heading">Solve Distribution</h4>
+          <canvas id="langChart" height="260"></canvas>
+        </div>
+        <div class="content-panel pad-lg">
+          <div class="content-section-heading" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-16px);">
+            <span>Activity</span>
+            <div style="display:flex;gap:0;">
+              <button class="chart-filter-btn active" data-filter="today">Today</button>
+              <button class="chart-filter-btn" data-filter="week">Week</button>
+              <button class="chart-filter-btn" data-filter="month">Month</button>
+              <button class="chart-filter-btn" data-filter="total">Total</button>
+            </div>
+          </div>
+          <canvas id="profile-activity-chart" height="250"></canvas>
+          <div class="admin-chart-stat-row" id="profile-activity-stats">
+            <div><p class="chart-stat-value" id="stat-solved-today">-</p><p class="chart-stat-label">Today</p></div>
+            <div><p class="chart-stat-value" id="stat-solved-week">-</p><p class="chart-stat-label">This Week</p></div>
+            <div><p class="chart-stat-value" id="stat-solved-month">-</p><p class="chart-stat-label">This Month</p></div>
+            <div><p class="chart-stat-value" id="stat-solved-all">-</p><p class="chart-stat-label">Total</p></div>
+          </div>
+        </div>
+      </div>
 
-      <a class="content-panel" id="group-box" href="#" style="display:block;text-decoration:none;color:inherit;cursor:default;">
-        <div style="display:flex;align-items:center;gap:var(--space-24px);">
-          <div style="width:90px;height:90px;background:var(--bg-hover);display:flex;align-items:center;justify-content:center;border:1px solid var(--border-default);overflow:hidden;flex-shrink:0;">
-            <img id="group-avatar-img" class="profile-group-avatar" alt="" style="display:none;">
-            <span id="group-avatar-fallback" class="material-symbols-outlined" style="font-size:42px;color:var(--text-muted);">group</span>
-          </div>
-          <div>
-            <h4 style="font-family:var(--font-mono);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:var(--space-4px);" id="group-name">-</h4>
-            <p class="content-meta" id="group-members"></p>
-          </div>
+      <a id="group-banner" class="tt-banner scroll-reveal" data-delay="100" style="margin-bottom:var(--space-24px);display:none;text-decoration:none;color:inherit;" href="#">
+        <div id="group-banner-bg" class="tt-banner-img" style="height:200px;background:linear-gradient(135deg,#0d0d0d,#1c1b1b,#0d0d0d);"></div>
+        <div class="tt-banner-overlay"></div>
+        <div class="tt-banner-info" style="padding-left:var(--space-32px);">
+          <h3 id="group-heading" style="font-family:var(--font-mono);font-size:clamp(1.25rem,2.5vw,1.5rem);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#e5e2e1;margin-bottom:var(--space-4px);">Group</h3>
+          <p class="content-meta" id="group-members"></p>
         </div>
       </a>
 
-      <h3 class="content-section-heading" style="margin-top:var(--space-32px);">Solved Puzzles</h3>
+      <h3 class="content-section-heading" style="margin-top:var(--space-16px);">Solved Puzzles</h3>
 
-      <div class="content-panel" id="solved-box">
+      <div class="content-panel scroll-reveal" data-delay="150" id="solved-box">
         <div id="solved-table"></div>
+      </div>
+
+      <h3 class="content-section-heading" style="margin-top:var(--space-32px);">Badge Collection</h3>
+      <div class="content-panel scroll-reveal" data-delay="200" style="padding:var(--space-24px);" id="badge-collection-wrapper">
+        <div id="badge-collection-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-16px);"></div>
+        <p id="badge-collection-empty" style="display:none;text-align:center;color:var(--text-muted);font-size:0.8125rem;padding:var(--space-32px) 0;">No badges earned yet. Solve contest puzzles to earn badges!</p>
       </div>
 
     </div>

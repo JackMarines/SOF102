@@ -58,7 +58,7 @@ function showSpinner(containerId) {
     wrapper.className = "spinner-wrapper";
     wrapper.id = "spinner-" + containerId;
     wrapper.innerHTML = '<div class="spinner"></div>';
-    wrapper.style.cssText = "position:absolute;inset:0;z-index:10;display:flex;justify-content:center;align-items:center;padding:40px;background:var(--spinner-overlay);border-radius:inherit;";
+    wrapper.style.cssText = "position:absolute;inset:0;z-index:10;display:flex;justify-content:center;align-items:center;padding:40px;border-radius:inherit;";
     container.appendChild(wrapper);
 }
 

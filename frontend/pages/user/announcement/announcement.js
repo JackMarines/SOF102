@@ -8,7 +8,7 @@ var ANN_TYPES = ['GENERAL','MAINTENANCE','RELEASE','FEATURE','BUG_FIX','SECURITY
 function renderAuthor(val, row) {
     var wrapper = document.createElement('div');
     wrapper.className = 'at-author-cell';
-    var avatar = Avatar.render({ size: 28, avatar: row.authorAvatar || null, isAdmin: row.authorIsAdmin });
+    var avatar = Avatar.render({ size: 28, avatar: row.authorAvatar || null, isAdmin: row.authorIsAdmin, trophySrc: row.authorSelectedTrophyAvatar || null });
     wrapper.appendChild(avatar);
     var nameSpan = document.createElement('span');
     nameSpan.className = 'at-author-name';
@@ -307,7 +307,7 @@ function showAnnouncementDetail(item) {
 
             var authorEl = document.createElement('span');
             authorEl.className = 'at-detail-author';
-            var authorAvatar = Avatar.render({ size: 24, avatar: item.authorAvatar || null, isAdmin: item.authorIsAdmin });
+            var authorAvatar = Avatar.render({ size: 24, avatar: item.authorAvatar || null, isAdmin: item.authorIsAdmin, trophySrc: item.authorSelectedTrophyAvatar || null });
             authorEl.appendChild(authorAvatar);
             var authorName = document.createElement('span');
             authorName.textContent = item.authorName || 'Unknown';

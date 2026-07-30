@@ -236,12 +236,13 @@ white-space: nowrap;
 .tt-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 20px;
     margin-top: 10px;
 }
 /* Thẻ nhóm */
 .tt-card {
     text-decoration: none; color: var(--text-primary);
+    min-width: 0;
     animation: ttCardIn 0.4s ease backwards;
 }
 /* Hiệu ứng fade-in tuần tự cho 8 thẻ đầu */
@@ -256,20 +257,25 @@ white-space: nowrap;
 /* Glass box effect + hover lift */
 .tt-card .glass-box {
     height: 100%;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 4px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .tt-card:hover .glass-box {
+    border-color: var(--border-hover);
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 /* Ảnh đại diện nhóm (hoặc fallback icon) */
 .tt-card-avatar {
-    width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px;
+    width: 100%; height: 100%; object-fit: cover;
 }
 .tt-card-avatar-fallback {
-    width: 100%; aspect-ratio: 1/1; border-radius: 12px;
+    width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
     background: var(--bg-input); color: var(--text-secondary); font-size: 42px;
+}
+.tt-card-avatar-wrap {
+    width: 100%; aspect-ratio: 1/1; overflow: hidden; border-radius: 0px;
 }
 /* Hàng tên + badge */
 .tt-card-header {
@@ -366,7 +372,7 @@ white-space: nowrap;
 .cg-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 20px;
     margin-top: 10px;
     min-width: 0;
 }
@@ -388,17 +394,18 @@ white-space: nowrap;
 /* Glass box effect + hover lift */
 .cg-card .glass-box {
     height: 100%; max-width: 100%; overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 4px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .cg-card:hover .glass-box {
+    border-color: var(--border-hover);
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
-/* Tắt hover lift khi có bộ lọc (tránh conflict với dropdown) */
-.cg-card.cg-no-lift:hover .glass-box { transform: none; }
 /* Hàng tên người dùng */
 .cg-card-header {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
     margin-top: 12px; margin-bottom: 6px; min-width: 0;
 }
 .cg-card-name {
@@ -552,7 +559,7 @@ white-space: nowrap;
 /* Dropdown menu ngữ cảnh */
 .cg-card-dropdown {
     position: absolute; top: 40px; right: 8px; z-index: 20;
-    min-width: 160px; background: var(--bg-panel);
+    min-width: 160px; background: var(--bg-surface);
     border: 1px solid var(--border-input); border-radius: 8px;
     padding: 4px 0; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
@@ -587,7 +594,7 @@ white-space: nowrap;
 /* Dropdown tùy chỉnh (không dùng Bootstrap) */
 .cg-filter-dropdown {
     position: absolute; top: calc(100% + 4px); right: 0; z-index: 25;
-    min-width: 180px; background: var(--bg-panel);
+    min-width: 180px; background: var(--bg-surface);
     border: 1px solid var(--border-input); border-radius: 8px;
     padding: 4px 0; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }

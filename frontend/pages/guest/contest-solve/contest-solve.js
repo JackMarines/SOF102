@@ -63,7 +63,7 @@
             var authorLink = document.createElement('a');
             authorLink.className = 'contest-header-author';
             authorLink.href = '#';
-            var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin });
+            var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin, trophySrc: c.authorSelectedTrophyAvatar || null });
             authorLink.appendChild(authorAvatar);
             var authorText = document.createElement('span');
             authorText.textContent = ' ' + c.authorName;
