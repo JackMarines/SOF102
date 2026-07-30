@@ -10,7 +10,7 @@
         '<div class="footer-grid">' +
           '<div class="footer-brand">' +
             '<a href="/frontend/pages/user/home/index.html" aria-label="DevClimb home">' +
-              '<span class="footer-logo-text"><span class="logo-symbol">\u25B7</span>ev:clmb<span class="logo-cursor">_</span></span>' +
+              '<span class="footer-logo-text"><span class="logo-symbol"></span><span class="logo-text-inner">ev:clmb</span><span class="logo-cursor">_</span></span>' +
             '</a>' +
             '<p class="footer-copyright">&copy; 2026 LBKT Studio</p>' +
           '</div>' +
@@ -22,8 +22,8 @@
           '<div class="footer-col">' +
             '<span class="footer-heading">CREDITS</span>' +
             '<span>Built by LBKT Studio</span>' +
-            '<span>FPT Polyschool - Software Development (Java)</span>' +
-            '<span>Graduation Project 2026</span>' +
+            '<span>FPT Polyschool - Software Development</span>' +
+            '<span>PRO230 Graduation Project</span>' +
           '</div>' +
           '<div class="footer-col">' +
             '<span class="footer-heading">INFRASTRUCTURE</span>' +

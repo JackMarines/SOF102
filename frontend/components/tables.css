@@ -144,8 +144,11 @@ white-space: nowrap;
 .pt-row-dropdown-item i,
 .pt-row-dropdown-item .material-symbols-outlined { font-size: 13px; }
 
+/* Scroll wrapper cho mobile (overflow-x auto) */
+.pt-scroll-wrap { min-width: 0; }
+
 /* Phân trang */
-.pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
 .pt-page {
     padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
     background: transparent; color: var(--text-primary); text-decoration: none;
@@ -170,6 +173,11 @@ white-space: nowrap;
     .pt-table-header, .pt-row { font-size: 13px; padding: 12px; gap: 8px; }
     .pt-filter-row .dropdown { width: 100%; }
     .pt-filter-row .dropdown .btn { width: 100%; }
+    .pt-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .pt-table-header, .pt-row { min-width: max-content; }
+
+    .cg-toolbar { flex-wrap: wrap; }
+    .cg-toolbar .cg-search-box { min-width: 100%; }
 }
 
 /* ═══════════════════════════════════════════════
@@ -311,7 +319,7 @@ white-space: nowrap;
 .tt-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
 
 /* Phân trang */
-.tt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.tt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
 .tt-page {
     padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
     background: transparent; color: var(--text-primary); text-decoration: none;
@@ -430,7 +438,7 @@ white-space: nowrap;
 .cg-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
 
 /* Phân trang */
-.cg-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.cg-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
 .cg-page {
     padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
     background: transparent; color: var(--text-primary); text-decoration: none;

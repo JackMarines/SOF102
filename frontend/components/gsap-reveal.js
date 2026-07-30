@@ -10,7 +10,7 @@
     heroTl
       .from('.hero-devclimb .hero-badge',      { y: -20, opacity: 0, duration: 0.4 })
       .from('.hero-devclimb h1',                { y: 30, opacity: 0 }, '-=0.2')
-      .from('.hero-devclimb .hero-sub',         { opacity: 0, duration: 0.4 }, '-=0.1')
+      .from('.hero-devclimb .hero-sub',         { y: 20, opacity: 0, duration: 0.4 }, '-=0.1')
       .from('.hero-devclimb .hero-actions',     { y: 20, opacity: 0 }, '-=0.1')
       .from('.code-window',                     { y: 40, opacity: 0, duration: 1 }, '-=0.1');
 

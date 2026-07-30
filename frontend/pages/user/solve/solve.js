@@ -170,6 +170,8 @@ async function handleSubmit() {
     };
 
     var result = await apiPost('/submit', body);
+    console.log("FULL SUBMIT RESULT:", result);
+console.log("FAILED TESTCASES:", result.testfailed);
 
     statusText.className = '';
     testCases.innerHTML = '';

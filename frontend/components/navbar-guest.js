@@ -22,7 +22,7 @@
     nav.innerHTML =
       '<div class="nav-inner">' +
         '<a class="nav-logo-link" href="/frontend/index.html" aria-label="DevClimb home">' +
-          '<span class="nav-logo-text"><span class="logo-symbol">▷</span>ev:clmb<span class="logo-cursor">_</span></span>' +
+          '<span class="nav-logo-text"><span class="logo-symbol"></span><span class="logo-text-inner">ev:clmb</span><span class="logo-cursor">_</span></span>' +
         '</a>' +
         '<div class="nav-links" id="nav-links" role="list">' +
           '<a href="/frontend/pages/guest/team-search/index.html" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +

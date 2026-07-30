@@ -39,6 +39,7 @@
 <main id="main-content" role="main" style="padding-top: var(--nav-height);">
 
   <section class="hero-devclimb">
+    <canvas class="hacker-bg"></canvas>
     <div class="hero-inner">
       <div class="hero-badge">
         <span class="hero-dot"></span>
@@ -46,14 +47,26 @@
       </div>
 
       <h1>
-        <span data-scramble>  > TRAIN YOUR</span><br>
-        <span class="hero-highlight" data-scramble>CODING SKILLS</span><br>
-        <span data-scramble> LIKE A GAME</span><span class="hero-cursor">_</span>
+        <span class="hero-highlight">></span>
+<span
+  data-typing
+  data-loop
+  data-phrases='[
+    "BUILD STRONGER PROBLEM-SOLVING SKILLS",
+    "WRITE LESS. SOLVE MORE.",
+    "EVERY BUG IS A LESSON",
+    "ONE PROBLEM AT A TIME",
+    "THINK. CODE. REPEAT.",
+    "TURN IDEAS INTO SOLUTIONS",
+    "LEARN WITH A PURPOSE",
+    "LEARN WITH DEVCLIMB"
+  ]'>
+</span>
+        <span class="hero-cursor">_</span>
       </h1>
 
-      <p  class="hero-sub  ">
-       <span data-scramble>  Improve algorithms, logic thinking and programming skills through interactive coding challenges and competitive gameplay.</span> <br>
-        <span data-scramble> Experience the flow state in a high-performance terminal environment.</span>
+      <p class="hero-sub">
+        improve your programming and problem-solving skills with hands-on coding challenges, instant feedback, <br> and a collaborative environment built for learning and competition.
       </p>
 
       <div class="hero-actions">
@@ -69,7 +82,7 @@
             <span class="dot yellow"></span>
             <span class="dot green"></span>
           </div>
-          <span class="code-filename">main.py — devclimb-workspace</span>
+          <span class="code-filename" >main.py — devclimb-workspace</span>
         </div>
 <div class="solve-editor-body"></div>
       <div id="codeEditor" style="height:100%;"></div>
@@ -79,50 +92,13 @@
     </div>
   </section>
 
-  <section class="section-devclimb" style="padding: clamp(2rem, 4vw, 3rem) 0;">
+
+  <section class="section-devclimb">
     <div class="section-inner">
-      <div class="stats-table">
-        <div class="panel-header">system.status</div>
-        <div class="stat-row">
-          <span class="stat-id">[0x01]</span>
-          <span class="stat-name">PUZZLES</span>
-          <span class="stat-value">150+</span>
-          <span class="stat-meter-wrap">
-            <span class="stat-meter" style="width: 120px;"></span>
-            <span class="stat-meter-track"></span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-id">[0x02]</span>
-          <span class="stat-name">ACTIVE USERS</span>
-          <span class="stat-value">500+</span>
-          <span class="stat-meter-wrap">
-            <span class="stat-meter" style="width: 200px;"></span>
-            <span class="stat-meter-track"></span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-id">[0x03]</span>
-          <span class="stat-name">UPTIME</span>
-          <span class="stat-value">24/7</span>
-          <span class="stat-meter-wrap">
-            <span class="stat-meter" style="width: 260px;"></span>
-            <span class="stat-meter-track"></span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-id">[0x04]</span>
-          <span class="stat-name">LANGUAGES</span>
-          <span class="stat-value">3</span>
-          <span class="stat-meter-wrap">
-            <span class="stat-meter" style="width: 70px;"></span>
-            <span class="stat-meter-track"></span>
-          </span>
-        </div>
-      </div>
+      <h1 data-typing style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; text-align: left; padding-left: clamp(2.5rem, 6vw, 4.5rem); color: var(--accent); margin-bottom: var(--space-16px); text-transform: uppercase; letter-spacing: -0.02em;">WHY DEVCLIMB?</h1>
+      <p class="scroll-reveal" data-delay="0.15" style="max-width: 75ch; margin: 0 auto; color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.7; text-align: justify;">Programming skills are developed through continuous practice and problem solving. <span style="color:var(--accent)">DevClimb</span> is designed to provide students with a focused online environment for solving coding challenges, strengthening algorithmic thinking, and participating in coding competitions within classrooms and small learning communities.</p>
     </div>
   </section>
-
 
   <section class="horizontal-section">
       <div class="horizontal-track">
@@ -133,13 +109,11 @@
     <div class="section-inner">
       <div class="feature-block scroll-reveal" data-delay="0">
         <div>
-          <span class="feature-label">MODULE_A</span>
-          <h2>Coding Challenges</h2>
-          <p>Solve real programming problems from easy to hard. Each challenge tests your algorithmic thinking and rewards precision over speed.</p>
+          <span class="feature-label" data-typing>MODULE_A</span>
+          <h2 style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); letter-spacing: 0.06em;">PYTHON</h2>
+          <p>Clean syntax. Focus on problem solving.<br>Python's simple and expressive syntax lets you concentrate on algorithms rather than language complexity. It's an ideal choice for learning programming fundamentals and developing logical thinking.</p>
         </div>
-        <div class="feature-visual">
-          <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--accent);">terminal</span>
-        </div>
+        <div class="feature-visual" data-code-module></div>
       </div>
     </div>
   </section>
@@ -148,13 +122,11 @@
     <div class="section-inner">
       <div class="feature-block reverse scroll-reveal" data-delay="100">
         <div>
-          <span class="feature-label">MODULE_B</span>
-          <h2>Ranking System</h2>
-          <p>Compete with peers and track your progress on the leaderboard. Every solved problem earns points. Every optimization matters.</p>
+          <span class="feature-label" data-typing>MODULE_B</span>
+          <h2>JAVASCRIPT</h2>
+          <p>Practice with the language of the web.<br>Strengthen your problem-solving skills while writing code in JavaScript. Apply algorithms, data structures, and logical thinking using one of the world's most widely used programming languages.</p>
         </div>
-        <div class="feature-visual">
-          <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--accent);">leaderboard</span>
-        </div>
+        <div class="feature-visual" data-code-module></div>
       </div>
     </div>
   </section>
@@ -163,13 +135,11 @@
     <div class="section-inner">
       <div class="feature-block scroll-reveal" data-delay="200">
         <div>
-          <span class="feature-label">MODULE_C</span>
-          <h2>Daily Practice</h2>
-          <p>Keep your coding streak alive with daily challenges. Consistent practice builds muscle memory and sharpens problem-solving skills.</p>
+          <span class="feature-label" data-typing>MODULE_C</span>
+          <h2>PHP</h2>
+          <p>Develop practical backend skills.<br>Practice server-side programming through coding challenges that reinforce core programming concepts, algorithmic thinking, and the foundations of modern web development.</p>
         </div>
-        <div class="feature-visual">
-          <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--accent);">update</span>
-        </div>
+        <div class="feature-visual" data-code-module></div>
       </div>
     </div>
   </section>
@@ -178,10 +148,87 @@
   </div>
   </section>
 
+  <section class="section-devclimb" style="background: var(--bg-deep);">
+    <div class="section-inner">
+      <h1 data-typing style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; text-align: left; padding-left: clamp(1.5rem, 4vw, 4rem); color: var(--accent); margin-bottom: var(--space-32px); text-transform: uppercase; letter-spacing: -0.02em;">SOLVE PROGRAMMING PUZZLES</h1>
+      <div class="puzzle-grid scroll-reveal" data-delay="0">
+        <div class="puzzle-section">
+          <div class="puzzle-terminal-header">
+            <span>CHALLENGE_01</span>
+          </div>
+          <div class="puzzle-body">
+            <div class="puzzle-title-row">
+              <h2>Two Sum</h2>
+              <span class="puzzle-badge medium">Medium</span>
+              <span class="puzzle-badge lang">Python</span>
+            </div>
+            <div class="puzzle-content">
+              <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p>
+              <p>You may assume that each input has exactly one solution, and you may not use the same element twice.</p>
+              <h3>Example</h3>
+              <div class="example">
+                <div class="example-line">
+                  <span class="example-label">Input:</span>
+                  <span class="example-value">nums = [2,7,11,15], target = 9</span>
+                </div>
+                <div class="example-line">
+                  <span class="example-label">Output:</span>
+                  <span class="example-value">[0,1]</span>
+                </div>
+              </div>
+              <h3>Constraints</h3>
+              <ul>
+                <li>2 &lt;= nums.length &lt;= 10<sup>4</sup></li>
+                <li>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></li>
+                <li>Only one valid answer exists.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="puzzle-section">
+          <div class="puzzle-terminal-header">
+            <span>CHALLENGE_02</span>
+          </div>
+          <div class="puzzle-body">
+            <div class="puzzle-title-row">
+              <h2>Longest Consecutive Sequence</h2>
+              <span class="puzzle-badge easy">Easy</span>
+              <span class="puzzle-badge lang">JavaScript</span>
+            </div>
+            <div class="puzzle-content">
+              <p>Given an unsorted array of integers <code>nums</code>, return the length of the longest consecutive elements sequence.</p>
+              <p>You must write an algorithm that runs in <code>O(n)</code> time.</p>
+              <h3>Example</h3>
+              <div class="example">
+                <div class="example-line">
+                  <span class="example-label">Input:</span>
+                  <span class="example-value">nums = [100,4,200,1,3,2]</span>
+                </div>
+                <div class="example-line">
+                  <span class="example-label">Output:</span>
+                  <span class="example-value">4</span>
+                </div>
+                <div class="example-line">
+                  <span class="example-label">Explanation:</span>
+                  <span class="example-value">The longest consecutive sequence is [1,2,3,4].</span>
+                </div>
+              </div>
+              <h3>Constraints</h3>
+              <ul>
+                <li>0 &lt;= nums.length &lt;= 10<sup>5</sup></li>
+                <li>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section-devclimb cta-devclimb">
     <div class="section-inner scroll-reveal" data-delay="0">
-      <h2>Ready to climb?</h2>
-      <p>One account. Hundreds of challenges. A leaderboard waiting for your name.</p>
+      <h2 data-typing>Start Your Journey</h2>
+      <p>Create an account to begin solving coding challenges, <br>track your progress, and improve your programming skills one solution at a time.</p>
       <a href="/frontend/pages/guest/auth/register.html" class="btn-devclimb primary">CREATE_ACCOUNT</a>
     </div>
   </section>
@@ -196,7 +243,9 @@
 <script src="/frontend/components/theme-toggle.js"></script>
 <script src="/frontend/components/gsap-reveal.js"></script>
 <script src="/frontend/components/gsap-horizontal.js"></script>
-<script src="/frontend/components/gsap-scramble.js"></script>
+<script src="/frontend/components/gsap-hacker-columns.js"></script>
+<script src="/frontend/components/gsap-navbar-shuffle.js"></script>
+<script src="/frontend/components/gsap-typing.js"></script>
 <script src="/frontend/components/spinner.js"></script>
 <script>window.addEventListener('deps-ready', function() { if (typeof redirectIfAuthenticated === 'function') redirectIfAuthenticated(); })</script>
 <script>
@@ -214,9 +263,9 @@
 
 </script>
 <script type="module">
-import { setLanguage, setCode, getCode,setSubmitCallback, editor, languages } from '/frontend/pages/user/solve/codeMirror.js';
+import { setLanguage, getCode, editor } from '/frontend/pages/user/solve/codeMirror.js';
 setLanguage("Python")
-setCode(`import os
+var code = `import os
 def init_challenge(uid):
     session = os.getenv('DEVCLIMB_TOKEN')
     if not session:
@@ -227,7 +276,66 @@ def init_challenge(uid):
     return payload.execute()
 
 # Initializing root instance
-print("System operational.")`)
+print("System operational.")`
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 768) {
+  editor.dispatch({ changes: { from: 0, to: editor.state.doc.length, insert: code } });
+} else {
+  var obj = { n: 0 };
+  gsap.to(obj, {
+    n: code.length,
+    duration: Math.max(1.5, code.length * 0.025),
+    ease: 'none',
+    onUpdate: function () {
+      editor.dispatch({ changes: { from: 0, to: editor.state.doc.length, insert: code.substring(0, Math.round(obj.n)) } });
+    },
+    onComplete: function () {
+      editor.dispatch({ changes: { from: 0, to: editor.state.doc.length, insert: code } });
+    }
+  });
+}
+</script>
+<script type="module">
+import { createCodeModule } from '/frontend/components/code-module-editor.js';
+
+var pyCode = `def two_sum(nums: list[int], target: int) -> list[int]:
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+
+        if complement in seen:
+            return [seen[complement], i]
+
+        seen[num] = i
+
+    return []
+    `;
+
+var jsCode = `function calculateScore(solved, time, difficulty) {
+    const base = solved * 100;
+    const bonus = Math.max(0, 300 - time) * 2;
+    const multiplier = difficulty === 'hard' ? 1.5 : 1;
+    return Math.round((base + bonus) * multiplier);
+}
+const rankings = users
+    .map(u => ({ name: u.name, score: calculateScore(u.solved, u.time, u.diff) }))
+    .sort((a, b) => b.score - a.score);
+    `;
+
+var phpCode = `<?php
+function checkStreak(int $userId): array {
+    $logs = getRecentActivity($userId, 30);
+    $streak = 0;
+    foreach ($logs as $day) {
+        if ($day['solved'] > 0) { $streak++; }
+        else { break; }
+    }
+    return ['streak' => $streak, 'days' => $logs];}?>
+`;
+
+var containers = document.querySelectorAll('.feature-visual[data-code-module]');
+createCodeModule(containers[0], pyCode, 'Python');
+createCodeModule(containers[1], jsCode, 'JavaScript');
+createCodeModule(containers[2], phpCode, 'PHP');
 </script>
 
 </body>
