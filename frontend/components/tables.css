@@ -102,6 +102,9 @@
 .pt-row:nth-child(5) { animation-delay: 0.16s; }
 .pt-row:nth-child(6) { animation-delay: 0.2s; }
 .pt-row:hover { background: var(--row-hover); }
+.pt-row-contest {
+  box-shadow: inset 3px 0 0 var(--warning);
+}
 /* Cột tiêu đề: căn trái */
 .pt-row-title { text-align: left; font-weight: 400;     overflow: hidden;
 white-space: nowrap;
@@ -131,7 +134,7 @@ white-space: nowrap;
 
 .pt-row-dropdown {
     display: none; position: absolute; right: 0; top: 100%; z-index: 100;
-    background: var(--bg-secondary, #1e293b); border: 1px solid var(--border-input);
+    background: var(--bg-elevated, #1e293b); border: 1px solid var(--border-input);
     border-radius: 8px; min-width: 140px; padding: 6px 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
@@ -493,14 +496,45 @@ white-space: nowrap;
     letter-spacing: 0.12em;
     text-transform: uppercase;
 }
-.at-type-badge.general { background: var(--ann-general-bg); color: #93c5fd; }
-.at-type-badge.maintenance { background: var(--ann-maintenance-bg); color: #fbbf24; }
-.at-type-badge.release { background: var(--ann-release-bg); color: #4ade80; }
-.at-type-badge.feature { background: var(--ann-feature-bg); color: #818cf8; }
-.at-type-badge.bug-fix { background: var(--ann-bug-fix-bg); color: #f87171; }
-.at-type-badge.security { background: var(--ann-security-bg); color: #c084fc; }
-.at-type-badge.incident { background: var(--ann-incident-bg); color: #ef4444; }
-.at-type-badge.event { background: var(--ann-event-bg); color: #60a5fa; }
+.at-type-badge.general {
+  background: var(--ann-general-bg);
+  color: var(--ann-general-text);
+}
+
+.at-type-badge.maintenance {
+  background: var(--ann-maintenance-bg);
+  color: var(--ann-maintenance-text);
+}
+
+.at-type-badge.release {
+  background: var(--ann-release-bg);
+  color: var(--ann-release-text);
+}
+
+.at-type-badge.feature {
+  background: var(--ann-feature-bg);
+  color: var(--ann-feature-text);
+}
+
+.at-type-badge.bug-fix {
+  background: var(--ann-bug-fix-bg);
+  color: var(--ann-bug-fix-text);
+}
+
+.at-type-badge.security {
+  background: var(--ann-security-bg);
+  color: var(--ann-security-text);
+}
+
+.at-type-badge.incident {
+  background: var(--ann-incident-bg);
+  color: var(--ann-incident-text);
+}
+
+.at-type-badge.event {
+  background: var(--ann-event-bg);
+  color: var(--ann-event-text);
+}
 
 /* Pin corner icon — absolutely positioned at top-left of the row */
 .at-pin-corner {

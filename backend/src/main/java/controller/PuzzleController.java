@@ -93,6 +93,7 @@ public class PuzzleController extends HttpServlet {
             item.put("language", p.getLanguage() != null ? p.getLanguage().getLangName() : null);
             item.put("difficulty", p.getPuzDifficulty());
             item.put("score", p.getPuzScore());
+            item.put("contestId", p.getContest() != null ? p.getContest().getConId() : null);
             dataList.add(item);
         }
 

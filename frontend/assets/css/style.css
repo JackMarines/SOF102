@@ -1106,7 +1106,7 @@ textarea {
     color: var(--text-primary);
 }
 .custom-btn.btn-secondary:hover {
-    background: var(--bg-secondary);
+    background: var(--bg-elevated);
     transform: none;
 }
 
