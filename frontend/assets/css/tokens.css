@@ -147,10 +147,10 @@ html.light-mode {
   --ann-incident-text: #e0b7b7;
   --ann-event-text: #bbcee6;
 
-  --skeleton-bg: #e5e0d6;
+  --skeleton-bg: #d2d7e9;
 
-  --code-bg: #f5f2ed;
-  --code-bar-bg: #ece6dc;
+  --code-bg: #eceef7;
+  --code-bar-bg: #d2d7e9;
   --code-border: rgba(0, 0, 0, 0.10);
   --code-text: #1e1e1e;
   --code-line-num: rgba(0, 0, 0, 0.3);
@@ -159,7 +159,6 @@ html.light-mode {
 /* Scanline in light mode */
 html.light-mode .scanline {
   opacity: 0.03;
-}
 }
 
 /* ── Scanline overlay (CRT effect) ── */

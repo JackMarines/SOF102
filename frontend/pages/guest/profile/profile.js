@@ -175,7 +175,7 @@ window.addEventListener('deps-ready', function () {
                     var key = date.getFullYear() + '-' +
                         String(date.getMonth() + 1).padStart(2, '0') + '-' +
                         String(date.getDate()).padStart(2, '0');
-                    labels.push(date.getMonth() + 1 + '/' + date.getDate());
+                    labels.push(days === 1 ? '24H' : date.getMonth() + 1 + '/' + date.getDate());
                     values.push(dayCounts[key] || 0);
                 }
                 var single = labels.length === 1;

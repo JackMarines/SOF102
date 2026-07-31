@@ -242,14 +242,6 @@
   background: var(--bg-hover);
 }
 
-html.light-mode .announcement-banner {
-  background: #ddd4c2;
-}
-
-html.light-mode .announcement-banner:hover {
-  background: #d5cbb6;
-}
-
 .announcement-banner .ann-date {
   color: var(--text-muted);
   font-weight: 400;
@@ -1398,6 +1390,66 @@ code {
   color: var(--text-muted);
 }
 
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-32px);
+  flex-wrap: wrap;
+}
+
+.profile-header-avatar {
+  flex-shrink: 0;
+}
+
+.profile-header-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-header-name {
+  margin-bottom: var(--space-8px);
+  word-break: break-word;
+  display: inline-flex;
+  align-items: center;
+}
+
+.profile-header-bio {
+  margin-bottom: var(--space-16px);
+}
+
+.profile-score-line {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-8px);
+}
+
+.profile-score-line strong {
+  color: var(--text-primary);
+}
+
+.profile-score-dot {
+  color: var(--text-muted);
+}
+
+.profile-header-edit {
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16px);
+  }
+
+  .profile-header-main {
+    width: 100%;
+  }
+}
+
 .content-link {
   font-size: 0.8125rem;
   font-weight: 600;
@@ -1572,6 +1624,19 @@ code {
 .admin-badge-visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+.mobile-only {
+  display: none;
+}
+
+#logout-btn-mobile,
+#logout-btn {
+  color: var(--error) !important;
+}
+#logout-btn-mobile:hover,
+#logout-btn:hover {
+  background: rgba(255, 107, 107, 0.1);
 }
 
 .nav-profile-dropdown {

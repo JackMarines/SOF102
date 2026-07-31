@@ -38,18 +38,18 @@
       </div>
 
       <div class="content-panel pad-lg scroll-reveal" style="margin-bottom:var(--space-32px);">
-        <div style="display:flex;align-items:center;gap:var(--space-32px);flex-wrap:wrap;">
-          <div id="profile-avatar" style="flex-shrink:0;"></div>
-          <div style="flex:1;min-width:0;">
-            <h2 class="content-section-heading" id="profile-displayname" style="margin-bottom:var(--space-8px);word-break:break-word;display:inline-flex;align-items:center;">Loading...</h2>
-            <p class="content-meta" id="profile-bio" style="margin-bottom:var(--space-16px);"></p>
-            <p style="font-size:0.8125rem;color:var(--text-secondary);">
-              <strong style="color:var(--text-primary);">Total Score:</strong> <span id="profile-score">0</span>
-              <span style="color:var(--text-muted);margin:0 var(--space-8px);">&middot;</span>
+        <div class="profile-header">
+          <div id="profile-avatar" class="profile-header-avatar"></div>
+          <div class="profile-header-main">
+            <h2 class="content-section-heading profile-header-name" id="profile-displayname">Loading...</h2>
+            <p class="content-meta profile-header-bio" id="profile-bio"></p>
+            <p class="profile-score-line">
+              <strong>Total Score:</strong> <span id="profile-score">0</span>
+              <span class="profile-score-dot">&middot;</span>
               <span id="profile-completed">0</span> puzzles solved
             </p>
           </div>
-          <div id="edit-btn-wrapper" style="flex-shrink:0;"></div>
+          <div id="edit-btn-wrapper" class="profile-header-edit"></div>
         </div>
       </div>
 
