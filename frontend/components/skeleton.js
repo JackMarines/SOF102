@@ -2,7 +2,7 @@ var _skeletonTemplates = {
   'announcement-rows': function () {
     var html = '';
     for (var i = 0; i < 5; i++) {
-      html += '<div class="skeleton-table-row" style="grid-template-columns:200px 1fr 120px 130px;padding:16px 20px;">' +
+      html += '<div class="skeleton-table-row" style="padding:16px 20px;">' +
         '<div class="skeleton skeleton-text" style="width:60%;"></div>' +
         '<div class="skeleton skeleton-text"></div>' +
         '<div class="skeleton skeleton-text-sm" style="width:60%;margin:0 auto;"></div>' +
@@ -65,7 +65,7 @@ var _skeletonTemplates = {
   },
 
   'team-grid': function () {
-    var html = '<div class="skeleton-team-grid">';
+    var html = '';
     for (var i = 0; i < 6; i++) {
       html += '<div class="skeleton skeleton-team-card">' +
         '<div class="skeleton skeleton-avatar" style="width:64px;height:64px;margin-bottom:8px;"></div>' +
@@ -74,7 +74,7 @@ var _skeletonTemplates = {
         '<div class="skeleton skeleton-text-sm" style="width:40%;margin:0 auto;"></div>' +
         '</div>';
     }
-    return html + '</div>';
+    return html;
   },
 
   'solve-panel': function () {
@@ -106,16 +106,15 @@ var _skeletonTemplates = {
   },
 
   'member-rows': function () {
-    var html = '';
-    for (var i = 0; i < 5; i++) {
-      html += '<div class="skeleton-table-row" style="grid-template-columns:40px 1fr 100px 80px;padding:12px 16px;">' +
-        '<div class="skeleton skeleton-avatar" style="width:32px;height:32px;"></div>' +
-        '<div class="skeleton skeleton-text"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:60%;"></div>' +
-        '<div class="skeleton skeleton-text-sm" style="width:50%;"></div>' +
-        '</div>';
+    var html = '<div class="cg-grid">';
+    for (var i = 0; i < 11; i++) {
+      html += '<a class="cg-card" style="pointer-events:none;">' +
+        '<div class="skeleton skeleton-avatar" style="width:48px;height:48px;margin:0 auto 8px;"></div>' +
+        '<div class="skeleton skeleton-text" style="width:60%;margin:0 auto 4px;"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:40%;margin:0 auto;"></div>' +
+        '</a>';
     }
-    return html;
+    return html + '</div>';
   },
 
   'contributor-rows': function () {
@@ -131,7 +130,7 @@ var _skeletonTemplates = {
   },
 
   'contest-grid': function () {
-    var html = '<div class="tt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-16px);">';
+    var html = '';
     for (var i = 0; i < 6; i++) {
       html += '<div class="glass-box" style="padding:var(--space-24px) var(--space-16px);">' +
         '<div class="skeleton skeleton-avatar" style="width:80px;height:80px;margin:0 auto var(--space-12px);"></div>' +
@@ -141,7 +140,7 @@ var _skeletonTemplates = {
         '<div class="skeleton skeleton-text-sm" style="width:40%;margin:0 auto;"></div>' +
         '</div>';
     }
-    return html + '</div>';
+    return html;
   },
 
   'search-rows': function () {

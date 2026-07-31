@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.ContestDao;
 import dao.ProgressDao;
 import dao.PuzzleDao;
+import dao.TrophyDao;
 import dao.UserDao;
 import dao.UserTrophyDao;
 import entity.Contest;
@@ -26,6 +27,7 @@ public class PublicContestController extends HttpServlet {
     private PuzzleDao puzzleDao = new PuzzleDao();
     private ProgressDao progressDao = new ProgressDao();
     private UserDao userDao = new UserDao();
+    private TrophyDao trophyDao = new TrophyDao();
     private UserTrophyDao userTrophyDao = new UserTrophyDao();
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -81,6 +83,12 @@ public class PublicContestController extends HttpServlet {
             item.put("authorName", author != null ? author.getUserName() : "Unknown");
             item.put("authorAvatar", author != null ? author.getUserAvatar() : null);
             item.put("authorIsAdmin", author != null && Boolean.TRUE.equals(author.getUserIsadmin()));
+            String authorTrophyAvatar = null;
+            if (author != null && author.getUserSelectedtrophyId() != null) {
+                Trophy at = trophyDao.findById(author.getUserSelectedtrophyId());
+                if (at != null) authorTrophyAvatar = at.getTropAvatar();
+            }
+            item.put("authorSelectedTrophyAvatar", authorTrophyAvatar);
 
             Trophy t = c.getTrophy();
             if (t != null) {
@@ -141,6 +149,12 @@ public class PublicContestController extends HttpServlet {
             data.put("authorName", author != null ? author.getUserName() : "Unknown");
             data.put("authorAvatar", author != null ? author.getUserAvatar() : null);
             data.put("authorIsAdmin", author != null && Boolean.TRUE.equals(author.getUserIsadmin()));
+            String authorTrophyAvatar = null;
+            if (author != null && author.getUserSelectedtrophyId() != null) {
+                Trophy at = trophyDao.findById(author.getUserSelectedtrophyId());
+                if (at != null) authorTrophyAvatar = at.getTropAvatar();
+            }
+            data.put("authorSelectedTrophyAvatar", authorTrophyAvatar);
 
             Trophy t = c.getTrophy();
             if (t != null) {

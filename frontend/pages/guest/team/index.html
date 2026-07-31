@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DEVCLIMB | Team</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -63,7 +65,7 @@
         <p id="team-shoutout" style="font-size:0.8125rem;color:var(--text-secondary);"></p>
       </div>
 
-      <div class="content-grid-2col scroll-reveal" data-delay="100">
+      <div class="content-grid-2col scroll-reveal" data-delay="150">
         <div>
           <div class="content-panel">
             <h4 class="content-section-heading">
@@ -92,6 +94,19 @@
                 <p class="stat-number-sm" id="perf-total-score">0</p>
                 <p class="stat-label-sm">Total Score</p>
               </div>
+            </div>
+          </div>
+
+          <div class="content-panel pad-lg" style="margin-bottom:var(--space-24px);">
+            <h4 class="content-section-heading">Group Solved Chart</h4>
+            <div style="display:flex;gap:0;margin-bottom:var(--space-16px);flex-wrap:wrap;">
+              <button class="chart-filter-btn active" data-filter="today">Today</button>
+              <button class="chart-filter-btn" data-filter="week">Week</button>
+              <button class="chart-filter-btn" data-filter="month">Month</button>
+              <button class="chart-filter-btn" data-filter="total">Total</button>
+            </div>
+            <div style="background:var(--bg-deep);border:1px solid var(--border-default);padding:var(--space-16px);">
+              <canvas id="team-solved-chart" height="180"></canvas>
             </div>
           </div>
 

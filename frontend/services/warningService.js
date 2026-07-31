@@ -107,11 +107,14 @@ function showWarningPopup(w) {
             msg.innerHTML = '<i class="bi bi-info-circle me-1"></i>' + target + ' will be automatically banned if you do not submit an appeal before <strong>' + endStr + '</strong>.';
             ctx.body.appendChild(msg);
 
-            var appeal = document.createElement('a');
-            appeal.href = '/frontend/pages/user/setting/index.html';
+            var appeal = document.createElement('button');
             appeal.className = 'custom-btn border-0';
             appeal.style.minWidth = '120px';
             appeal.textContent = 'Appeal';
+            appeal.addEventListener('click', function () {
+                ctx.close();
+                if (typeof window.openAppealForm === 'function') window.openAppealForm();
+            });
             ctx.footer.appendChild(appeal);
 
             var dismiss = document.createElement('button');
@@ -123,3 +126,52 @@ function showWarningPopup(w) {
         }
     });
 }
+
+// ── Appeal form (shared across pages) ──
+
+window.openAppealForm = function () {
+    Popup.open({
+        id: 'appeal-form',
+        size: 'sm',
+        render: function (ctx) {
+            var ta = document.createElement('textarea');
+            ta.className = 'form-control';
+            ta.id = 'appeal-message';
+            ta.rows = 5;
+            ta.placeholder = 'Explain why the warning should be removed...';
+            ctx.body.appendChild(ta);
+
+            var submit = document.createElement('button');
+            submit.className = 'custom-btn border-0';
+            submit.textContent = 'Submit';
+            submit.addEventListener('click', window.submitAppeal);
+            ctx.footer.appendChild(submit);
+        }
+    });
+};
+
+window.submitAppeal = async function () {
+    var msg = document.getElementById('appeal-message');
+    if (!msg || !msg.value.trim()) {
+        Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Validation Error', message: 'Please enter your appeal message.', okLabel: 'OK' });
+        return;
+    }
+
+    var existing = await apiGet('/appeal');
+    if (existing && existing.data) {
+        for (var i = 0; i < existing.data.length; i++) {
+            if (existing.data[i].status === 'PENDING') {
+                Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--warning);">warning</span>', title: 'Pending Appeal', message: 'You already have a pending appeal. Wait for it to be reviewed.', okLabel: 'OK' });
+                return;
+            }
+        }
+    }
+
+    var res = await apiPost('/appeal', { message: msg.value.trim() });
+    if (res && !res.error) {
+        Popup.close('appeal-form');
+        location.reload();
+    } else {
+        Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res.message || 'Failed to submit appeal', okLabel: 'OK' });
+    }
+};

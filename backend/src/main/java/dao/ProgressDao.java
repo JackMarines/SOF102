@@ -444,9 +444,10 @@ public class ProgressDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             jakarta.persistence.Query q = em.createNativeQuery(
-                "SELECT pr.user_id, u.user_name, pr.prog_time, c.con_title, p.puz_title, u.user_avatar, u.user_isadmin " +
+                "SELECT pr.user_id, u.user_name, pr.prog_time, c.con_title, p.puz_title, u.user_avatar, u.user_isadmin, t.trop_avatar " +
                 "FROM progress pr " +
                 "JOIN user u ON pr.user_id = u.user_id " +
+                "LEFT JOIN trophy t ON u.user_selectedtrophy_id = t.trop_id " +
                 "JOIN puzzle p ON pr.puz_id = p.puz_id " +
                 "JOIN contest c ON p.con_id = c.con_id " +
                 "WHERE pr.prog_time IS NOT NULL AND u.user_isactive = true AND p.con_id IS NOT NULL " +
@@ -464,6 +465,7 @@ public class ProgressDao {
                 item.put("puzzle", row[4]);
                 item.put("avatar", row[5]);
                 item.put("isAdmin", row[6] != null && (Boolean) row[6]);
+                item.put("selectedTrophyAvatar", row.length > 7 ? row[7] : null);
                 result.add(item);
             }
             return result;
@@ -477,8 +479,9 @@ public class ProgressDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             jakarta.persistence.Query q = em.createNativeQuery(
-                "SELECT u.user_id, u.user_name, u.user_avatar, u.user_isadmin, COUNT(DISTINCT cq.con_id) AS contest_count " +
+                "SELECT u.user_id, u.user_name, u.user_avatar, u.user_isadmin, t.trop_avatar, COUNT(DISTINCT cq.con_id) AS contest_count " +
                 "FROM user u " +
+                "LEFT JOIN trophy t ON u.user_selectedtrophy_id = t.trop_id " +
                 "JOIN ( " +
                 "  SELECT ut.user_id, c.con_id " +
                 "  FROM user_trophy ut " +
@@ -494,7 +497,7 @@ public class ProgressDao {
                 "  ) " +
                 ") cq ON u.user_id = cq.user_id " +
                 "WHERE u.user_isactive = true " +
-                "GROUP BY u.user_id, u.user_name, u.user_avatar, u.user_isadmin " +
+                "GROUP BY u.user_id, u.user_name, u.user_avatar, u.user_isadmin, t.trop_avatar " +
                 "ORDER BY contest_count DESC " +
                 "LIMIT ?");
             q.setParameter(1, limit);
@@ -506,7 +509,8 @@ public class ProgressDao {
                 item.put("name", row[1]);
                 item.put("avatar", row[2]);
                 item.put("isAdmin", row[3] != null && (Boolean) row[3]);
-                item.put("value", ((Number) row[4]).intValue() + " contests");
+                item.put("selectedTrophyAvatar", row.length > 4 ? row[4] : null);
+                item.put("value", ((Number) row[5]).intValue() + " contests");
                 result.add(item);
             }
             return result;
@@ -522,12 +526,13 @@ public class ProgressDao {
         try {
             StringBuilder sql = new StringBuilder(
                 "SELECT pr.prog_id, pr.user_id, u.user_name, c.con_title, p.puz_title, " +
-                "u.user_avatar, u.user_isadmin, " +
+                "u.user_avatar, u.user_isadmin, t.trop_avatar, " +
                 "CASE WHEN EXISTS (SELECT 1 FROM progress pr2 WHERE pr2.user_id = :uid AND pr2.puz_id = pr.puz_id) " +
                 "THEN pr.prog_code ELSE NULL END AS prog_code, " +
                 "CHAR_LENGTH(pr.prog_code) AS code_length " +
                 "FROM progress pr " +
                 "JOIN user u ON pr.user_id = u.user_id " +
+                "LEFT JOIN trophy t ON u.user_selectedtrophy_id = t.trop_id " +
                 "JOIN puzzle p ON pr.puz_id = p.puz_id " +
                 "JOIN contest c ON p.con_id = c.con_id " +
                 "WHERE pr.prog_code IS NOT NULL AND u.user_isactive = true AND p.con_id IS NOT NULL " +
@@ -546,8 +551,9 @@ public class ProgressDao {
                 item.put("puzzle", row[4]);
                 item.put("avatar", row[5]);
                 item.put("isAdmin", row[6] != null && (Boolean) row[6]);
-                item.put("code", row[7]);
-                item.put("chars", ((Number) row[8]).intValue());
+                item.put("selectedTrophyAvatar", row.length > 7 ? row[7] : null);
+                item.put("code", row[8]);
+                item.put("chars", ((Number) row[9]).intValue());
                 result.add(item);
             }
             return result;

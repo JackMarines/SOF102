@@ -42,7 +42,7 @@
     <div class="solve-editor-tabs">
       <div class="tabs-left">
         <span class="material-symbols-outlined" style="font-size:0.875rem;color:var(--accent);margin-right:var(--space-8px);">code</span>
-        <span style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-primary);">solution.js</span>
+        <span id="solution-filename" style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-primary);">solution.js</span>
       </div>
       <div class="tabs-right">
         <div style="display:flex;align-items:center;gap:var(--space-4px);font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">
@@ -59,7 +59,7 @@
     <div class="solve-actions-bar">
       <span style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.625rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:auto;">
         <span style="width:6px;height:6px;background:var(--accent);display:inline-block;"></span>
-        JavaScript (Node.js)
+        <span id="solution-lang-name">JavaScript (Node.js)</span>
       </span>
       <button id="resetBtn" class="btn-devclimb secondary sm">Reset</button>
       <button id="submitBtn" class="btn-devclimb primary sm">Submit</button>

@@ -207,7 +207,8 @@
             card.appendChild(Avatar.render({
                 size: 120,
                 avatar: item.avatar,
-                isAdmin: item.isAdmin || item.userIsadmin
+                isAdmin: item.isAdmin || item.userIsadmin,
+                trophySrc: item.selectedTrophyAvatar || null
             }));
 
             // Header tên người dùng (chỉ khi cột đầu là 'user')

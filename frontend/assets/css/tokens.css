@@ -62,6 +62,12 @@
   --spinner-overlay-accent: var(--accent-solid);
 
   --shimmer-highlight: rgba(255, 255, 255, 0.05);
+  --skeleton-bg: oklch(20% 0.015 260);
+  --code-bg: #0d0d0d;
+  --code-bar-bg: #1a1a1a;
+  --code-border: rgba(255, 255, 255, 0.1);
+  --code-text: #d4d4d4;
+  --code-line-num: rgba(255, 255, 255, 0.3);
   --activity-lvl-1: rgba(164, 201, 255, 0.15);
   --activity-lvl-2: rgba(164, 201, 255, 0.3);
   --activity-lvl-3: rgba(164, 201, 255, 0.5);
@@ -140,6 +146,20 @@ html.light-mode {
   --ann-security-text: #d4c2e5;
   --ann-incident-text: #e0b7b7;
   --ann-event-text: #bbcee6;
+
+  --skeleton-bg: #e5e0d6;
+
+  --code-bg: #f5f2ed;
+  --code-bar-bg: #ece6dc;
+  --code-border: rgba(0, 0, 0, 0.10);
+  --code-text: #1e1e1e;
+  --code-line-num: rgba(0, 0, 0, 0.3);
+}
+
+/* Scanline in light mode */
+html.light-mode .scanline {
+  opacity: 0.03;
+}
 }
 
 /* ── Scanline overlay (CRT effect) ── */

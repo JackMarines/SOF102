@@ -59,6 +59,7 @@ public class HomeController extends HttpServlet {
                 m.put("avatar", row[2]);
                 m.put("totalScore", ((Number) row[3]).intValue());
                 m.put("isAdmin", Boolean.TRUE.equals(row[4]));
+                m.put("selectedTrophyAvatar", row.length > 5 ? row[5] : null);
                 m.put("rank", i + 1);
                 topMembers.add(m);
             }

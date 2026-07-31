@@ -198,18 +198,21 @@
             card.className = 'glass-box p-3';
 
             // Ảnh đại diện nhóm (fallback icon nếu không có avatar)
+            var wrap = document.createElement('div');
+            wrap.className = 'tt-card-avatar-wrap';
             if (item.avatar) {
                 var img = document.createElement('img');
                 img.src = item.avatar;
                 img.alt = item.name || '';
                 img.className = 'tt-card-avatar';
-                card.appendChild(img);
+                wrap.appendChild(img);
             } else {
                 var fallback = document.createElement('div');
                 fallback.className = 'tt-card-avatar-fallback';
                 fallback.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">group</span>';
-                card.appendChild(fallback);
+                wrap.appendChild(fallback);
             }
+            card.appendChild(wrap);
 
             // Hàng tên + badge công khai/riêng tư
             var header = document.createElement('div');

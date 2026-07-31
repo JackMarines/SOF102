@@ -42,7 +42,7 @@
         </button>
       </div>
 
-      <div class="admin-stat-grid scroll-reveal" data-delay="50" style="margin-bottom:var(--space-32px);">
+      <div class="admin-stat-grid scroll-reveal" data-delay="50" id="stat-grid" style="margin-bottom:var(--space-32px);">
         <div class="admin-stat-card">
           <p class="stat-number" id="stat-total-users">-</p>
           <p class="stat-label">Total Users</p>
@@ -114,7 +114,7 @@
           </div>
         </div>
 
-        <div style="background:var(--bg-deep);border:1px solid var(--border-default);padding:var(--space-24px);margin-bottom:var(--space-24px);">
+        <div class="chart-box" id="stat-chart-area" style="background:var(--bg-deep);border:1px solid var(--border-default);padding:var(--space-24px);margin-bottom:var(--space-24px);">
           <canvas id="solvedChart" height="280"></canvas>
         </div>
 

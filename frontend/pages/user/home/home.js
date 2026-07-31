@@ -64,7 +64,7 @@ getMe().then(async function (session) {
 
             var avatarWrap = document.createElement('div');
             avatarWrap.className = 'd-flex justify-content-center mb-2';
-            avatarWrap.appendChild(Avatar.render({ size: 64, avatar: m.avatar, isAdmin: m.isAdmin }));
+            avatarWrap.appendChild(Avatar.render({ size: 64, avatar: m.avatar, isAdmin: m.isAdmin, trophySrc: m.selectedTrophyAvatar || null }));
 
             var nameEl = document.createElement('div');
             nameEl.className = 'home-member-name';

@@ -36,3 +36,7 @@ constants.js
 
 # opencode config
 opencode.json
+
+persistence.xml 
+
+.impeccable/

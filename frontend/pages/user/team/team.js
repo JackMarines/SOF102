@@ -40,13 +40,12 @@ getMe().then(async function (session) {
     }
     var ownerEl = document.getElementById('team-owner');
     if (owner) {
-        ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar }));
+        ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar, trophySrc: owner.selectedTrophyAvatar || null }));
         var ownerName = document.createElement('span');
         ownerName.textContent = owner.displayName || 'Unknown';
         ownerEl.appendChild(ownerName);
         var ownerLink = document.createElement('a');
         ownerLink.href = '/frontend/pages/user/profile/index.html?id=' + owner.userId;
-        ownerLink.style.color = 'inherit';
         ownerLink.appendChild(ownerEl);
         document.getElementById('team-owner-wrapper').appendChild(ownerLink);
     }
@@ -95,7 +94,7 @@ getMe().then(async function (session) {
                 nameSection.style.marginBottom = 'var(--space-24px)';
                 nameSection.innerHTML =
                     '<label for="edit-team-name" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Team Name</label>' +
-                    '<input type="text" id="edit-team-name" placeholder="Enter your team name">' +
+                    '<input type="text" id="edit-team-name" placeholder="Enter your team name" style="width:100%;">' +
                     '<div id="edit-team-name-error" style="font-size:0.75rem;color:var(--error);margin-top:var(--space-4px);display:none;"></div>';
                 ctx.body.appendChild(nameSection);
 
@@ -474,7 +473,7 @@ getMe().then(async function (session) {
 
     // ── Group Solved Chart ──
     var teamChart = null;
-    var teamChartData = null;
+    var teamDayCounts = {};
 
     function css(key) { return getComputedStyle(document.documentElement).getPropertyValue(key).trim(); }
     function csstext(key) { return getComputedStyle(document.documentElement).getPropertyValue('--text-' + key).trim(); }
@@ -484,49 +483,71 @@ getMe().then(async function (session) {
     }
 
     function initTeamChart(days) {
-        if (!teamChartData) return;
-        var cutoff = new Date();
-        cutoff.setDate(cutoff.getDate() - days);
-        var filtered = teamChartData.filter(function(d) {
-            var dd = new Date(d.date);
-            return dd >= cutoff;
-        });
-        var labels = filtered.map(function(d) { return d.date.substring(5); });
-        var values = filtered.map(function(d) { return d.solves; });
+        var today = new Date();
+        var labels = [];
+        var values = [];
+        for (var i = days - 1; i >= 0; i--) {
+            var date = new Date(today);
+            date.setDate(date.getDate() - i);
+            var key = date.getFullYear() + '-' +
+                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(date.getDate()).padStart(2, '0');
+            labels.push(date.getMonth() + 1 + '/' + date.getDate());
+            values.push(teamDayCounts[key] || 0);
+        }
+        var single = labels.length === 1;
         var ctx = document.getElementById('team-solved-chart').getContext('2d');
-        if (teamChart) teamChart.destroy();
-        teamChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Puzzles Solved',
-                    data: values,
-                    borderColor: css('--accent'),
-                    backgroundColor: accentRgb(0.08),
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    pointHoverRadius: 4,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } },
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } }
+        var dataset = {
+            label: 'Puzzles Solved',
+            data: values,
+            borderColor: css('--accent'),
+            backgroundColor: accentRgb(0.08),
+            borderWidth: 2,
+            pointRadius: single ? 5 : 0,
+            pointHoverRadius: single ? 5 : 4,
+            tension: 0.3,
+            fill: true
+        };
+        if (teamChart) {
+            teamChart.data.labels = labels;
+            teamChart.data.datasets[0].data = values;
+            teamChart.data.datasets[0].pointRadius = single ? 5 : 0;
+            teamChart.data.datasets[0].pointHoverRadius = single ? 5 : 4;
+            teamChart.update();
+        } else {
+            teamChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [dataset]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 600, easing: 'easeOutQuart' },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } },
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: csstext('muted'), font: { size: 9 } } }
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
-    fetchTeamStats(teamId).then(function(stats) {
-        if (stats && stats.data) teamChartData = stats.data;
-        initTeamChart(7);
-    }).catch(function() {});
+    function loadTeamChart(days) {
+        fetchTeamStats(teamId).then(function(stats) {
+            if (stats && stats.data) {
+                teamDayCounts = {};
+                for (var i = 0; i < stats.data.length; i++) {
+                    teamDayCounts[stats.data[i].date] = stats.data[i].solves;
+                }
+            }
+            initTeamChart(days);
+        }).catch(function() {});
+    }
+
+    loadTeamChart(1);
 
     var teamChartPanel = document.querySelector('.content-panel .chart-filter-btn');
     var teamFilterBtns = teamChartPanel ? document.querySelectorAll('.content-panel .chart-filter-btn') : document.querySelectorAll('.chart-filter-btn');
@@ -570,7 +591,7 @@ getMe().then(async function (session) {
 
             var avatarWrap = document.createElement('span');
             avatarWrap.style.cssText = 'border-radius:50%;border:2px solid ' + rc.border + ';display:inline-flex;margin-right:var(--space-12px);flex-shrink:0;overflow:hidden;';
-            avatarWrap.appendChild(Avatar.render({ size: 40, avatar: m.avatar }));
+            avatarWrap.appendChild(Avatar.render({ size: 40, avatar: m.avatar, trophySrc: m.selectedTrophyAvatar || null }));
             row.appendChild(avatarWrap);
 
             var info = document.createElement('div');
@@ -665,20 +686,20 @@ getMe().then(async function (session) {
             });
         }
 
-        var pageSize = 12;
-        var p = page || 1;
-        var start = (p - 1) * pageSize;
-        var paged = allMembers.slice(start, start + pageSize);
+    var pageSize = 18;
+    var p = page || 1;
+    var start = (p - 1) * pageSize;
+    var paged = allMembers.slice(start, start + pageSize);
 
-        var fakeResponse = {
-            data: paged,
-            pagination: {
-                page: p,
-                totalPages: Math.max(1, Math.ceil(allMembers.length / pageSize)),
-                total: allMembers.length,
-                limit: pageSize
-            }
-        };
+    var fakeResponse = {
+        data: paged,
+        pagination: {
+            page: p,
+            totalPages: Math.max(1, Math.ceil(allMembers.length / pageSize)),
+            total: allMembers.length,
+            limit: pageSize
+        }
+    };
 
         if (tbl) tbl.setData(fakeResponse);
     };

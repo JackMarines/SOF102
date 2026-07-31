@@ -1,4 +1,4 @@
-/* ── Navbar ── */
+﻿/* â”€â”€ Navbar â”€â”€ */
 
 .navbar-devclimb {
   position: fixed;
@@ -203,9 +203,23 @@
   .navbar-devclimb .nav-toggle {
     display: block;
   }
+
+  .mobile-only {
+    display: block !important;
+  }
+
+  .navbar-devclimb .nav-actions .nav-profile-dropdown {
+    display: none;
+  }
 }
 
-/* ── Announcement Banner ── */
+.navbar-devclimb .nav-links hr {
+  border: none;
+  border-top: 2px solid var(--text-secondary);
+  margin: var(--space-8px) 0;
+}
+
+/* â”€â”€ Announcement Banner â”€â”€ */
 
 .announcement-banner {
   display: flex;
@@ -228,6 +242,14 @@
   background: var(--bg-hover);
 }
 
+html.light-mode .announcement-banner {
+  background: #ddd4c2;
+}
+
+html.light-mode .announcement-banner:hover {
+  background: #d5cbb6;
+}
+
 .announcement-banner .ann-date {
   color: var(--text-muted);
   font-weight: 400;
@@ -248,7 +270,7 @@
   text-transform: uppercase;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 
 .btn-devclimb {
   font-family: var(--font-mono);
@@ -292,7 +314,7 @@
 .btn-devclimb.secondary {
   background: transparent;
   color: var(--text-secondary);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-hover);
 }
 
 .btn-devclimb.secondary:hover {
@@ -312,10 +334,14 @@
   transform: none;
 }
 
-/* ── Sections ── */
+/* â”€â”€ Sections â”€â”€ */
 
 .section-devclimb {
   padding: clamp(4rem, 8vw, 8rem) 0;
+}
+
+.section-devclimb + .section-devclimb {
+  border-top: 1px solid var(--border-subtle);
 }
 
 .section-devclimb .section-inner {
@@ -324,7 +350,7 @@
   padding: 0 var(--space-32px);
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 
 .hero-devclimb {
   position: relative;
@@ -413,23 +439,23 @@
   margin-bottom: var(--space-96px);
 }
 
-/* ── Global Visual Contrast ── */
+/* â”€â”€ Global Visual Contrast â”€â”€ */
 
 code {
   background: var(--bg-hover);
   padding: 1px 6px;
-  color: #d4e3ff;
+  color: var(--code-text);
   font-size: 0.875em;
 }
 
-/* ── Code Preview Window ── */
+/* â”€â”€ Code Preview Window â”€â”€ */
 
 .code-window {
   width: 100%;
   max-width: 960px;
   margin: 0 auto;
-  border: 1px solid var(--border-default);
-  background: var(--bg-surface);
+  border: 1px solid var(--code-border);
+  background: var(--code-bg);
   text-align: left;
 }
 
@@ -454,8 +480,8 @@ code {
   justify-content: space-between;
   height: 32px;
   padding: 0 12px;
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-default);
+  background: var(--code-bar-bg);
+  border-bottom: 1px solid var(--code-border);
 }
 
 .code-window .code-dots {
@@ -481,17 +507,26 @@ code {
   color: var(--text-muted);
 }
 
+.hero-devclimb .code-window .code-bar {
+  background: #1a1a1a;
+}
+
+.hero-devclimb .code-window .code-filename {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .code-window .code-body {
   display: flex;
   padding: var(--space-32px);
   gap: var(--space-24px);
-  background: var(--bg-base);
+  overflow-x: auto;
+  background: var(--code-bg);
 }
 
 .code-window .code-lines {
   flex-shrink: 0;
   text-align: right;
-  color: var(--text-faint);
+  color: var(--code-line-num);
   font-size: 0.875rem;
   line-height: 1.7;
   user-select: none;
@@ -508,8 +543,10 @@ code {
   min-width: 0;
   font-size: 0.875rem;
   line-height: 1.7;
-  color: var(--text-secondary);
+  color: var(--code-text);
   white-space: pre;
+  background: transparent;
+  padding: 0;
   overflow-x: auto;
 }
 
@@ -533,7 +570,7 @@ code {
   }
 }
 
-/* ── Terminal Stats Table ── */
+/* â”€â”€ Terminal Stats Table â”€â”€ */
 
 .stats-table {
   max-width: 720px;
@@ -640,7 +677,7 @@ code {
   }
 }
 
-/* ── Feature Blocks ── */
+/* â”€â”€ Feature Blocks â”€â”€ */
 
 .feature-block {
   display: grid;
@@ -755,7 +792,7 @@ code {
 
 }
 
-/* ── CTA ── */
+/* â”€â”€ CTA â”€â”€ */
 
 .cta-devclimb {
   text-align: center;
@@ -839,7 +876,7 @@ code {
   }
 }
 
-/* ── Footer ── */
+/* â”€â”€ Footer â”€â”€ */
 
 .footer-devclimb {
   border-top: 1px solid var(--border-default);
@@ -971,7 +1008,7 @@ code {
   }
 }
 
-/* ── Auth Pages ── */
+/* â”€â”€ Auth Pages â”€â”€ */
 
 .auth-page {
   min-height: calc(100vh - var(--nav-height));
@@ -997,6 +1034,7 @@ code {
   letter-spacing: 0.02em;
   color: var(--text-primary);
   margin-bottom: var(--space-8px);
+  text-align: center;
 }
 
 .auth-card .auth-sub {
@@ -1005,6 +1043,7 @@ code {
   margin-bottom: var(--space-32px);
   line-height: 1.5;
   max-width: 50ch;
+  text-align: center;
 }
 
 .auth-form label {
@@ -1155,7 +1194,7 @@ code {
   display: none !important;
 }
 
-/* ── Dropdown polyfill (replaces Bootstrap dropdown JS/CSS) ── */
+/* â”€â”€ Dropdown polyfill (replaces Bootstrap dropdown JS/CSS) â”€â”€ */
 
 .dropdown-menu {
   display: none;
@@ -1210,7 +1249,7 @@ code {
   font-size: 0.8125rem;
 }
 
-/* ── Content Pages ── */
+/* â”€â”€ Content Pages â”€â”€ */
 
 .table-header {
   display: grid;
@@ -1226,10 +1265,10 @@ code {
 }
 
 .table-header.has-user {
-  grid-template-columns: 150px 1fr 140px 100px;
+  grid-template-columns: 180px 1fr 140px 100px;
 }
 
-/* ── Puzzle Rows (homepage tables) ── */
+/* â”€â”€ Puzzle Rows (homepage tables) â”€â”€ */
 
 .puzzle-item {
   display: grid;
@@ -1272,12 +1311,14 @@ code {
 .puzzle-item .hard { color: #ef4444; }
 
 @media (max-width: 768px) {
+  .table-header,
   .puzzle-item {
     font-size: 0.75rem;
     padding: 12px;
     gap: 8px;
     grid-template-columns: 1fr 75px 70px;
   }
+  .table-header.has-user,
   .puzzle-item.has-user {
     grid-template-columns: 80px 1fr 75px 70px;
   }
@@ -1425,7 +1466,7 @@ code {
   letter-spacing: 0.06em;
 }
 
-/* ── Team Banner ── */
+/* â”€â”€ Team Banner â”€â”€ */
 
 .tt-banner {
   position: relative;
@@ -1492,7 +1533,7 @@ code {
   }
 }
 
-/* ── User Navbar Extras ── */
+/* â”€â”€ User Navbar Extras â”€â”€ */
 
 .nav-avatar-link {
   display: flex;
@@ -1588,7 +1629,7 @@ code {
   margin: var(--space-4px) 0;
 }
 
-/* ── Modal System ── */
+/* â”€â”€ Modal System â”€â”€ */
 
 .modal-overlay {
   display: none;
@@ -1646,7 +1687,7 @@ code {
   margin-top: var(--space-24px);
 }
 
-/* ── Settings Page ── */
+/* â”€â”€ Settings Page â”€â”€ */
 
 .settings-theme-grid {
   display: grid;
@@ -1699,7 +1740,7 @@ code {
   justify-content: flex-start;
 }
 
-/* ── Home Page ── */
+/* â”€â”€ Home Page â”€â”€ */
 
 .home-welcome {
   font-family: var(--font-mono);
@@ -1719,6 +1760,12 @@ code {
 .home-team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-24px);
+}
+
+.tt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: var(--space-16px);
 }
 
@@ -1731,7 +1778,7 @@ code {
 }
 
 .page-btn {
-  background: var(--surface-2);
+  background: var(--bg-elevated);
   border: 1px solid var(--border-default);
   color: var(--text-secondary);
   padding: 6px 16px;
@@ -1775,7 +1822,7 @@ code {
   text-align: center;
 }
 
-/* ── Team Create ── */
+/* â”€â”€ Team Create â”€â”€ */
 
 .upload-area {
   border: 2px dashed var(--border-default);
@@ -1800,7 +1847,7 @@ code {
   color: var(--text-muted);
 }
 
-/* ── Chart Filter Buttons ── */
+/* â”€â”€ Chart Filter Buttons â”€â”€ */
 
 .chart-filter-btn {
   font-family: var(--font-mono);
@@ -1885,7 +1932,7 @@ code {
   }
 }
 
-/* ── Admin Dashboard ── */
+/* â”€â”€ Admin Dashboard â”€â”€ */
 
 .admin-stat-grid {
   display: grid;
@@ -1936,6 +1983,39 @@ code {
   font-weight: 600;
 }
 
+/* Admin dashboard loading state â€” skeleton shimmer while /admin/dashboard resolves */
+.admin-stat-grid.stat-loading .stat-number,
+.admin-stat-grid.stat-loading .stat-sub {
+  color: transparent;
+  background: var(--skeleton-bg);
+  overflow: hidden;
+  position: relative;
+}
+.admin-stat-grid.stat-loading .stat-number::after,
+.admin-stat-grid.stat-loading .stat-sub::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, var(--shimmer-highlight) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s ease-in-out infinite;
+}
+.chart-box.stat-loading {
+  position: relative;
+  overflow: hidden;
+}
+.chart-box.stat-loading canvas {
+  visibility: hidden;
+}
+.chart-box.stat-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, var(--skeleton-bg) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s ease-in-out infinite;
+}
+
 .admin-action-row {
   display: flex;
   flex-wrap: wrap;
@@ -1978,10 +2058,10 @@ code {
 
 .admin-chart-stat-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-12px);
   text-align: center;
-  margin-top: var(--space-16px);
+  margin-top: var(--space-32px);
 }
 
 .admin-chart-stat-row .chart-stat-value {
@@ -2008,14 +2088,14 @@ code {
   color: var(--error);
 }
 
-/* ── Admin Card Dropdown Compatibility ── */
+/* â”€â”€ Admin Card Dropdown Compatibility â”€â”€ */
 
 .cg-card-dropdown,
 .cg-filter-dropdown {
   background: var(--bg-surface) !important;
 }
 
-/* ── Tab Polyfill ── */
+/* â”€â”€ Tab Polyfill â”€â”€ */
 
 .nav-tabs {
   display: flex;
@@ -2086,7 +2166,7 @@ code {
   }
 }
 
-/* ── Popup System Compatibility (replaces Bootstrap utils for popup.js) ── */
+/* â”€â”€ Popup System Compatibility (replaces Bootstrap utils for popup.js) â”€â”€ */
 
 .popup-overlay {
   display: none;
@@ -2322,13 +2402,13 @@ code {
 .border-danger { border-color: var(--error); }
 .border-0 { border: none; }
 
-/* ── Announcement table cursor ── */
+/* â”€â”€ Announcement table cursor â”€â”€ */
 
 .pt-list a {
   cursor: pointer;
 }
 
-/* ── Admin action fix: scanline should not block admin buttons ── */
+/* â”€â”€ Admin action fix: scanline should not block admin buttons â”€â”€ */
 
 .admin-stat-card button,
 .admin-action-row button,
@@ -2337,7 +2417,7 @@ code {
   z-index: 1;
 }
 
-/* ── Form Controls ── */
+/* â”€â”€ Form Controls â”€â”€ */
 
 .form-control {
   display: block;
@@ -2409,7 +2489,7 @@ textarea.form-control {
 .g-3 { gap: var(--space-16px); }
 .gap-4 { gap: var(--space-24px); }
 
-/* ── Announcement Detail Popup ── */
+/* â”€â”€ Announcement Detail Popup â”€â”€ */
 
 .at-detail-title {
   font-family: var(--font-mono);
@@ -2473,7 +2553,7 @@ textarea.form-control {
   color: var(--accent);
 }
 
-/* ── Settings Theme Preview Cards ── */
+/* â”€â”€ Settings Theme Preview Cards â”€â”€ */
 
 .settings-theme-card-v2 {
   position: relative;
@@ -2569,7 +2649,7 @@ textarea.form-control {
   background: linear-gradient(135deg, #0a0a0a 0%, #1c1b1b 100%);
 }
 
-/* ── Puzzle Solve Split-Pane ── */
+/* â”€â”€ Puzzle Solve Split-Pane â”€â”€ */
 
 .solve-workspace {
   display: flex;
@@ -2644,7 +2724,7 @@ textarea.form-control {
 
 
 
-/* ── Code Editor Selection ── */
+/* â”€â”€ Code Editor Selection â”€â”€ */
 
 .solve-editor-body ::selection {
   background: rgba(96, 165, 250, 0.25);
@@ -2742,7 +2822,7 @@ textarea.form-control {
   flex-shrink: 0;
 }
 
-/* ── Profile Charts ── */
+/* â”€â”€ Profile Charts â”€â”€ */
 
 .profile-group-avatar {
   width: 90px;
@@ -2925,7 +3005,7 @@ textarea.form-control {
   }
 }
 
-/* ── Skeleton Loading ── */
+/* â”€â”€ Skeleton Loading â”€â”€ */
 
 @keyframes skeleton-shimmer {
   0% { background-position: -200% 0; }
@@ -2933,7 +3013,7 @@ textarea.form-control {
 }
 
 .skeleton {
-  background: var(--bg-hover);
+  background: var(--skeleton-bg);
   position: relative;
   overflow: hidden;
   min-height: 1em;
@@ -3015,7 +3095,7 @@ textarea.form-control {
 
 .skeleton-table-row {
   display: grid;
-  grid-template-columns: 1fr 150px 120px;
+  grid-template-columns: var(--pt-grid, 1fr 150px 120px);
   gap: var(--space-16px);
   padding: 14px 20px;
   align-items: center;
@@ -3053,11 +3133,6 @@ textarea.form-control {
   margin: 0 auto;
 }
 
-.skeleton-team-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: var(--space-16px);
-}
 
 .skeleton-team-card {
   padding: var(--space-16px);
@@ -3066,7 +3141,6 @@ textarea.form-control {
   flex-direction: column;
   align-items: center;
   gap: var(--space-8px);
-  height: 100px;
 }
 
 .skeleton-team-card .skeleton-avatar {
@@ -3090,7 +3164,7 @@ textarea.form-control {
   height: 1.5rem;
 }
 
-/* ── Animations ── */
+/* â”€â”€ Animations â”€â”€ */
 
 @keyframes blink-step {
   0%, 100% { opacity: 1; }
@@ -3102,7 +3176,7 @@ textarea.form-control {
   50% { opacity: 0.3; }
 }
 
-/* ── Text overflow utilities ── */
+/* â”€â”€ Text overflow utilities â”€â”€ */
 
 .truncate {
   overflow: hidden;
@@ -3124,7 +3198,7 @@ textarea.form-control {
   overflow: hidden;
 }
 
-/* ── Loading state ── */
+/* â”€â”€ Loading state â”€â”€ */
 
 .loading-dots::after {
   content: '';
@@ -3153,13 +3227,13 @@ textarea.form-control {
   50% { opacity: 1; }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   CONTEST PAGES — Shared + Page-Specific CSS
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CONTEST PAGES â€” Shared + Page-Specific CSS
    contest-solve + contest-create + Hall of Fame + Solve Entries
    (migrated from contestMERGELATER.css)
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── Shared: Layout ── */
+/* â”€â”€ Shared: Layout â”€â”€ */
 
 #puzzles-container {
   display: flex;
@@ -3209,7 +3283,7 @@ textarea.form-control {
   overflow: hidden;
 }
 
-/* ── Shared: Contest Header ── */
+/* â”€â”€ Shared: Contest Header â”€â”€ */
 
 .contest-header {
   background: var(--bg-surface);
@@ -3270,7 +3344,7 @@ textarea.form-control {
   color: var(--accent-hover);
 }
 
-/* ── Shared: Puzzle Section ── */
+/* â”€â”€ Shared: Puzzle Section â”€â”€ */
 
 .puzzle-section {
   background: var(--bg-surface);
@@ -3323,7 +3397,7 @@ textarea.form-control {
   min-width: 0;
 }
 
-/* ── Shared: Sidebar ── */
+/* â”€â”€ Shared: Sidebar â”€â”€ */
 
 .sidebar-panel {
   background: var(--bg-surface);
@@ -3413,7 +3487,7 @@ textarea.form-control {
   margin-top: 1px;
 }
 
-/* ── Shared: Reward ── */
+/* â”€â”€ Shared: Reward â”€â”€ */
 
 .reward-card {
   background: var(--bg-elevated);
@@ -3452,7 +3526,7 @@ textarea.form-control {
   word-break: break-word;
 }
 
-/* ── Contest-Solve Only ── */
+/* â”€â”€ Contest-Solve Only â”€â”€ */
 
 .leaderboard-scroll {
   max-height: 360px;
@@ -3691,7 +3765,7 @@ textarea.form-control {
   opacity: 0.8;
 }
 
-/* ── Contest-Create Only ── */
+/* â”€â”€ Contest-Create Only â”€â”€ */
 
 .banner-upload-zone {
   width: 100%;
@@ -3844,7 +3918,7 @@ textarea.form-control {
 
 .reward-change:hover { opacity: 0.8; }
 
-/* ── Trophy Popup ── */
+/* â”€â”€ Trophy Popup â”€â”€ */
 
 .popup-panel.trophy-popup {
   max-width: 420px;
@@ -3997,7 +4071,7 @@ textarea.form-control {
   background: var(--accent);
 }
 
-/* ── Trophy Avatar Upload ── */
+/* â”€â”€ Trophy Avatar Upload â”€â”€ */
 
 .trophy-avatar-upload {
   display: flex;
@@ -4040,7 +4114,7 @@ textarea.form-control {
 
 .trophy-avatar-upload-btn:hover { text-decoration: underline; }
 
-/* ── Save Bar ── */
+/* â”€â”€ Save Bar â”€â”€ */
 
 .save-bar {
   display: flex;
@@ -4063,7 +4137,7 @@ textarea.form-control {
   color: #fff;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 
 @media (max-width: 1024px) {
   .contest-detail-grid {
@@ -4071,9 +4145,9 @@ textarea.form-control {
   }
 }
 
-/* ═══════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    HALL OF FAME + SOLVE ENTRIES
-   ═══════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .hall-fame-grid {
   display: grid;
@@ -4213,7 +4287,7 @@ textarea.form-control {
   margin: var(--space-64px) 0;
 }
 
-/* ── Solve Entries (Shortest Solves board) ── */
+/* â”€â”€ Solve Entries (Shortest Solves board) â”€â”€ */
 
 .solve-entry {
   padding: var(--space-12px) var(--space-24px);
@@ -4311,10 +4385,37 @@ textarea.form-control {
   font-style: italic;
 }
 
-/* ── Hall of Fame Responsive ── */
+/* â”€â”€ Hall of Fame Responsive â”€â”€ */
 
 @media (max-width: 1024px) {
   .hall-fame-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* â”€â”€ Glass Box (card container for teams, contests, members) â”€â”€ */
+
+.glass-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+}
+
+.home-member-card {
+  height: 100%;
+  overflow: hidden;
+  min-width: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.home-member-name {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.AnnouncementCache;
 import util.ResponseUtil;
 
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class AdminAnnouncementController extends HttpServlet {
         }
         try {
             announcementDao.delete(Integer.parseInt(idParam.trim()));
+            AnnouncementCache.clearAll(); // Xoá cache để public API lấy dữ liệu mới
             Map<String, Object> data = new HashMap<>();
             data.put("message", "Announcement deleted");
             ResponseUtil.success(resp, data);
@@ -175,6 +177,7 @@ public class AdminAnnouncementController extends HttpServlet {
         if (body.containsKey("type")) a.setAnnType((String) body.get("type"));
 
         announcementDao.create(a);
+        AnnouncementCache.clearAll(); // Xoá cache để public API lấy dữ liệu mới
 
         Map<String, Object> data = new HashMap<>();
         data.put("id", a.getAnnId());
@@ -206,6 +209,7 @@ public class AdminAnnouncementController extends HttpServlet {
             a.setAnnUpdatedat(new Timestamp(System.currentTimeMillis()));
 
             announcementDao.update(a);
+            AnnouncementCache.clearAll(); // Xoá cache để public API lấy dữ liệu mới
 
             Map<String, Object> data = new HashMap<>();
             data.put("message", "Announcement updated");

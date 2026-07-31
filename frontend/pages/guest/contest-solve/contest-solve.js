@@ -63,7 +63,7 @@
             var authorLink = document.createElement('a');
             authorLink.className = 'contest-header-author';
             authorLink.href = '#';
-            var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin });
+            var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin, trophySrc: c.authorSelectedTrophyAvatar || null });
             authorLink.appendChild(authorAvatar);
             var authorText = document.createElement('span');
             authorText.textContent = ' ' + c.authorName;
@@ -226,7 +226,14 @@
         }
 
         showSpinner('contest-left');
-        var data = await getContest(id);
+        var data;
+        try {
+            data = await getContest(id);
+        } catch (e) {
+            hideSpinner('contest-left');
+            leftEl.innerHTML = '<p style="color:var(--text-muted);">Failed to load contest. Please try again.</p>';
+            return;
+        }
         hideSpinner('contest-left');
 
         if (!data || data.error) {
