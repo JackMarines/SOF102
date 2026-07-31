@@ -3,8 +3,11 @@ package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.ProgressDao;
+import dao.TrophyDao;
 import dao.UserDao;
+import dao.UserTrophyDao;
 import entity.Puzzle;
+import entity.Trophy;
 import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,17 +24,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet({"/api/v1/profile", "/api/v1/profile/completed", "/api/v1/profile/activity"})
+@WebServlet({"/api/v1/profile", "/api/v1/profile/completed", "/api/v1/profile/activity", "/api/v1/profile/trophies", "/api/v1/profile/trophy"})
 public class ProfileController extends HttpServlet {
 
     private UserDao userDao = new UserDao();
     private ProgressDao progressDao = new ProgressDao();
+    private TrophyDao trophyDao = new TrophyDao();
+    private UserTrophyDao userTrophyDao = new UserTrophyDao();
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
+    // Xử lý GET /api/v1/profile — route đến handler tương ứng theo URI
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String uri = req.getRequestURI();
+
+        // /api/v1/profile/trophies
+        if (uri.endsWith("/trophies")) {
+            handleTrophies(req, resp);
+            return;
+        }
 
         // /api/v1/profile/activity
         if (uri.endsWith("/activity")) {
@@ -67,6 +79,13 @@ public class ProfileController extends HttpServlet {
         data.put("totalScore", totalScore);
         data.put("totalCompletedPuzzles", totalCompleted);
         data.put("isAdmin", user.getUserIsadmin());
+        // Trophy
+        String selectedTrophyAvatar = null;
+        if (user.getUserSelectedtrophyId() != null) {
+            Trophy t = trophyDao.findById(user.getUserSelectedtrophyId());
+            if (t != null) selectedTrophyAvatar = t.getTropAvatar();
+        }
+        data.put("selectedTrophyAvatar", selectedTrophyAvatar);
         return data;
     }
 
@@ -200,6 +219,46 @@ public class ProfileController extends HttpServlet {
         ResponseUtil.success(resp, result);
     }
 
+    // GET /api/v1/profile/trophies?id=X — danh sách trophy của user
+    private void handleTrophies(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String idParam = req.getParameter("id");
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        int userId;
+        if (idParam != null && !idParam.trim().isEmpty()) {
+            try {
+                userId = Integer.parseInt(idParam.trim());
+            } catch (NumberFormatException e) {
+                ResponseUtil.error(resp, 400, "Invalid userId");
+                return;
+            }
+        } else if (sessionUser != null) {
+            userId = sessionUser.getUserId();
+        } else {
+            ResponseUtil.error(resp, 401, "Not authenticated");
+            return;
+        }
+
+        List<Object[]> rows = userTrophyDao.findByUserId(userId);
+        List<Map<String, Object>> data = new ArrayList<>();
+        Integer selectedId = null;
+        if (sessionUser != null && (idParam == null || idParam.trim().isEmpty() || String.valueOf(userId).equals(String.valueOf(sessionUser.getUserId())))) {
+            User u = userDao.findById(userId);
+            if (u != null) selectedId = u.getUserSelectedtrophyId();
+        }
+        for (Object[] row : rows) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("id", row[0]);
+            item.put("name", row[1]);
+            item.put("avatar", row[2]);
+            item.put("content", row[3]);
+            item.put("awardedAt", row[4] != null ? row[4].toString() : null);
+            item.put("selected", selectedId != null && selectedId.equals(row[0]));
+            data.add(item);
+        }
+        ResponseUtil.success(resp, data);
+    }
+
     // GET /api/v1/profile/activity?id=X — số puzzle giải theo ngày của user
     private void handleActivity(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -232,6 +291,7 @@ public class ProfileController extends HttpServlet {
         ResponseUtil.success(resp, Map.of("period", "daily", "data", data));
     }
 
+    // Xử lý PUT /api/v1/profile — cập nhật profile hoặc chọn trophy
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -249,6 +309,18 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
+        String uri = req.getRequestURI();
+
+        // PUT /api/v1/profile/trophy — chọn trophy
+        if (uri.endsWith("/trophy")) {
+            Object trophyIdObj = body.get("trophyId");
+            Integer trophyId = trophyIdObj != null ? ((Number) trophyIdObj).intValue() : null;
+            userDao.updateSelectedTrophy(sessionUser.getUserId(), trophyId);
+            ResponseUtil.success(resp, Map.of("message", "Trophy updated"));
+            return;
+        }
+
+        // PUT /api/v1/profile — cập nhật profile
         String email = (String) body.get("email");
         String displayName = (String) body.get("displayName");
         String bio = (String) body.get("bio");

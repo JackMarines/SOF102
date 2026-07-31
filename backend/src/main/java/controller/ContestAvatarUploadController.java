@@ -1,6 +1,7 @@
 // Controller xử lý upload ảnh contest avatar lên R2
 package controller;
 
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,6 +27,12 @@ public class ContestAvatarUploadController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
 
         if (!R2Util.isConfigured()) {
             ResponseUtil.error(resp, 500, "R2 not configured");

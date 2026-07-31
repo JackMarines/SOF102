@@ -76,84 +76,74 @@ getMe().then(async function (session) {
             render: function (ctx) {
                 // Avatar Upload
                 var avatarSection = document.createElement('div');
-                avatarSection.className = 'mb-4';
+                avatarSection.style.marginBottom = 'var(--space-24px)';
                 avatarSection.innerHTML =
-                    '<label class="form-label fw-semibold">Team Avatar</label>' +
+                    '<label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Team Avatar</label>' +
                     '<input type="file" id="edit-avatar-input" accept="image/*" hidden>' +
-                    '<label for="edit-avatar-input" class="upload-box w-100">' +
-                        '<img id="edit-avatar-preview" class="preview-avatar mb-3">' +
+                    '<label for="edit-avatar-input" class="upload-area" style="display:block;cursor:pointer;">' +
+                        '<img id="edit-avatar-preview" class="upload-preview">' +
                         '<div id="edit-upload-content">' +
-                            '<i class="bi bi-cloud-arrow-up"></i>' +
-                            '<h6 class="mt-3">Click or drag image here</h6>' +
-                            '<small class="text-secondary">PNG, JPG, WEBP supported</small>' +
+                            '<div class="upload-icon"><span class="material-symbols-outlined" style="font-size:2.5rem;">cloud_upload</span></div>' +
+                            '<div class="upload-text">Click to upload image</div>' +
+                            '<div style="font-size:0.6875rem;color:var(--text-faint);margin-top:var(--space-4px);">PNG, JPG, WEBP</div>' +
                         '</div>' +
                     '</label>';
                 ctx.body.appendChild(avatarSection);
 
                 // Team Name
                 var nameSection = document.createElement('div');
-                nameSection.className = 'mb-4';
+                nameSection.style.marginBottom = 'var(--space-24px)';
                 nameSection.innerHTML =
-                    '<label for="edit-team-name" class="form-label fw-semibold">Team Name</label>' +
-                    '<input type="text" id="edit-team-name" class="form-control" placeholder="Enter your team name">' +
-                    '<div id="edit-team-name-error" class="text-danger small mt-1 d-none"></div>';
+                    '<label for="edit-team-name" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-4px);">Team Name</label>' +
+                    '<input type="text" id="edit-team-name" placeholder="Enter your team name">' +
+                    '<div id="edit-team-name-error" style="font-size:0.75rem;color:var(--error);margin-top:var(--space-4px);display:none;"></div>';
                 ctx.body.appendChild(nameSection);
 
                 // Visibility
                 var visSection = document.createElement('div');
-                visSection.className = 'mb-4';
+                visSection.style.marginBottom = 'var(--space-24px)';
                 visSection.innerHTML =
-                    '<label class="form-label fw-semibold d-block mb-3">Team Visibility</label>' +
-                    '<div class="row g-3">' +
-                        '<div class="col-md-6">' +
-                            '<div class="visibility-card" data-type="public">' +
-                                '<div class="fw-bold"><i class="bi bi-globe me-2"></i>Public</div>' +
-                                '<small class="text-secondary">Anyone can discover and join.</small>' +
-                            '</div>' +
+                    '<label style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:var(--space-12px);">Team Visibility</label>' +
+                    '<div class="visibility-toggle-grid">' +
+                        '<div class="visibility-card" data-type="public">' +
+                            '<div class="vis-icon"><span class="material-symbols-outlined" style="font-size:1.5rem;color:var(--text-muted);">public</span></div>' +
+                            '<div class="vis-label">Public</div>' +
+                            '<div style="font-size:0.6875rem;color:var(--text-faint);margin-top:var(--space-4px);">Anyone can discover and join</div>' +
                         '</div>' +
-                        '<div class="col-md-6">' +
-                            '<div class="visibility-card" data-type="private">' +
-                                '<div class="fw-bold"><i class="bi bi-lock-fill me-2"></i>Private</div>' +
-                                '<small class="text-secondary">No one can join.</small>' +
-                            '</div>' +
+                        '<div class="visibility-card" data-type="private">' +
+                            '<div class="vis-icon"><span class="material-symbols-outlined" style="font-size:1.5rem;color:var(--text-muted);">lock</span></div>' +
+                            '<div class="vis-label">Private</div>' +
+                            '<div style="font-size:0.6875rem;color:var(--text-faint);margin-top:var(--space-4px);">No one can join</div>' +
                         '</div>' +
                     '</div>';
                 ctx.body.appendChild(visSection);
 
                 // Buttons
                 var btnRow = document.createElement('div');
-                btnRow.className = 'd-flex justify-content-end gap-2';
+                btnRow.style.cssText = 'display:flex;gap:var(--space-12px);justify-content:flex-end;';
                 var cancelBtn = document.createElement('button');
-                cancelBtn.className = 'custom-btn btn-secondary';
+                cancelBtn.className = 'btn-devclimb secondary sm';
                 cancelBtn.textContent = 'Cancel';
                 cancelBtn.addEventListener('click', function () { ctx.close(); });
                 var saveBtn = document.createElement('button');
-                saveBtn.className = 'custom-btn';
+                saveBtn.className = 'btn-devclimb primary sm';
                 saveBtn.textContent = 'Save Changes';
                 saveBtn.addEventListener('click', async function () {
                     var btn = this;
                     if (btn.disabled) return;
-                    btn.disabled = true;
                     var name = document.getElementById('edit-team-name').value.trim();
                     var nameError = document.getElementById('edit-team-name-error');
-                    nameError.classList.add('d-none');
-
+                    nameError.style.display = 'none';
                     if (!name) {
-                        btn.disabled = false;
-                        btn.textContent = 'Save Changes';
                         nameError.textContent = 'Team name is required';
-                        nameError.classList.remove('d-none');
+                        nameError.style.display = 'block';
                         return;
                     }
-
                     var activeCard = ctx.body.querySelector('.visibility-card.active');
                     var isPublic = activeCard ? activeCard.getAttribute('data-type') === 'public' : true;
-
                     btn.disabled = true;
                     btn.textContent = 'Saving...';
-
                     var payload = { name: name, isPublic: isPublic };
-
                     var avatarInput = document.getElementById('edit-avatar-input');
                     var file = avatarInput.files[0];
                     if (file) {
@@ -164,17 +154,14 @@ getMe().then(async function (session) {
                         } else {
                             btn.disabled = false;
                             btn.textContent = 'Save Changes';
-                            var errMsg = uploadRes ? (uploadRes.error || 'Avatar upload failed') : 'Avatar upload failed';
-                            nameError.textContent = errMsg;
-                            nameError.classList.remove('d-none');
+                            nameError.textContent = uploadRes ? (uploadRes.error || 'Avatar upload failed') : 'Avatar upload failed';
+                            nameError.style.display = 'block';
                             return;
                         }
                     }
-
                     var res = await updateTeam(payload);
                     btn.disabled = false;
                     btn.textContent = 'Save Changes';
-
                     if (res && !res.error) {
                         window.location.reload();
                     } else {
@@ -184,7 +171,7 @@ getMe().then(async function (session) {
                         } else {
                             nameError.textContent = err;
                         }
-                        nameError.classList.remove('d-none');
+                        nameError.style.display = 'block';
                     }
                 });
                 btnRow.appendChild(cancelBtn);
@@ -194,25 +181,26 @@ getMe().then(async function (session) {
                 // Disband
                 ctx.body.appendChild(document.createElement('hr'));
                 var disbandBtn = document.createElement('button');
-                disbandBtn.className = 'custom-btn btn-danger w-100';
-                disbandBtn.innerHTML = '<i class="bi bi-trash-fill me-1"></i> Disband Team';
+                disbandBtn.className = 'btn-devclimb danger';
+                disbandBtn.style.width = '100%';
+                disbandBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">delete</span> Disband Team';
                 disbandBtn.addEventListener('click', function () {
                     ctx.close();
                     Popup.confirm({
-                        icon: '<i class="bi bi-exclamation-triangle-fill"></i>',
+                        icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">warning</span>',
                         title: 'Disband Team',
                         message: 'Are you sure you want to disband ' + (team.name || 'this team') + '? This will remove all members and cannot be undone.',
                         okLabel: 'Disband',
-                        okClass: 'btn-danger',
+                        okClass: 'btn-devclimb danger',
                         onConfirm: async function () {
-                                var disbandBtn = document.querySelector('.btn-danger');
-                                if (disbandBtn && disbandBtn.disabled) return;
-                                if (disbandBtn) disbandBtn.disabled = true;
+                                var dbBtn = document.querySelector('.btn-devclimb.danger.confirm-disband');
+                                if (dbBtn && dbBtn.disabled) return;
+                                if (dbBtn) dbBtn.disabled = true;
                                 var res = await disbandTeam();
                                 if (res && !res.error) {
                                     window.location.href = '/frontend/pages/user/home/index.html';
                                 } else {
-                                    if (disbandBtn) disbandBtn.disabled = false;
+                                    if (dbBtn) dbBtn.disabled = false;
                                     Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res ? (res.error || 'Failed to disband') : 'Failed to disband', okLabel: 'OK' });
                                 }
                             }

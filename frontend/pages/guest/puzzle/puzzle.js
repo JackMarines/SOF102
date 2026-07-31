@@ -21,7 +21,10 @@ window.addEventListener('deps-ready', function () {
         onSearch: function () { loadPuzzles(1); },
         onFilter: function () { loadPuzzles(1); },
         onFilter2: function () { loadPuzzles(1); },
-        onPageChange: function (page) { loadPuzzles(page); }
+        onPageChange: function (page) { loadPuzzles(page); },
+        rowClass: function (item) {
+            return item.contestId ? 'pt-row-contest' : '';
+        }
     });
 
     showSkeleton('pt-list-puzzle-table', 'puzzle-rows');

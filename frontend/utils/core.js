@@ -49,11 +49,8 @@ window.addEventListener('deps-ready', function () {
 // ── Auth Redirect ──
 // Nếu trang có data-auth="user" → kiểm tra đăng nhập, nếu chưa thì redirect sang login
 if (document.body.dataset.auth === 'user') {
-    document.body.style.display = 'none';
     window.addEventListener('deps-ready', function () {
-        checkAuth().then(function () {
-            document.body.style.display = '';
-        });
+        checkAuth();
     });
 }
 

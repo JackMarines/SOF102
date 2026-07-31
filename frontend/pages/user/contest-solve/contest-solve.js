@@ -1,4 +1,4 @@
-// Contest-solve page orchestrator — loads contest detail, renders header + puzzle list + sidebar
+// Contest-solve page orchestrator — tải chi tiết contest, hiển thị header + danh sách puzzle + sidebar
 (function () {
 
     var leftEl = document.getElementById('contest-left');
@@ -31,7 +31,6 @@
         var header = document.createElement('div');
         header.className = 'contest-header';
 
-        // Banner
         var banner = document.createElement('div');
         banner.className = 'contest-header-banner';
         if (c.avatar) {
@@ -51,7 +50,6 @@
 
         header.appendChild(banner);
 
-        // Body
         var body = document.createElement('div');
         body.className = 'contest-header-body';
 
@@ -114,7 +112,6 @@
             var body = document.createElement('div');
             body.className = 'puzzle-body';
 
-            // Title row
             var titleRow = document.createElement('div');
             titleRow.className = 'puzzle-title-row';
 
@@ -146,15 +143,13 @@
 
             body.appendChild(titleRow);
 
-            // Content
             if (p.content) {
                 var content = document.createElement('div');
                 content.className = 'puzzle-content';
-                content.textContent = p.content;
+                content.append(...parsePuzzleContent(p.content || ''));
                 body.appendChild(content);
             }
 
-            // Button
             var btnRow = document.createElement('div');
             btnRow.className = 'solve-btn';
             var btn = document.createElement('a');
@@ -172,7 +167,7 @@
     // ── Right Column ──
 
     function renderSidebar(c) {
-        // System Info
+        // Thông tin hệ thống
         var sysPanel = createPanel('panel-system', 'SYSTEM_INFO');
         var sysBody = sysPanel.querySelector('.sidebar-body');
         addRow(sysBody, 'Duration', formatDuration(c.start, c.end));
@@ -180,7 +175,7 @@
         addRow(sysBody, 'Participants', String(c.participants || 0));
         rightEl.appendChild(sysPanel);
 
-        // Reward
+        // Phần thưởng
         if (c.trophyName) {
             var rewardPanel = createPanel('panel-reward', 'REWARD');
             var rewardBody = rewardPanel.querySelector('.sidebar-body');
@@ -221,7 +216,7 @@
             rightEl.appendChild(rewardPanel);
         }
 
-        // Rules
+        // Luật lệ
         var rulesPanel = createPanel('panel-rules', 'CONTEST_RULES');
         var rulesBody = rulesPanel.querySelector('.sidebar-body');
         var rulesList = document.createElement('ul');
@@ -239,44 +234,6 @@
         }
         rulesBody.appendChild(rulesList);
         rightEl.appendChild(rulesPanel);
-    }
-
-    function createPanel(id, label) {
-        var panel = document.createElement('div');
-        panel.className = 'sidebar-panel';
-        panel.id = id;
-
-        var header = document.createElement('div');
-        header.className = 'puzzle-terminal-header';
-        header.onclick = function () { panel.classList.toggle('collapsed'); };
-        var span = document.createElement('span');
-        span.textContent = label;
-        header.appendChild(span);
-        var icon = document.createElement('span');
-        icon.className = 'collapse-icon material-symbols-outlined';
-        icon.textContent = 'expand_more';
-        header.appendChild(icon);
-        panel.appendChild(header);
-
-        var body = document.createElement('div');
-        body.className = 'sidebar-body';
-        panel.appendChild(body);
-
-        return panel;
-    }
-
-    function addRow(container, label, value) {
-        var row = document.createElement('div');
-        row.className = 'sidebar-row';
-        var l = document.createElement('span');
-        l.className = 'label';
-        l.textContent = label;
-        var v = document.createElement('span');
-        v.className = 'value';
-        v.textContent = value;
-        row.appendChild(l);
-        row.appendChild(v);
-        container.appendChild(row);
     }
 
     // ── Init ──
@@ -327,6 +284,6 @@
         grid.parentElement.insertBefore(bar, grid);
     }
 
-    init();
+    window.addEventListener('deps-ready', init);
 
 })();

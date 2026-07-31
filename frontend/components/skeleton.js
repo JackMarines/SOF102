@@ -130,6 +130,20 @@ var _skeletonTemplates = {
     return html;
   },
 
+  'contest-grid': function () {
+    var html = '<div class="tt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-16px);">';
+    for (var i = 0; i < 6; i++) {
+      html += '<div class="glass-box" style="padding:var(--space-24px) var(--space-16px);">' +
+        '<div class="skeleton skeleton-avatar" style="width:80px;height:80px;margin:0 auto var(--space-12px);"></div>' +
+        '<div class="skeleton skeleton-heading" style="width:70%;margin:0 auto var(--space-8px);"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:50%;margin:0 auto var(--space-12px);"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:60%;margin:0 auto var(--space-8px);"></div>' +
+        '<div class="skeleton skeleton-text-sm" style="width:40%;margin:0 auto;"></div>' +
+        '</div>';
+    }
+    return html + '</div>';
+  },
+
   'search-rows': function () {
     var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">';
     for (var i = 0; i < 8; i++) {

@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
   <link rel="stylesheet" href="/frontend/components/tables.css">
-  <link rel="icon" href="/frontend/assets/images/icon.png">
+  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
 
   <script>
     try {
@@ -22,6 +22,7 @@
       }
     } catch (e) {}
   </script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 </head>
 <body>
 
@@ -47,7 +48,7 @@
             <p class="content-meta" id="profile-bio" style="margin-bottom:var(--space-16px);"></p>
             <p style="font-size:0.8125rem;color:var(--text-secondary);">
               <strong style="color:var(--text-primary);">Total Score:</strong> <span id="profile-score">0</span>
-              <span style="color:var(--border-default);margin:0 var(--space-8px);">&middot;</span>
+              <span style="color:var(--text-muted);margin:0 var(--space-8px);">&middot;</span>
               <span id="profile-completed">0</span> puzzles solved
             </p>
           </div>
@@ -84,7 +85,7 @@
 
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-guest.js"></script>
-<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/footer-guest.js"></script>
 <script src="/frontend/components/theme-toggle.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/components/spinner.js"></script>
@@ -94,5 +95,6 @@
 <script src="/frontend/services/profileService.js"></script>
 <script src="profile.js"></script>
 
+<script src="/frontend/components/gsap-navbar-shuffle.js"></script>
 </body>
 </html>

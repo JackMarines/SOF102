@@ -431,7 +431,7 @@ public class TeamDao {
         try {
             java.sql.Timestamp weekAgo = new java.sql.Timestamp(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
             List<Object[]> rows = em.createNativeQuery(
-                "SELECT u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
+                "SELECT pz.puz_id, u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
                 "FROM progress pr " +
                 "JOIN user u ON pr.user_id = u.user_id " +
                 "JOIN puzzle pz ON pr.puz_id = pz.puz_id " +
@@ -452,7 +452,7 @@ public class TeamDao {
         EntityManager em = JpaUtils.getEntityManager();
         try {
             List<Object[]> rows = em.createNativeQuery(
-                "SELECT u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
+                "SELECT pz.puz_id, u.user_name, pz.puz_title, l.lang_name, pz.puz_difficulty " +
                 "FROM progress pr " +
                 "JOIN user u ON pr.user_id = u.user_id " +
                 "JOIN puzzle pz ON pr.puz_id = pz.puz_id " +
@@ -472,10 +472,11 @@ public class TeamDao {
         List<Map<String, Object>> result = new ArrayList<>();
         for (Object[] row : rows) {
             Map<String, Object> item = new HashMap<>();
-            item.put("displayName", row[0]);
-            item.put("title", row[1]);
-            item.put("language", row[2]);
-            item.put("difficulty", row[3]);
+            item.put("id", ((Number) row[0]).intValue());
+            item.put("displayName", row[1]);
+            item.put("title", row[2]);
+            item.put("language", row[3]);
+            item.put("difficulty", row[4]);
             result.add(item);
         }
         return result;

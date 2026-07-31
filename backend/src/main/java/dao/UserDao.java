@@ -98,6 +98,7 @@ public class UserDao {
         }
     }
 
+    // Cập nhật email của user
     public void updateEmail(int userId, String email) {
         EntityManager em = JpaUtils.getEntityManager();
         try {
@@ -348,6 +349,22 @@ public class UserDao {
                 u.setUserLastteamname(teamName);
                 u.setUserLastleaveReason(leaveReason);
                 u.setTeam(null);
+                em.merge(u);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Cập nhật trophy đang chọn của user
+    public void updateSelectedTrophy(int userId, Integer trophyId) {
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User u = em.find(User.class, userId);
+            if (u != null) {
+                u.setUserSelectedtrophyId(trophyId);
                 em.merge(u);
             }
             em.getTransaction().commit();

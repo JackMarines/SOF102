@@ -9,13 +9,11 @@
       if (p === 'home') return path === '/frontend/index.html';
       if (p === 'team') return path.includes('/guest/team');
       if (p === 'puzzles') return path.includes('/puzzle');
+      if (p === 'contests') return path.includes('/contest');
       if (p === 'announcements') return path.includes('/announcement');
       if (p === 'login') return path.includes('/guest/auth/');
       return false;
     }
-
-    var isLight = document.documentElement.classList.contains('light-mode');
-    var themeIcon = isLight ? '\u263E' : '\u2600';
 
     var nav = document.createElement('nav');
     nav.className = 'navbar-devclimb';
@@ -24,18 +22,16 @@
     nav.innerHTML =
       '<div class="nav-inner">' +
         '<a class="nav-logo-link" href="/frontend/index.html" aria-label="DevClimb home">' +
-          '<span class="nav-logo-dev">DEV</span>' +
-          '<span class="nav-logo-climb">CLIMB</span>' +
-          '<span class="nav-logo-cursor"></span>' +
+          '<span class="nav-logo-text"><span class="logo-symbol"></span><span class="logo-text-inner">ev:clmb</span><span class="logo-cursor">_</span></span>' +
         '</a>' +
         '<div class="nav-links" id="nav-links" role="list">' +
           '<a href="/frontend/pages/guest/team-search/index.html" role="listitem"' + (isActive('team') ? ' class="active"' : '') + '>TEAM</a>' +
           '<a href="/frontend/pages/guest/puzzle/index.html" role="listitem"' + (isActive('puzzles') ? ' class="active"' : '') + '>PUZZLES</a>' +
+          '<a href="/frontend/pages/guest/contest/index.html" role="listitem"' + (isActive('contests') ? ' class="active"' : '') + '>CONTEST</a>' +
           '<a href="/frontend/pages/guest/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
-          '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOG IN</a>' +
+          '<a class="nav-link-login" href="/frontend/pages/guest/auth/login.html" role="listitem"' + (isActive('login') ? ' class="active nav-link-login"' : '') + '>LOGIN</a>' +
         '</div>' +
         '<div class="nav-actions">' +
-          '<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">' + themeIcon + '</button>' +
           '<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">\u2630</button>' +
         '</div>' +
       '</div>';

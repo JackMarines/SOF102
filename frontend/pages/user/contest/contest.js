@@ -1,4 +1,4 @@
-// Contest page orchestrator — renders contest cards, search, pagination, hall of fame
+// Contest page orchestrator — hiển thị danh sách contest, tìm kiếm, phân trang, hall of fame
 (function () {
 
     var gridEl = document.getElementById('contest-grid');
@@ -31,7 +31,7 @@
             card.href = '/frontend/pages/user/contest-solve/?id=' + c.id;
 
             var box = document.createElement('div');
-            box.className = 'glass-box p-3';
+            box.className = 'glass-box';
 
             if (c.avatar) {
                 var img = document.createElement('img');
@@ -62,7 +62,7 @@
             box.appendChild(header);
 
             var authorRow = document.createElement('p');
-            authorRow.className = 'tt-card-meta mb-1';
+            authorRow.className = 'tt-card-meta';
             var authorAvatar = Avatar.render({ size: 18, avatar: c.authorAvatar || null, isAdmin: !!c.authorIsAdmin });
             authorRow.appendChild(authorAvatar);
             var authorText = document.createElement('span');
@@ -70,16 +70,14 @@
             authorRow.appendChild(authorText);
             box.appendChild(authorRow);
 
-            if (c.start) {
-                var dateRow = document.createElement('p');
-                dateRow.className = 'tt-card-meta mb-1';
-                dateRow.innerHTML = '<i class="bi bi-calendar-event"></i> ' + formatDateRange(c.start, c.end);
-                box.appendChild(dateRow);
-            }
+            var dateRow = document.createElement('p');
+            dateRow.className = 'tt-card-meta';
+            dateRow.innerHTML = '<span class="material-symbols-outlined" style="font-size:0.875rem;">event</span> ' + (c.start ? formatDateRange(c.start, c.end) : '\u2014');
+            box.appendChild(dateRow);
 
             var problemRow = document.createElement('p');
-            problemRow.className = 'tt-card-meta mb-2';
-            problemRow.innerHTML = '<i class="bi bi-code-slash"></i> ' + (c.problemCount || 0) + ' puzzles';
+            problemRow.className = 'tt-card-meta';
+            problemRow.innerHTML = '<span class="material-symbols-outlined" style="font-size:0.875rem;">code</span> ' + (c.problemCount || 0) + ' puzzles';
             box.appendChild(problemRow);
 
             card.appendChild(box);
@@ -152,12 +150,12 @@
         });
     }
 
-    // ── Load Contests ──
+    // ── Tải Contest ──
 
     async function loadContests(page) {
-        showSpinner('contest-grid');
+        showSkeleton('contest-grid', 'contest-grid');
         var res = await getContests(page || 1, currentSearch);
-        hideSpinner('contest-grid');
+        hideSkeleton('contest-grid');
         if (res && res.data) {
             currentPage = res.pagination.page;
             totalPages = res.pagination.totalPages;
@@ -166,7 +164,7 @@
         }
     }
 
-    // ── Admin: Create Contest ──
+    // ── Admin: Tạo Contest ──
 
     function showCreateButton() {
         var wrap = document.createElement('div');
@@ -250,7 +248,7 @@
 
         hallEl.innerHTML = html;
 
-        // Post-process: render avatars via Avatar.render()
+        // Render avatar sau khi render HTML
         var avatarSlots = hallEl.querySelectorAll('.avatar-sm');
         avatarSlots.forEach(function (slot) {
             var idx = parseInt(slot.dataset.idx);
@@ -288,9 +286,9 @@
         if (res) renderHallOfFame(res);
     }
 
-    // ── Init ──
+    // ── Khởi tạo (chờ deps: api.js, authService.js) ──
 
-    if (typeof getMe === 'function') {
+    window.addEventListener('deps-ready', function () {
         getMe()
             .then(function (session) {
                 if (session && session.userIsadmin) {
@@ -303,9 +301,6 @@
                 loadContests(1);
                 loadHallOfFame();
             });
-    } else {
-        loadContests(1);
-        loadHallOfFame();
-    }
+    });
 
 })();

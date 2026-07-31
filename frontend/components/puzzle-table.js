@@ -20,7 +20,8 @@
             onSearch: function () {}, // Callback khi tìm kiếm
             onFilter: function () {}, // Callback khi chọn bộ lọc 1
             onFilter2: function () {}, // Callback khi chọn bộ lọc 2
-            onPageChange: function () {} // Callback khi chuyển trang
+            onPageChange: function () {}, // Callback khi chuyển trang
+            rowClass: null              // Function(item) => extra CSS class name for each row
         }, options || {});
 
         // Trạng thái nội bộ
@@ -149,6 +150,11 @@
             this.container.appendChild(filterRow);
         }
 
+        // ── Scroll wrapper (tránh overflow trên mobile) ──
+        var scrollWrap = document.createElement('div');
+        scrollWrap.className = 'pt-scroll-wrap';
+        this.container.appendChild(scrollWrap);
+
         // ── Header bảng (dòng tiêu đề cột) ──
         var header = document.createElement('div');
         header.className = 'pt-table-header';
@@ -158,13 +164,13 @@
             span.textContent = this.opts.columns[j].label;
             header.appendChild(span);
         }
-        this.container.appendChild(header);
+        scrollWrap.appendChild(header);
 
         // ── Vùng danh sách hàng ──
         this._listEl = document.createElement('div');
         this._listEl.className = 'pt-list';
         this._listEl.id = 'pt-list-' + id;
-        this.container.appendChild(this._listEl);
+        scrollWrap.appendChild(this._listEl);
 
         // ── Vùng phân trang ──
         this._paginationEl = document.createElement('div');
@@ -223,6 +229,11 @@
             var item = data[i];
             var row = document.createElement('div');
             row.className = 'pt-row';
+
+            if (typeof this.opts.rowClass === 'function') {
+                var extra = this.opts.rowClass(item);
+                if (extra) row.classList.add(extra);
+            }
 
             // Render từng cột trong hàng
             for (var c = 0; c < cols.length; c++) {

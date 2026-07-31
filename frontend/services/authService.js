@@ -40,7 +40,6 @@ async function getMe() {
 
 // redirect to login if not authenticated
 async function checkAuth() {
-  document.body.style.display='none';
   try {
     const session = await getMe();
     if (session.error) {

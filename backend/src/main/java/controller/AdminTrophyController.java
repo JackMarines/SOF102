@@ -4,6 +4,7 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.TrophyDao;
 import entity.Trophy;
+import entity.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,11 @@ public class AdminTrophyController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         String uri = req.getRequestURI();
         if (uri.endsWith("/trophies")) {
             handleListTrophies(resp);
@@ -35,18 +41,33 @@ public class AdminTrophyController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         handleCreateTrophy(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         handleUpdateTrophy(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        if (sessionUser == null) {
+            ResponseUtil.error(resp, 401, "User not logged in");
+            return;
+        }
         String idParam = req.getParameter("id");
         if (idParam == null || idParam.trim().isEmpty()) {
             ResponseUtil.error(resp, 400, "id is required");

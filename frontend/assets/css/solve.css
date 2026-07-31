@@ -6,7 +6,7 @@
 
 #codeEditor .cm-editor {
   height: 100%;
-  background: var(--bg-deep);
+  background: var(--bg-base);
 }
 
 #codeEditor .cm-gutters {
@@ -26,6 +26,16 @@
 
 .cm-content {
   font-family: "JetBrains Mono", monospace;
+}
+
+html.light-mode #codeEditor .cm-content {
+  color: #1a1a1a;
+}
+
+html.light-mode .solve-workspace {
+  --text-primary: #1a1a1a;
+  --text-secondary: #3a3a3a;
+  --text-muted: #666666;
 }
 
 .cm-selectionBackground {

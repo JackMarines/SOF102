@@ -1,4 +1,4 @@
-// Profile service — fetch profile data, completed puzzles, and update profile
+// Profile service — lấy dữ liệu profile, puzzle đã hoàn thành, cập nhật profile
 // ===========================
 
 async function fetchProfile(id) {
@@ -27,4 +27,13 @@ async function loadSolved(page) {
 
 async function updateProfile(data) {
     return apiPut('/profile', data);
+}
+
+async function fetchUserTrophies(userId) {
+    var url = userId ? '/profile/trophies?id=' + userId : '/profile/trophies';
+    return apiGet(url);
+}
+
+async function setSelectedTrophy(trophyId) {
+    return apiPut('/profile/trophy', { trophyId: trophyId });
 }

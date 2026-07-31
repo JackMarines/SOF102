@@ -15,11 +15,12 @@
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
   <link rel="stylesheet" href="/frontend/components/tables.css">
-  <link rel="icon" href="/frontend/assets/images/icon.png">
+  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
 
   <script>
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
   </script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 </head>
 <body data-auth="user">
 
@@ -44,7 +45,7 @@
             <p class="content-meta" id="profile-bio" style="margin-bottom:var(--space-16px);"></p>
             <p style="font-size:0.8125rem;color:var(--text-secondary);">
               <strong style="color:var(--text-primary);">Total Score:</strong> <span id="profile-score">0</span>
-              <span style="color:var(--border-default);margin:0 var(--space-8px);">&middot;</span>
+              <span style="color:var(--text-muted);margin:0 var(--space-8px);">&middot;</span>
               <span id="profile-completed">0</span> puzzles solved
             </p>
           </div>
@@ -111,11 +112,23 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="trophyCaseModal">
+  <div class="modal-panel" style="max-width:600px;">
+    <div class="modal-heading">
+      Trophy Case
+      <button onclick="document.getElementById('trophyCaseModal').classList.remove('show');">&times;</button>
+    </div>
+    <div id="trophy-case-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--space-12px);">
+    </div>
+    <p id="trophy-case-empty" style="text-align:center;color:var(--text-muted);font-size:0.8125rem;padding:var(--space-32px) 0;display:none;">No trophies earned yet.</p>
+  </div>
+</div>
+
 <div id="footer"></div>
 
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-user.js"></script>
-<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/footer-user.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/utils/modal-polyfill.js"></script>
 <script src="/frontend/components/spinner.js"></script>
@@ -125,5 +138,6 @@
 <script src="/frontend/services/profileService.js"></script>
 <script src="profile.js"></script>
 
+<script src="/frontend/components/gsap-navbar-shuffle.js"></script>
 </body>
 </html>

@@ -15,11 +15,12 @@
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
   <link rel="stylesheet" href="/frontend/components/tables.css">
-  <link rel="icon" href="/frontend/assets/images/icon.png">
+  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
 
   <script>
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
   </script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 </head>
 <body>
 
@@ -178,7 +179,7 @@
 
 <div id="footer"></div>
 
-<script src="/frontend/components/footer.js"></script>
+<script src="/frontend/components/footer-user.js"></script>
 <script src="/frontend/components/spinner.js"></script>
 <script src="/frontend/components/skeleton.js"></script>
 <script src="/frontend/components/avatar.js"></script>
@@ -201,5 +202,6 @@
   window.addEventListener('deps-ready', function () { initDashboard(); });
 </script>
 
+<script src="/frontend/components/gsap-navbar-shuffle.js"></script>
 </body>
 </html>

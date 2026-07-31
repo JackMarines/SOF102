@@ -13,7 +13,7 @@ html {
 }
 
 body {
-  background-color: var(--bg-deep);
+  background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 1rem;
@@ -125,7 +125,7 @@ code, pre {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-deep);
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {

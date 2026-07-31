@@ -24,7 +24,7 @@ function renderTitle(val) {
 function renderType(val) {
     var key = (val || 'GENERAL').toLowerCase().replace(/_/g, '-');
     var label = (val || 'GENERAL').replace(/_/g, ' ');
-    return '<div style="display:flex; justify-content:center; align-items:center; height:100%; position:relative; right:40px;"><span class="badges"><span class="ann-' + key + '">' + label + '</span></span></div>';
+    return '<div style="display:flex; justify-content:flex-start; align-items:center; height:100%;"><span class="at-type-badge ' + key + '">' + label + '</span></div>';
 }
 
 function renderDate(val) {
@@ -58,7 +58,7 @@ window.loadAnnouncements = function(page) {
                 if (item.isPinned) {
                     var pin = document.createElement('span');
                     pin.className = 'at-pin-corner';
-                    pin.innerHTML = '<i class="bi bi-pin-fill"></i>';
+                    pin.innerHTML = '<span class="material-symbols-outlined">push_pin</span>';
                     rows[i].appendChild(pin);
                 }
                 if (_isAdmin) injectActionMenu(rows[i], item);
@@ -89,11 +89,13 @@ function injectActionMenu(row, item) {
 
     var btn = document.createElement('button');
     btn.className = 'pt-row-menu-btn';
-    btn.innerHTML = '<i class="bi bi-three-dots-vertical"></i>';
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">more_vert</span>';
     btn.addEventListener('click', function(e) {
         e.stopPropagation();
         closeAllMenus();
+        var isOpen = !dd.classList.contains('show');
         dd.classList.toggle('show');
+        wrap.style.zIndex = isOpen ? '1000' : '5';
     });
     wrap.appendChild(btn);
 
@@ -102,20 +104,22 @@ function injectActionMenu(row, item) {
 
     var editItem = document.createElement('div');
     editItem.className = 'pt-row-dropdown-item';
-    editItem.innerHTML = '<i class="bi bi-pencil"></i> Edit';
+    editItem.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">edit</span> Edit';
     editItem.addEventListener('click', function(e) {
         e.stopPropagation();
         dd.classList.remove('show');
+        wrap.style.zIndex = '5';
         showEditPopup(item);
     });
     dd.appendChild(editItem);
 
     var takeDown = document.createElement('div');
     takeDown.className = 'pt-row-dropdown-item text-danger';
-    takeDown.innerHTML = '<i class="bi bi-x-circle"></i> Take down';
+    takeDown.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">cancel</span> Take down';
     takeDown.addEventListener('click', function(e) {
         e.stopPropagation();
         dd.classList.remove('show');
+        wrap.style.zIndex = '5';
         takeDownAnnouncement(item.id);
     });
     dd.appendChild(takeDown);
@@ -127,6 +131,9 @@ function injectActionMenu(row, item) {
 function closeAllMenus() {
     document.querySelectorAll('.pt-row-dropdown.show').forEach(function(el) {
         el.classList.remove('show');
+    });
+    document.querySelectorAll('.pt-row-actions').forEach(function(el) {
+        el.style.zIndex = '5';
     });
 }
 document.addEventListener('click', closeAllMenus);
@@ -274,7 +281,7 @@ function takeDownAnnouncement(id) {
     Popup.confirm({
         title: 'Take down announcement?',
         message: 'Are you sure you want to unpublish "' + (item ? item.title : '') + '"?',
-        icon: '<i class="bi bi-exclamation-triangle-fill"></i>',
+        icon: '<span class="material-symbols-outlined">warning</span>',
         okLabel: 'Take down',
         okClass: 'btn-danger',
         onConfirm: function() {
@@ -301,8 +308,8 @@ function showAnnouncementDetail(item) {
             meta.className = 'at-detail-meta';
 
             var typeBadge = document.createElement('span');
-            typeBadge.className = 'badges';
-            typeBadge.innerHTML = renderType(item.type);
+            typeBadge.className = 'at-type-badge ' + (item.type || 'GENERAL').toLowerCase().replace(/_/g, '-');
+            typeBadge.textContent = (item.type || 'GENERAL').replace(/_/g, ' ');
             meta.appendChild(typeBadge);
 
             var authorEl = document.createElement('span');
@@ -341,7 +348,7 @@ function showAnnouncementDetail(item) {
             if (item.isPinned) {
                 var pinnedBadge = document.createElement('span');
                 pinnedBadge.className = 'at-detail-pinned-badge';
-                pinnedBadge.innerHTML = '<i class="bi bi-pin-fill"></i> Pinned';
+                pinnedBadge.innerHTML = '<span class="material-symbols-outlined">push_pin</span> Pinned';
                 footer.appendChild(pinnedBadge);
             }
 
@@ -363,7 +370,7 @@ function showCreateButton() {
     var container = document.getElementById('announcement-table');
     var btn = document.createElement('div');
     btn.className = 'mb-3';
-    btn.innerHTML = '<button class="custom-btn" id="ann-create-btn"><i class="bi bi-plus-lg"></i> Create Announcement</button>';
+    btn.innerHTML = '<button class="custom-btn" id="ann-create-btn"><span class="material-symbols-outlined" style="font-size:1rem;">add</span> Create Announcement</button>';
     container.insertBefore(btn, container.firstChild);
     document.getElementById('ann-create-btn').addEventListener('click', showCreatePopup);
 }

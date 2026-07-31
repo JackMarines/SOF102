@@ -13,28 +13,28 @@
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
   <link rel="stylesheet" href="/frontend/components/tables.css">
-  <link rel="stylesheet" href="/frontend/assets/css/contestMERGELATER.css">
-  <link rel="icon" href="/frontend/assets/images/icon.png">
+  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
 
   <script>
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
   </script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 </head>
 <body data-auth="user">
 
 <div class="scanline"></div>
 <div id="navbar"></div>
 
-<main style="padding-top: var(--nav-height);">
+<main id="main-content" role="main" style="padding-top: var(--nav-height);">
   <section class="section-page">
     <div class="container-page">
 
-      <h1 class="page-title">Contests</h1>
+      <h1 class="page-title scroll-reveal">Contests</h1>
 
-      <div class="tt-search-box input-group" style="margin-bottom:var(--space-24px);">
-        <input type="text" class="form-control" placeholder="Search contests..." id="contest-search-input">
-        <button class="btn" type="button" onclick="document.getElementById('contest-search-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}))">
-          <i class="bi bi-search"></i>
+      <div class="tt-search-box" style="margin-bottom:var(--space-24px);">
+        <input type="text" placeholder="Search contests..." id="contest-search-input">
+        <button type="button" onclick="document.getElementById('contest-search-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}))">
+          <span class="material-symbols-outlined">search</span>
         </button>
       </div>
 
@@ -57,14 +57,15 @@
 
 <script src="/frontend/utils/core.js"></script>
 <script src="/frontend/components/navbar-user.js"></script>
-<script src="/frontend/components/footer.js"></script>
-<script src="/frontend/components/theme-toggle.js"></script>
+<script src="/frontend/components/footer-user.js"></script>
 <script src="/frontend/components/scroll-reveal.js"></script>
 <script src="/frontend/components/spinner.js"></script>
+<script src="/frontend/components/skeleton.js"></script>
 <script src="/frontend/components/avatar.js"></script>
-<script src="/frontend/components/team-table.js"></script>
+
 <script src="/frontend/services/contestService.js"></script>
 <script src="contest.js"></script>
 
+<script src="/frontend/components/gsap-navbar-shuffle.js"></script>
 </body>
 </html>

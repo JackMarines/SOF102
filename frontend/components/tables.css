@@ -90,6 +90,7 @@
     display: grid; grid-template-columns: var(--pt-grid);
     padding: 14px 20px; border-bottom: 1px solid var(--row-border);
     transition: 0.2s; text-decoration: none; color: var(--text-primary);
+    font-family: var(--font-mono); font-size: 0.875rem;
     animation: ptFadeIn 0.4s ease backwards;
     position: relative;
 }
@@ -101,6 +102,9 @@
 .pt-row:nth-child(5) { animation-delay: 0.16s; }
 .pt-row:nth-child(6) { animation-delay: 0.2s; }
 .pt-row:hover { background: var(--row-hover); }
+.pt-row-contest {
+  box-shadow: inset 3px 0 0 var(--warning);
+}
 /* Cột tiêu đề: căn trái */
 .pt-row-title { text-align: left; font-weight: 400;     overflow: hidden;
 white-space: nowrap;
@@ -110,16 +114,27 @@ white-space: nowrap;
 .pt-row-medium { color: #fbbf24; }
 .pt-row-hard { color: #ef4444; }
 
+/* Grid cells must shrink to column width — enables text-overflow: ellipsis on children */
+.pt-row > span {
+  min-width: 0;
+  overflow: hidden;
+}
+
 /* Menu ngữ cảnh hàng (dropdown 3 chấm) */
 .pt-row-actions { position: relative; display: inline-block; }
 .pt-row-menu-btn {
     background: none; border: none; color: var(--text-secondary); cursor: pointer;
     padding: 4px 6px; border-radius: 4px; transition: all 0.2s;
+    display: inline-flex; align-items: center; justify-content: center;
 }
 .pt-row-menu-btn:hover { background: var(--bg-hover); color: var(--accent); }
+.pt-row-menu-btn .material-symbols-outlined {
+    font-size: 16px; margin-top: 3px;
+}
+
 .pt-row-dropdown {
     display: none; position: absolute; right: 0; top: 100%; z-index: 100;
-    background: var(--bg-secondary, #1e293b); border: 1px solid var(--border-input);
+    background: var(--bg-elevated, #1e293b); border: 1px solid var(--border-input);
     border-radius: 8px; min-width: 140px; padding: 6px 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
@@ -129,10 +144,14 @@ white-space: nowrap;
     font-size: 13px; color: var(--text-primary); cursor: pointer; transition: background 0.15s;
 }
 .pt-row-dropdown-item:hover { background: var(--bg-hover); }
-.pt-row-dropdown-item i { font-size: 13px; }
+.pt-row-dropdown-item i,
+.pt-row-dropdown-item .material-symbols-outlined { font-size: 13px; }
+
+/* Scroll wrapper cho mobile (overflow-x auto) */
+.pt-scroll-wrap { min-width: 0; }
 
 /* Phân trang */
-.pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.pt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
 .pt-page {
     padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
     background: transparent; color: var(--text-primary); text-decoration: none;
@@ -157,6 +176,11 @@ white-space: nowrap;
     .pt-table-header, .pt-row { font-size: 13px; padding: 12px; gap: 8px; }
     .pt-filter-row .dropdown { width: 100%; }
     .pt-filter-row .dropdown .btn { width: 100%; }
+    .pt-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .pt-table-header, .pt-row { min-width: max-content; }
+
+    .cg-toolbar { flex-wrap: wrap; }
+    .cg-toolbar .cg-search-box { min-width: 100%; }
 }
 
 /* ═══════════════════════════════════════════════
@@ -243,10 +267,6 @@ white-space: nowrap;
 .tt-card {
     text-decoration: none; color: var(--text-primary);
     animation: ttCardIn 0.4s ease backwards;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
 }
 /* Hiệu ứng fade-in tuần tự cho 8 thẻ đầu */
 .tt-card:nth-child(1) { animation-delay: 0s; }
@@ -259,11 +279,7 @@ white-space: nowrap;
 .tt-card:nth-child(8) { animation-delay: 0.28s; }
 /* Glass box effect + hover lift */
 .tt-card .glass-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
+    height: 100%;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .tt-card:hover .glass-box {
@@ -272,12 +288,10 @@ white-space: nowrap;
 }
 /* Ảnh đại diện nhóm (hoặc fallback icon) */
 .tt-card-avatar {
-    width: 100%; height: 180px; object-fit: cover; border-radius: 12px;
-    display: block; flex: 0 0 auto;
+    width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px;
 }
 .tt-card-avatar-fallback {
-    width: 100%; height: 180px; border-radius: 12px;
-    flex: 0 0 auto;
+    width: 100%; aspect-ratio: 1/1; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     background: var(--bg-input); color: var(--text-secondary); font-size: 42px;
 }
@@ -308,7 +322,7 @@ white-space: nowrap;
 .tt-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
 
 /* Phân trang */
-.tt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.tt-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
 .tt-page {
     padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
     background: transparent; color: var(--text-primary); text-decoration: none;
@@ -427,7 +441,7 @@ white-space: nowrap;
 .cg-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
 
 /* Phân trang */
-.cg-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
+.cg-pagination { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
 .cg-page {
     padding: 6px 12px; border: 1px solid var(--border-input); border-radius: 6px;
     background: transparent; color: var(--text-primary); text-decoration: none;
@@ -453,6 +467,12 @@ white-space: nowrap;
    ANNOUNCEMENT TABLE (at-) — puzzle-table variant with author avatar + pinned section
    ═══════════════════════════════════════════════ */
 
+/* Announcement table grid gap — keeps type and date columns from being flush */
+#announcement-table .pt-row,
+#announcement-table .pt-table-header {
+    column-gap: 16px;
+}
+
 /* Author cell: avatar + name in flex row */
 .at-author-cell {
     display: flex;
@@ -467,6 +487,55 @@ white-space: nowrap;
     text-overflow: ellipsis;
 }
 
+/* Announcement type badges — style matches announcement-banner badge in components.css */
+.at-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.at-type-badge.general {
+  background: var(--ann-general-bg);
+  color: var(--ann-general-text);
+}
+
+.at-type-badge.maintenance {
+  background: var(--ann-maintenance-bg);
+  color: var(--ann-maintenance-text);
+}
+
+.at-type-badge.release {
+  background: var(--ann-release-bg);
+  color: var(--ann-release-text);
+}
+
+.at-type-badge.feature {
+  background: var(--ann-feature-bg);
+  color: var(--ann-feature-text);
+}
+
+.at-type-badge.bug-fix {
+  background: var(--ann-bug-fix-bg);
+  color: var(--ann-bug-fix-text);
+}
+
+.at-type-badge.security {
+  background: var(--ann-security-bg);
+  color: var(--ann-security-text);
+}
+
+.at-type-badge.incident {
+  background: var(--ann-incident-bg);
+  color: var(--ann-incident-text);
+}
+
+.at-type-badge.event {
+  background: var(--ann-event-bg);
+  color: var(--ann-event-text);
+}
+
 /* Pin corner icon — absolutely positioned at top-left of the row */
 .at-pin-corner {
     position: absolute;
@@ -476,6 +545,9 @@ white-space: nowrap;
     font-size: 13px;
     z-index: 2;
     line-height: 1;
+}
+.at-pin-corner .material-symbols-outlined {
+    font-size: inherit;
 }
 
 /* ═══════════════════════════════════════════════
@@ -497,7 +569,6 @@ white-space: nowrap;
     flex-wrap: wrap;
     gap: 4px;
     margin-bottom: 20px;
-    padding-left: 42px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border-subtle);
     overflow-wrap: break-word;

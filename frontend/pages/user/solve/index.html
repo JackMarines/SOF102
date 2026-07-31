@@ -13,11 +13,12 @@
   <link rel="stylesheet" href="/frontend/assets/css/reset.css">
   <link rel="stylesheet" href="/frontend/assets/css/components.css">
   <link rel="stylesheet" href="/frontend/assets/css/solve.css">
-  <link rel="icon" href="/frontend/assets/images/icon.png">
+  <link rel="icon" href="/frontend/assets/images/devclimbicon.png">
 
   <script>
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
   </script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 </head>
 <body data-auth="user">
 
@@ -99,11 +100,13 @@
 <script src="/frontend/components/spinner.js"></script>
 <script src="/frontend/components/skeleton.js"></script>
 <script src="/frontend/components/popup.js"></script>
+<script src="/frontend/utils/contentParser.js"></script>
 <script src="/frontend/services/puzzleService.js"></script>
 <script src="/frontend/services/puzzleSolveService.js"></script>
 <script src="/frontend/services/submissionService.js"></script>
 <script src="solve.js"></script>
 <script src="puzzle.js" type="module"></script>
 
+<script src="/frontend/components/gsap-navbar-shuffle.js"></script>
 </body>
 </html>
