@@ -223,58 +223,121 @@ getMe().then(async function (session) {
     }
 
     // --- Badge Collection ---
+    var BADGES_PER_PAGE = 5;
+    var badgePage = 1;
+    var allTrophies = [];
+
+    function renderBadgeCard(t) {
+        var card = document.createElement('div');
+        card.style.cssText = 'border:2px solid var(--border-default);padding:var(--space-16px);display:flex;flex-direction:column;align-items:center;min-width:0;max-width:100%;transition:border-color 150ms ease-out;';
+        if (t.selected) {
+            card.style.borderColor = 'var(--accent)';
+            card.style.background = 'var(--accent-dim)';
+        }
+        if (t.avatar) {
+            var img = document.createElement('img');
+            img.src = t.avatar;
+            img.alt = t.name || '';
+            img.style.cssText = 'width:64px;height:64px;object-fit:contain;margin-bottom:var(--space-8px);';
+            card.appendChild(img);
+        } else {
+            var icon = document.createElement('div');
+            icon.style.cssText = 'font-size:2rem;color:var(--accent);margin-bottom:var(--space-8px);';
+            icon.innerHTML = '<span class="material-symbols-outlined" style="font-size:2rem;">emoji_events</span>';
+            card.appendChild(icon);
+        }
+        var name = document.createElement('div');
+        name.style.cssText = 'font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-primary);margin-bottom:var(--space-4px);word-break:break-word;';
+        name.textContent = t.name || '';
+        card.appendChild(name);
+        if (t.content) {
+            var desc = document.createElement('div');
+            desc.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-bottom:var(--space-4px);word-break:break-word;overflow-wrap:break-word;';
+            desc.textContent = t.content;
+            card.appendChild(desc);
+        }
+        if (t.awardedAt) {
+            var date = new Date(t.awardedAt);
+            var dateEl = document.createElement('div');
+            dateEl.style.cssText = 'font-size:0.6875rem;color:var(--text-secondary);font-family:var(--font-mono);';
+            dateEl.textContent = date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+            card.appendChild(dateEl);
+        }
+        return card;
+    }
+
+    function renderBadgePagination() {
+        var pag = document.getElementById('badge-collection-pagination');
+        if (!pag) return;
+        pag.innerHTML = '';
+        var totalPages = Math.max(1, Math.ceil(allTrophies.length / BADGES_PER_PAGE));
+        if (totalPages <= 1) return;
+        var current = badgePage;
+
+        function addBtn(text, disabled, onClick) {
+            var a = document.createElement('a');
+            a.className = 'cg-page';
+            a.textContent = text;
+            if (disabled) {
+                a.style.opacity = '0.4';
+                a.style.pointerEvents = 'none';
+            }
+            a.addEventListener('click', onClick);
+            pag.appendChild(a);
+        }
+
+        addBtn('First', current <= 1, function () { badgePage = 1; renderBadgePage(); });
+        addBtn('Prev', current <= 1, function () { badgePage = current - 1; renderBadgePage(); });
+
+        var start = Math.max(1, current - 1);
+        var end = Math.min(totalPages, current + 1);
+        if (end - start < 2) {
+            if (start === 1) end = Math.min(3, totalPages);
+            else start = Math.max(1, totalPages - 2);
+        }
+        for (var i = start; i <= end; i++) {
+            (function (pageNum) {
+                var a = document.createElement('a');
+                a.className = 'cg-page';
+                if (pageNum === current) a.classList.add('cg-active');
+                a.textContent = pageNum;
+                a.addEventListener('click', function () { badgePage = pageNum; renderBadgePage(); });
+                pag.appendChild(a);
+            })(i);
+        }
+
+        addBtn('Next', current >= totalPages, function () { badgePage = current + 1; renderBadgePage(); });
+        addBtn('Last', current >= totalPages, function () { badgePage = totalPages; renderBadgePage(); });
+    }
+
+    function renderBadgePage() {
+        var grid = document.getElementById('badge-collection-grid');
+        grid.innerHTML = '';
+        var start = (badgePage - 1) * BADGES_PER_PAGE;
+        var pageTrophies = allTrophies.slice(start, start + BADGES_PER_PAGE);
+        for (var i = 0; i < pageTrophies.length; i++) {
+            grid.appendChild(renderBadgeCard(pageTrophies[i]));
+        }
+        renderBadgePagination();
+    }
+
     async function renderBadgeCollection(userId) {
         var grid = document.getElementById('badge-collection-grid');
         var empty = document.getElementById('badge-collection-empty');
         grid.innerHTML = '';
-        var trophies;
+        badgePage = 1;
         try {
-            trophies = await fetchUserTrophies(userId);
-        } catch (e) { return; }
-        if (!trophies || trophies.length === 0) {
+            allTrophies = await fetchUserTrophies(userId);
+        } catch (e) {
+            empty.style.display = 'block';
+            return;
+        }
+        if (!Array.isArray(allTrophies) || allTrophies.length === 0) {
             empty.style.display = 'block';
             return;
         }
         empty.style.display = 'none';
-        for (var i = 0; i < trophies.length; i++) {
-            var t = trophies[i];
-            var card = document.createElement('div');
-            card.style.cssText = 'border:2px solid var(--border-default);padding:var(--space-16px);display:flex;flex-direction:column;align-items:center;transition:border-color 150ms ease-out;';
-            if (t.selected) {
-                card.style.borderColor = 'var(--accent)';
-                card.style.background = 'var(--accent-dim)';
-            }
-            if (t.avatar) {
-                var img = document.createElement('img');
-                img.src = t.avatar;
-                img.alt = t.name || '';
-                img.style.cssText = 'width:64px;height:64px;object-fit:contain;margin-bottom:var(--space-8px);';
-                card.appendChild(img);
-            } else {
-                var icon = document.createElement('div');
-                icon.style.cssText = 'font-size:2rem;color:var(--accent);margin-bottom:var(--space-8px);';
-                icon.innerHTML = '<span class="material-symbols-outlined" style="font-size:2rem;">emoji_events</span>';
-                card.appendChild(icon);
-            }
-            var name = document.createElement('div');
-            name.style.cssText = 'font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-primary);margin-bottom:var(--space-4px);word-break:break-word;';
-            name.textContent = t.name || '';
-            card.appendChild(name);
-            if (t.content) {
-                var desc = document.createElement('div');
-                desc.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-bottom:var(--space-4px);';
-                desc.textContent = t.content;
-                card.appendChild(desc);
-            }
-            if (t.awardedAt) {
-                var date = new Date(t.awardedAt);
-                var dateEl = document.createElement('div');
-                dateEl.style.cssText = 'font-size:0.6875rem;color:var(--text-secondary);font-family:var(--font-mono);';
-                dateEl.textContent = date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-                card.appendChild(dateEl);
-            }
-            grid.appendChild(card);
-        }
+        renderBadgePage();
     }
 
     // --- Bảng Puzzle đã giải ---
@@ -389,6 +452,7 @@ getMe().then(async function (session) {
                 labels.push(date.getMonth() + 1 + '/' + date.getDate());
                 values.push(dayCounts[key] || 0);
             }
+            var single = labels.length === 1;
 
             var totalSolves = 0;
             for (var i = 0; i < values.length; i++) totalSolves += values[i];
@@ -417,28 +481,32 @@ getMe().then(async function (session) {
             if (profileActivityChart) {
                 profileActivityChart.data.labels = labels;
                 profileActivityChart.data.datasets[0].data = values;
+                profileActivityChart.data.datasets[0].pointRadius = single ? 5 : 0;
+                profileActivityChart.data.datasets[0].pointHoverRadius = single ? 5 : 6;
                 profileActivityChart.update();
             } else {
                 var ctx2 = document.getElementById('profile-activity-chart').getContext('2d');
+                var dataset = {
+                    label: 'Puzzles Solved',
+                    data: values,
+                    borderColor: css('--accent'),
+                    backgroundColor: accentRgb(0.08),
+                    borderWidth: 2,
+                    pointRadius: single ? 5 : 0,
+                    pointHoverRadius: single ? 5 : 6,
+                    tension: 0.3,
+                    fill: true
+                };
                 profileActivityChart = new Chart(ctx2, {
                     type: 'line',
                     data: {
                         labels: labels,
-                        datasets: [{
-                            label: 'Puzzles Solved',
-                            data: values,
-                            borderColor: css('--accent'),
-                            backgroundColor: accentRgb(0.08),
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            pointHoverRadius: 6,
-                            tension: 0.3,
-                            fill: true
-                        }]
+                        datasets: [dataset]
                     },
                         options: {
                             responsive: true,
                             maintainAspectRatio: true,
+                            animation: { duration: 600, easing: 'easeOutQuart' },
                             plugins: { legend: { display: false } },
                         scales: {
                             x: { grid: { display: false }, ticks: { color: csstext('muted'), font: { size: 9, family: 'JetBrains Mono' }, maxTicksLimit: 8 } },
@@ -450,13 +518,13 @@ getMe().then(async function (session) {
             }
         }
 
-        initActivityChart(7);
+        initActivityChart(1);
         document.querySelector('#profile-activity-chart').parentElement.querySelectorAll('.chart-filter-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 document.querySelector('#profile-activity-chart').parentElement.querySelectorAll('.chart-filter-btn').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 var filter = btn.getAttribute('data-filter');
-                var days = filter === 'today' ? 7 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
+                var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
                 initActivityChart(days);
         });
     });

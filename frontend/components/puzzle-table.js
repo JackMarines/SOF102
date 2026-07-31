@@ -11,6 +11,7 @@
         this.opts = Object.assign({
             columns: [],              // Mảng cột [{key, label, width, render}]
             searchPlaceholder: 'Search...',
+            showSearch: true,         // false để ẩn ô tìm kiếm
             filterOptions: [],        // Tùy chọn bộ lọc 1 (VD: difficulty)
             filterLabel: 'Filter',
             filter2Options: [],       // Tùy chọn bộ lọc 2 (VD: language)
@@ -54,27 +55,29 @@
         this.container.innerHTML = '';
 
         // ── Ô tìm kiếm ──
-        var searchBox = document.createElement('div');
-        searchBox.className = 'pt-search-box input-group';
+        if (this.opts.showSearch !== false) {
+            var searchBox = document.createElement('div');
+            searchBox.className = 'pt-search-box input-group';
 
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'form-control';
-        input.placeholder = this.opts.searchPlaceholder;
-        input.id = 'pt-input-' + id;
-        input.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') self._doSearch();
-        });
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control';
+            input.placeholder = this.opts.searchPlaceholder;
+            input.id = 'pt-input-' + id;
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') self._doSearch();
+            });
 
-        var btn = document.createElement('button');
-        btn.className = 'btn';
-        btn.type = 'button';
-        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">search</span>';
-        btn.addEventListener('click', function () { self._doSearch(); });
+            var btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.type = 'button';
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1rem;">search</span>';
+            btn.addEventListener('click', function () { self._doSearch(); });
 
-        searchBox.appendChild(input);
-        searchBox.appendChild(btn);
-        this.container.appendChild(searchBox);
+            searchBox.appendChild(input);
+            searchBox.appendChild(btn);
+            this.container.appendChild(searchBox);
+        }
 
         // ── Hàng bộ lọc (dropdown Bootstrap) ──
         if (this.opts.filterOptions.length > 0 || this.opts.filter2Options.length > 0) {

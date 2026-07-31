@@ -31,7 +31,7 @@
           '<a href="/frontend/pages/user/user-search/index.html" role="listitem"' + (isActive('users') ? ' class="active"' : '') + '>USERS</a>' +
           '<a href="/frontend/pages/user/announcement/index.html" role="listitem"' + (isActive('announcements') ? ' class="active"' : '') + '>ANNOUNCEMENTS</a>' +
           '<a href="/frontend/pages/user/contest/index.html" role="listitem"' + (isActive('contest') ? ' class="active"' : '') + '>CONTEST</a>' +
-          '<hr class="mobile-only" style="border-color:var(--text-muted);margin:8px 0;">' +
+          '<hr class="mobile-only">' +
           '<a href="/frontend/pages/user/profile/index.html" class="mobile-only" role="listitem">PROFILE</a>' +
           '<a href="/frontend/pages/user/setting/index.html" class="mobile-only" role="listitem">SETTINGS</a>' +
           '<a href="#" class="mobile-only" id="logout-btn-mobile" role="listitem">LOG OUT</a>' +

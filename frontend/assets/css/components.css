@@ -189,6 +189,12 @@
   }
 }
 
+.navbar-devclimb .nav-links hr {
+  border: none;
+  border-top: 2px solid var(--text-secondary);
+  margin: var(--space-8px) 0;
+}
+
 /* ── Announcement Banner ── */
 
 .announcement-banner {
@@ -1738,6 +1744,39 @@ code {
   color: var(--accent);
   margin-top: var(--space-8px);
   font-weight: 600;
+}
+
+/* Admin dashboard loading state — skeleton shimmer while /admin/dashboard resolves */
+.admin-stat-grid.stat-loading .stat-number,
+.admin-stat-grid.stat-loading .stat-sub {
+  color: transparent;
+  background: var(--skeleton-bg);
+  overflow: hidden;
+  position: relative;
+}
+.admin-stat-grid.stat-loading .stat-number::after,
+.admin-stat-grid.stat-loading .stat-sub::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, var(--shimmer-highlight) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s ease-in-out infinite;
+}
+.chart-box.stat-loading {
+  position: relative;
+  overflow: hidden;
+}
+.chart-box.stat-loading canvas {
+  visibility: hidden;
+}
+.chart-box.stat-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, var(--skeleton-bg) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s ease-in-out infinite;
 }
 
 .admin-action-row {

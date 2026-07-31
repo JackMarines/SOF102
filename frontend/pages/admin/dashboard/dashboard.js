@@ -1323,9 +1323,28 @@ function getChartTotal(chart) {
 }
 
 async function loadDashboardStats() {
+    var statGrid = document.getElementById('stat-grid');
+    var chartArea = document.getElementById('stat-chart-area');
     try {
+        if (statGrid) statGrid.classList.add('stat-loading');
+        if (chartArea) chartArea.classList.add('stat-loading');
+
         var res = await fetchAdminDashboard();
-        if (!res) return;
+        if (!res || res.error) {
+            if (typeof Popup !== 'undefined' && res && res.error) {
+                Popup.open({
+                    id: 'dashboard-error-popup',
+                    title: 'Error',
+                    size: 'sm',
+                    render: function (ctx) {
+                        var p = document.createElement('p');
+                        p.textContent = 'Failed to load dashboard statistics: ' + res.error;
+                        ctx.body.appendChild(p);
+                    }
+                });
+            }
+            return;
+        }
         dashboardData = res;
 
         document.getElementById('stat-total-users').textContent = fmt(res.totalUsers || 0);
@@ -1348,7 +1367,23 @@ async function loadDashboardStats() {
         document.getElementById('stat-solved-all').textContent = fmt(allTotal);
 
         initSolvedChart(res.todayChart);
-    } catch (e) {}
+    } catch (e) {
+        if (typeof Popup !== 'undefined') {
+            Popup.open({
+                id: 'dashboard-error-popup',
+                title: 'Error',
+                size: 'sm',
+                render: function (ctx) {
+                    var p = document.createElement('p');
+                    p.textContent = 'Failed to load dashboard statistics.';
+                    ctx.body.appendChild(p);
+                }
+            });
+        }
+    } finally {
+        if (statGrid) statGrid.classList.remove('stat-loading');
+        if (chartArea) chartArea.classList.remove('stat-loading');
+    }
 }
 
 function initSolvedChart(chart) {

@@ -368,13 +368,26 @@ white-space: nowrap;
 }
 .cg-search-box button:hover { background: var(--bg-hover); color: var(--accent); }
 
-/* Lưới thẻ — 4 cột mặc định */
+/* Lưới thẻ — tự co giãn cột theo độ rộng, thẻ vuông cân đối */
 .cg-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
     margin-top: 10px;
     min-width: 0;
+}
+
+/* Team detail: 3 thành viên mỗi hàng */
+#cg-grid-member-table { grid-template-columns: repeat(3, 1fr); }
+
+/* User search: 4 người dùng mỗi hàng */
+#cg-grid-user-table { grid-template-columns: repeat(4, 1fr); }
+
+/* Thẻ thành viên/người dùng cao hơn, vuông cân đối */
+#cg-grid-member-table .cg-card .glass-box,
+#cg-grid-user-table .cg-card .glass-box {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 240px;
 }
 
 /* Thẻ người dùng/nhóm */
@@ -438,13 +451,6 @@ white-space: nowrap;
     from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-
-/* Responsive: tablet (3 cột) */
-@media (max-width: 1199px) { .cg-grid { grid-template-columns: repeat(3, 1fr); } }
-/* Responsive: mobile (2 cột) */
-@media (max-width: 991px) { .cg-grid { grid-template-columns: repeat(2, 1fr); } }
-/* Responsive: mobile nhỏ (1 cột) */
-@media (max-width: 576px) { .cg-grid { grid-template-columns: 1fr; } }
 
 /* ═══════════════════════════════════════════════
    ANNOUNCEMENT TABLE (at-) — puzzle-table variant with author avatar + pinned section

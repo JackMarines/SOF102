@@ -41,6 +41,7 @@ window.announcementTable = PuzzleTable.init('announcement-table', {
     ],
     emptyMessage: 'No announcements found.',
     urlTemplate: '#ann-',
+    showSearch: false,
     onPageChange: function (page) { loadAnnouncements(page); }
 });
 

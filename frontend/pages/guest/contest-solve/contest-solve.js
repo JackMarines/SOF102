@@ -226,7 +226,14 @@
         }
 
         showSpinner('contest-left');
-        var data = await getContest(id);
+        var data;
+        try {
+            data = await getContest(id);
+        } catch (e) {
+            hideSpinner('contest-left');
+            leftEl.innerHTML = '<p style="color:var(--text-muted);">Failed to load contest. Please try again.</p>';
+            return;
+        }
         hideSpinner('contest-left');
 
         if (!data || data.error) {
