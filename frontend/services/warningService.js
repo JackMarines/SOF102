@@ -17,7 +17,10 @@ async function checkUserWarning() {
 
     if (res.warning) {
         warningData = res.warning;
-        showWarningPopup(warningData);
+        // Đang có appeal PENDING thì không hiện lại popup cảnh báo (đã kháng cáo rồi)
+        if (!res.appealPending) {
+            showWarningPopup(warningData);
+        }
     }
 }
 
@@ -170,7 +173,11 @@ window.submitAppeal = async function () {
     var res = await apiPost('/appeal', { message: msg.value.trim() });
     if (res && !res.error) {
         Popup.close('appeal-form');
-        location.reload();
+        if (warningData && warningData.teamId) {
+            window.location.href = '/frontend/pages/user/team/index.html?id=' + warningData.teamId;
+        } else {
+            window.location.href = '/frontend/pages/user/profile/index.html?edit=1';
+        }
     } else {
         Popup.confirm({ icon: '<span class="material-symbols-outlined" style="font-size:48px;color:var(--error);">error</span>', title: 'Error', message: res.message || 'Failed to submit appeal', okLabel: 'OK' });
     }

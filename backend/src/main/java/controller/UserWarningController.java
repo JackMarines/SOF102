@@ -54,6 +54,19 @@ public class UserWarningController extends HttpServlet {
         }
 
         if (warning != null) {
+            // Nếu đang có appeal PENDING cho warning này thì ẩn popup cảnh báo (vẫn giữ data để setting hiện badge)
+            boolean appealPending = false;
+            java.util.List<entity.Appeal> appeals = new dao.AppealDao().findByApplicantId(user.getUserId());
+            for (entity.Appeal a : appeals) {
+                if ("PENDING".equals(a.getAppStatus())
+                        && a.getAppWarnid() != null
+                        && a.getAppWarnid().intValue() == warning.getWarnId()) {
+                    appealPending = true;
+                    break;
+                }
+            }
+            result.put("appealPending", appealPending);
+
             Map<String, Object> warnData = new HashMap<>();
             warnData.put("warnId", warning.getWarnId());
             warnData.put("reason", warning.getWarnReason());

@@ -436,7 +436,7 @@ function openManageTeamsPopup() {
                 columnRenderers: {
                     team: function (t) {
                         var wrap = document.createElement('div');
-                        wrap.style.cssText = 'display:flex;align-items:center;gap:6px;';
+                        wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;';
 
                         var info = document.createElement('div');
                         var name = document.createElement('strong');

@@ -7,6 +7,7 @@ window.addEventListener('deps-ready', function() {
     });
 
     function renderWarningBox(w) {
+        warningData = w;
         var section = document.createElement('div');
         section.className = 'glass-box p-4 mb-4 border border-danger';
         section.id = 'warning-section';
