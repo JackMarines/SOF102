@@ -279,6 +279,12 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
+        // type=today → trả về biểu đồ 4 khung giờ của hôm nay (00-06, 06-12, 12-18, 18-00)
+        if ("today".equals(req.getParameter("type"))) {
+            ResponseUtil.success(resp, progressDao.getUserTodayChart(userId));
+            return;
+        }
+
         List<Object[]> rows = progressDao.getUserActivityByDay(userId, 100);
         List<Map<String, Object>> data = new ArrayList<>();
         for (Object[] row : rows) {

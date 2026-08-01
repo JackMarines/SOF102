@@ -9,6 +9,7 @@ import util.JpaUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -203,6 +204,31 @@ public class TeamDao {
         } finally {
             em.close();
         }
+    }
+
+    // Today — 4 segments: 00-06, 06-12, 12-18, 18-00 (toàn team, cho biểu đồ team)
+    public Map<String, Object> getTeamTodayChart(int teamId) {
+        String[] labels = {"00-06", "06-12", "12-18", "18-00"};
+        long[] data = new long[4];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT FLOOR(HOUR(pr.prog_date) / 6) AS seg, COUNT(*) AS cnt " +
+                "FROM progress pr JOIN user u ON pr.user_id = u.user_id " +
+                "WHERE u.team_id = ? AND DATE(pr.prog_date) = CURDATE() GROUP BY seg");
+            q.setParameter(1, teamId);
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int seg = ((Number) row[0]).intValue();
+                if (seg >= 0 && seg < 4) data[seg] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        result.put("data", List.of(data[0], data[1], data[2], data[3]));
+        return result;
     }
 
     // Số thành viên đã giải ít nhất 1 puzzle (dùng cho throughput)

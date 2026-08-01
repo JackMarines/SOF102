@@ -119,6 +119,8 @@ white-space: nowrap;
   min-width: 0;
   overflow: hidden;
 }
+/* Action cell (3-dot menu) must not clip its dropdown */
+.pt-row > span:has(.pt-row-actions) { overflow: visible; }
 
 /* Menu ngữ cảnh hàng (dropdown 3 chấm) */
 .pt-row-actions { position: relative; display: inline-block; }

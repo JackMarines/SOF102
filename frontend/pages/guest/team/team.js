@@ -1,5 +1,9 @@
 // Guest team detail — read-only team view with clickable members, top contributors, and owner link
 window.addEventListener('deps-ready', async function () {
+    // Khi quay lại trang (back/forward), reload lại để lấy điểm mới nhất
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) window.location.reload();
+    });
     var params = new URLSearchParams(window.location.search);
     var teamId = params.get('id');
     if (!teamId) return;
@@ -70,19 +74,7 @@ window.addEventListener('deps-ready', async function () {
         return 'rgba(' + parseInt(h.slice(1,3),16) + ',' + parseInt(h.slice(3,5),16) + ',' + parseInt(h.slice(5,7),16) + ',' + a + ')';
     }
 
-    function initTeamChart(days) {
-        var today = new Date();
-        var labels = [];
-        var values = [];
-        for (var i = days - 1; i >= 0; i--) {
-            var date = new Date(today);
-            date.setDate(date.getDate() - i);
-            var key = date.getFullYear() + '-' +
-                String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                String(date.getDate()).padStart(2, '0');
-            labels.push(date.getMonth() + 1 + '/' + date.getDate());
-            values.push(teamDayCounts[key] || 0);
-        }
+    function renderTeamChart(labels, values) {
         var single = labels.length === 1;
         var ctx = document.getElementById('team-solved-chart').getContext('2d');
         var dataset = {
@@ -123,6 +115,22 @@ window.addEventListener('deps-ready', async function () {
         }
     }
 
+    function initTeamChart(days) {
+        var today = new Date();
+        var labels = [];
+        var values = [];
+        for (var i = days - 1; i >= 0; i--) {
+            var date = new Date(today);
+            date.setDate(date.getDate() - i);
+            var key = date.getFullYear() + '-' +
+                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(date.getDate()).padStart(2, '0');
+            labels.push(date.getMonth() + 1 + '/' + date.getDate());
+            values.push(teamDayCounts[key] || 0);
+        }
+        renderTeamChart(labels, values);
+    }
+
     function loadTeamChart(days) {
         fetchTeamStats(teamId).then(function(stats) {
             if (stats && stats.data) {
@@ -135,7 +143,16 @@ window.addEventListener('deps-ready', async function () {
         }).catch(function() {});
     }
 
-    loadTeamChart(1);
+    // Today — 4 khung giờ 00-06, 06-12, 12-18, 18-00 (lấy từ server)
+    function loadTeamTodayChart() {
+        fetchTeamStats(teamId, 'today').then(function(today) {
+            if (today && today.labels && today.data) {
+                renderTeamChart(today.labels, today.data);
+            }
+        }).catch(function() {});
+    }
+
+    loadTeamTodayChart();
 
     var teamChartPanel = document.querySelector('.content-panel .chart-filter-btn');
     var teamFilterBtns = teamChartPanel ? document.querySelectorAll('.content-panel .chart-filter-btn') : document.querySelectorAll('.chart-filter-btn');
@@ -144,8 +161,12 @@ window.addEventListener('deps-ready', async function () {
             teamFilterBtns.forEach(function(b) { b.classList.remove('active'); });
             btn.classList.add('active');
             var filter = btn.getAttribute('data-filter');
-            var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 90;
-            initTeamChart(days);
+            if (filter === 'today') {
+                loadTeamTodayChart();
+            } else {
+                var days = filter === 'week' ? 7 : filter === 'month' ? 30 : 90;
+                initTeamChart(days);
+            }
         });
     });
 

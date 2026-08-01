@@ -11,9 +11,12 @@ public class ResponseUtil {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // Gửi response JSON với dữ liệu bất kỳ
+    // Chống cache để profile/team luôn lấy dữ liệu điểm mới nhất
     public static void json(HttpServletResponse resp, Object data) throws IOException {
         resp.setContentType("application/json; charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        resp.setHeader("Pragma", "no-cache");
         mapper.writeValue(resp.getWriter(), data);
     }
 
