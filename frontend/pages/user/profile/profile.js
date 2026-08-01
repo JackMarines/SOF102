@@ -1,6 +1,11 @@
 // Profile page orchestrator — hiển thị profile, modal chỉnh sửa, group banner, biểu đồ, bảng puzzle đã giải
 window.addEventListener('deps-ready', function () {
 getMe().then(async function (session) {
+    // Khi quay lại trang (back/forward), reload lại để lấy điểm mới nhất
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) window.location.reload();
+    });
+
     var params = new URLSearchParams(window.location.search);
     var targetId = params.get('id');
     var isOwn = !targetId || String(targetId) === String(session.userId);
@@ -439,23 +444,9 @@ getMe().then(async function (session) {
 
         var profileActivityChart = null;
 
-        function initActivityChart(days) {
-            var today = new Date();
-            var labels = [];
-            var values = [];
-            for (var i = days - 1; i >= 0; i--) {
-                var date = new Date(today);
-                date.setDate(date.getDate() - i);
-                var key = date.getFullYear() + '-' +
-                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(date.getDate()).padStart(2, '0');
-                labels.push(days === 1 ? '24H' : date.getMonth() + 1 + '/' + date.getDate());
-                values.push(dayCounts[key] || 0);
-            }
-            var single = labels.length === 1;
-
+        function computeStats() {
             var totalSolves = 0;
-            for (var i = 0; i < values.length; i++) totalSolves += values[i];
+            for (var key in dayCounts) totalSolves += dayCounts[key];
             var now = new Date();
             var todayKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
             var todaySolves = dayCounts[todayKey] || 0;
@@ -477,6 +468,10 @@ getMe().then(async function (session) {
             document.getElementById('stat-solved-week').textContent = weekSolves;
             document.getElementById('stat-solved-month').textContent = monthSolves;
             document.getElementById('stat-solved-all').textContent = totalSolves;
+        }
+
+        function renderActivityChart(labels, values) {
+            var single = labels.length === 1;
 
             if (profileActivityChart) {
                 profileActivityChart.data.labels = labels;
@@ -518,14 +513,43 @@ getMe().then(async function (session) {
             }
         }
 
-        initActivityChart(1);
+        // Today — 4 khung giờ 00-06, 06-12, 12-18, 18-00 (lấy từ server)
+        function loadTodayChart() {
+            apiGet('/profile/activity?type=today&id=' + effectiveId).then(function(today) {
+                if (!today || !today.labels || !today.data) return;
+                renderActivityChart(today.labels, today.data);
+            });
+        }
+
+        function initActivityChart(days) {
+            var today = new Date();
+            var labels = [];
+            var values = [];
+            for (var i = days - 1; i >= 0; i--) {
+                var date = new Date(today);
+                date.setDate(date.getDate() - i);
+                var key = date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+                labels.push(date.getMonth() + 1 + '/' + date.getDate());
+                values.push(dayCounts[key] || 0);
+            }
+            renderActivityChart(labels, values);
+        }
+
+        computeStats();
+        loadTodayChart();
         document.querySelector('#profile-activity-chart').parentElement.querySelectorAll('.chart-filter-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 document.querySelector('#profile-activity-chart').parentElement.querySelectorAll('.chart-filter-btn').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 var filter = btn.getAttribute('data-filter');
-                var days = filter === 'today' ? 1 : filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
-                initActivityChart(days);
+                if (filter === 'today') {
+                    loadTodayChart();
+                } else {
+                    var days = filter === 'week' ? 7 : filter === 'month' ? 30 : 100;
+                    initActivityChart(days);
+                }
         });
     });
 });

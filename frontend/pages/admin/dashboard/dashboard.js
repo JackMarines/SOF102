@@ -436,13 +436,7 @@ function openManageTeamsPopup() {
                 columnRenderers: {
                     team: function (t) {
                         var wrap = document.createElement('div');
-                        wrap.style.cssText = 'display:flex;align-items:center;gap:6px;margin:0 auto;';
-
-                        wrap.appendChild(Avatar.render({
-                            size: 32,
-                            avatar: t.avatar || null,
-                            isAdmin: false
-                        }));
+                        wrap.style.cssText = 'display:flex;align-items:center;gap:6px;';
 
                         var info = document.createElement('div');
                         var name = document.createElement('strong');
@@ -872,6 +866,7 @@ async function loadLanguagesInto(selectId, selectedId) {
 
 function buildTabShell(puzzleTabId, tcTabId, puzzleContentId, tcContentId) {
     var shell = document.createElement('div');
+    shell.className = 'tab-content-wrap';
     shell.innerHTML =
         '<ul class="nav nav-tabs mb-4">' +
             '<li class="nav-item"><button class="nav-link active" id="' + puzzleTabId + '" data-bs-toggle="tab" data-bs-target="#' + puzzleContentId + '" type="button">Puzzle Details</button></li>' +

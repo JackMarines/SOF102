@@ -302,6 +302,30 @@ public class ProgressDao {
         return result;
     }
 
+    // Today — 4 segments: 00-06, 06-12, 12-18, 18-00 (chỉ của 1 user, cho biểu đồ profile)
+    public Map<String, Object> getUserTodayChart(int userId) {
+        String[] labels = {"00-06", "06-12", "12-18", "18-00"};
+        long[] data = new long[4];
+        EntityManager em = JpaUtils.getEntityManager();
+        try {
+            jakarta.persistence.Query q = em.createNativeQuery(
+                "SELECT FLOOR(HOUR(prog_date) / 6) AS seg, COUNT(*) AS cnt " +
+                "FROM progress WHERE user_id = ? AND DATE(prog_date) = CURDATE() GROUP BY seg");
+            q.setParameter(1, userId);
+            List<Object[]> rows = q.getResultList();
+            for (Object[] row : rows) {
+                int seg = ((Number) row[0]).intValue();
+                if (seg >= 0 && seg < 4) data[seg] = ((Number) row[1]).longValue();
+            }
+        } finally {
+            em.close();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("labels", List.of(labels));
+        result.put("data", List.of(data[0], data[1], data[2], data[3]));
+        return result;
+    }
+
     // Week — 7 segments: Mon-Sun
     public Map<String, Object> getWeekChart() {
         String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
