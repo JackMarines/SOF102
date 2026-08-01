@@ -1571,13 +1571,19 @@ code {
 }
 
 @media (max-width: 768px) {
-  .content-panel {
+  .content-panel,
+  .content-panel.pad-lg {
     padding: var(--space-16px);
   }
 
   .content-grid-2col,
   .content-grid-2col-equal {
     grid-template-columns: 1fr;
+  }
+
+  .content-grid-2col > *,
+  .content-grid-2col-equal > * {
+    min-width: 0;
   }
 
   .tt-banner-img {
@@ -1936,6 +1942,22 @@ code {
 .chart-filter-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .chart-filter-btn {
+    padding: 6px 10px;
+  }
+
+  .chart-filter-row {
+    flex-wrap: wrap;
+    row-gap: var(--space-8px);
+  }
+
+  .chart-filter-row button {
+    padding: 6px 10px;
+    font-size: 0.6875rem;
+  }
 }
 
 .chart-filter-btn:active {

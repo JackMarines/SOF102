@@ -44,6 +44,7 @@ getMe().then(async function (session) {
     }
     var ownerEl = document.getElementById('team-owner');
     if (owner) {
+        ownerEl.appendChild(Avatar.render({ size: 32, avatar: owner.avatar, trophySrc: owner.selectedTrophyAvatar || null }));
         var ownerName = document.createElement('span');
         ownerName.textContent = owner.displayName || 'Unknown';
         ownerEl.appendChild(ownerName);
@@ -576,7 +577,7 @@ getMe().then(async function (session) {
                 loadTeamTodayChart();
             } else {
                 var days = filter === 'week' ? 7 : filter === 'month' ? 30 : 90;
-                initTeamChart(days);
+                loadTeamChart(days);
             }
         });
     });

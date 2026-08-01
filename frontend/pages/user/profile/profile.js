@@ -169,6 +169,12 @@ getMe().then(async function (session) {
         }
     }
 
+    // Tự mở modal chỉnh sửa profile nếu được điều hướng từ luồng kháng cáo (?edit=1)
+    if (isOwn && params.get('edit') === '1') {
+        var editModal = document.getElementById('editProfileModal');
+        if (editModal) editModal.classList.add('show');
+    }
+
     // --- Trophy Case ---
     async function openTrophyCase() {
         var grid = document.getElementById('trophy-case-grid');
